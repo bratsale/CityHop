@@ -47,7 +47,6 @@ public class TransportMap {
         return this.stations.get(stationId);
     }
 
-    // --- Getteri ---
     public City[][] getCities() {
         return cities;
     }

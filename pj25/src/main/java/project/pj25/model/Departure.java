@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Departure {
     private String type; // "autobus" ili "voz"
-    private String departureStationId; // ID stanice polaska (A_X_Y ili Z_X_Y)
+    private String departureStationId; // ID stanice polaska (B_X_Y ili T_X_Y)
     private String arrivalStationId;   // ID stanice dolaska (može biti u drugom gradu ili ista stanica/grad za transfer)
     private LocalTime departureTime;   // Vrijeme polaska
     private LocalTime arrivalTime;     // Vrijeme dolaska

@@ -15,7 +15,6 @@ public class City {
         this.name = "G_" + x + "_" + y; // U skladu sa generatorom
     }
 
-    // --- Getteri ---
     public int getId() {
         return id;
     }

@@ -15,6 +15,14 @@ public class TrainStation implements Station {
         this.departures = new ArrayList<>();
     }
 
+    public TrainStation(){
+        this.departures = new ArrayList<>();
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
     @Override
     public String getId() {
         return id;
@@ -57,5 +65,9 @@ public class TrainStation implements Station {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void setId(String s) {
+        this.id = s;
     }
 }

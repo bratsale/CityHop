@@ -3,47 +3,65 @@
     "id" : 0,
     "x" : 0,
     "y" : 0,
-    "name" : "G_0_0"
+    "name" : "G_0_0",
+    "busStation" : null,
+    "trainStation" : null
   }, {
     "id" : 1,
     "x" : 0,
     "y" : 1,
-    "name" : "G_0_1"
+    "name" : "G_0_1",
+    "busStation" : null,
+    "trainStation" : null
   }, {
     "id" : 2,
     "x" : 0,
     "y" : 2,
-    "name" : "G_0_2"
+    "name" : "G_0_2",
+    "busStation" : null,
+    "trainStation" : null
   } ], [ {
     "id" : 3,
     "x" : 1,
     "y" : 0,
-    "name" : "G_1_0"
+    "name" : "G_1_0",
+    "busStation" : null,
+    "trainStation" : null
   }, {
     "id" : 4,
     "x" : 1,
     "y" : 1,
-    "name" : "G_1_1"
+    "name" : "G_1_1",
+    "busStation" : null,
+    "trainStation" : null
   }, {
     "id" : 5,
     "x" : 1,
     "y" : 2,
-    "name" : "G_1_2"
+    "name" : "G_1_2",
+    "busStation" : null,
+    "trainStation" : null
   } ], [ {
     "id" : 6,
     "x" : 2,
     "y" : 0,
-    "name" : "G_2_0"
+    "name" : "G_2_0",
+    "busStation" : null,
+    "trainStation" : null
   }, {
     "id" : 7,
     "x" : 2,
     "y" : 1,
-    "name" : "G_2_1"
+    "name" : "G_2_1",
+    "busStation" : null,
+    "trainStation" : null
   }, {
     "id" : 8,
     "x" : 2,
     "y" : 2,
-    "name" : "G_2_2"
+    "name" : "G_2_2",
+    "busStation" : null,
+    "trainStation" : null
   } ] ],
   "numRows" : 3,
   "numCols" : 3,
@@ -54,80 +72,82 @@
         "id" : 8,
         "x" : 2,
         "y" : 2,
-        "name" : "G_2_2"
+        "name" : "G_2_2",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_2_2",
         "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 13, 0 ],
-        "arrivalTime" : [ 13, 14 ],
-        "price" : 8.04,
+        "departureTime" : [ 7, 45 ],
+        "arrivalTime" : [ 8, 9 ],
+        "price" : 14.59,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_2",
         "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 8, 45 ],
-        "arrivalTime" : [ 9, 1 ],
-        "price" : 13.9,
+        "departureTime" : [ 12, 30 ],
+        "arrivalTime" : [ 12, 52 ],
+        "price" : 17.3,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_2",
         "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 14, 0 ],
-        "arrivalTime" : [ 14, 12 ],
-        "price" : 5.69,
+        "departureTime" : [ 22, 0 ],
+        "arrivalTime" : [ 22, 16 ],
+        "price" : 13.35,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_2",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 12, 45 ],
-        "arrivalTime" : [ 15, 34 ],
-        "price" : 572.7,
-        "minTransferTime" : 1320.000000000
+        "departureTime" : [ 23, 0 ],
+        "arrivalTime" : [ 2, 0 ],
+        "price" : 620.79,
+        "minTransferTime" : 840.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_2",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 9, 15 ],
-        "arrivalTime" : [ 10, 51 ],
-        "price" : 824.31,
-        "minTransferTime" : 1560.000000000
+        "departureTime" : [ 14, 15 ],
+        "arrivalTime" : [ 15, 30 ],
+        "price" : 103.73,
+        "minTransferTime" : 780.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_2",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 2, 30 ],
-        "arrivalTime" : [ 3, 21 ],
-        "price" : 154.3,
-        "minTransferTime" : 420.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_2_2",
-        "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 16, 15 ],
-        "arrivalTime" : [ 17, 6 ],
-        "price" : 558.67,
-        "minTransferTime" : 420.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_2_2",
-        "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 21, 30 ],
-        "arrivalTime" : [ 0, 8 ],
-        "price" : 278.72,
-        "minTransferTime" : 1620.000000000
+        "departureTime" : [ 7, 30 ],
+        "arrivalTime" : [ 9, 8 ],
+        "price" : 769.36,
+        "minTransferTime" : 900.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_2",
         "arrivalStationId" : "Z_2_1",
         "departureTime" : [ 3, 0 ],
-        "arrivalTime" : [ 5, 40 ],
-        "price" : 174.74,
-        "minTransferTime" : 1500.000000000
+        "arrivalTime" : [ 5, 18 ],
+        "price" : 796.17,
+        "minTransferTime" : 1620.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_2_2",
+        "arrivalStationId" : "Z_2_1",
+        "departureTime" : [ 4, 45 ],
+        "arrivalTime" : [ 5, 16 ],
+        "price" : 794.85,
+        "minTransferTime" : 1680.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_2_2",
+        "arrivalStationId" : "Z_2_1",
+        "departureTime" : [ 22, 15 ],
+        "arrivalTime" : [ 0, 1 ],
+        "price" : 241.53,
+        "minTransferTime" : 1620.0
       } ]
     },
     "A_2_2" : {
@@ -136,80 +156,82 @@
         "id" : 8,
         "x" : 2,
         "y" : 2,
-        "name" : "G_2_2"
+        "name" : "G_2_2",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 16, 0 ],
-        "arrivalTime" : [ 16, 26 ],
-        "price" : 5.86,
+        "departureTime" : [ 22, 45 ],
+        "arrivalTime" : [ 23, 11 ],
+        "price" : 12.22,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 10, 30 ],
-        "arrivalTime" : [ 10, 49 ],
-        "price" : 14.11,
+        "departureTime" : [ 23, 15 ],
+        "arrivalTime" : [ 23, 38 ],
+        "price" : 7.46,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 20, 0 ],
-        "arrivalTime" : [ 20, 10 ],
-        "price" : 18.09,
+        "departureTime" : [ 3, 30 ],
+        "arrivalTime" : [ 3, 40 ],
+        "price" : 19.71,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "A_1_2",
         "departureTime" : [ 1, 30 ],
-        "arrivalTime" : [ 2, 42 ],
-        "price" : 454.67,
-        "minTransferTime" : 1440.000000000
+        "arrivalTime" : [ 2, 19 ],
+        "price" : 236.67,
+        "minTransferTime" : 720.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 5, 45 ],
-        "arrivalTime" : [ 6, 43 ],
-        "price" : 609.47,
-        "minTransferTime" : 660.000000000
+        "departureTime" : [ 3, 0 ],
+        "arrivalTime" : [ 3, 37 ],
+        "price" : 111.13,
+        "minTransferTime" : 1500.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 22, 30 ],
-        "arrivalTime" : [ 23, 4 ],
-        "price" : 874.39,
-        "minTransferTime" : 1500.000000000
+        "departureTime" : [ 19, 30 ],
+        "arrivalTime" : [ 20, 4 ],
+        "price" : 903.12,
+        "minTransferTime" : 1800.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 9, 45 ],
-        "arrivalTime" : [ 10, 31 ],
-        "price" : 328.64,
-        "minTransferTime" : 1680.000000000
+        "departureTime" : [ 15, 0 ],
+        "arrivalTime" : [ 16, 8 ],
+        "price" : 433.73,
+        "minTransferTime" : 1200.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 0, 15 ],
-        "arrivalTime" : [ 3, 3 ],
-        "price" : 425.7,
-        "minTransferTime" : 1140.000000000
+        "departureTime" : [ 12, 0 ],
+        "arrivalTime" : [ 13, 45 ],
+        "price" : 709.17,
+        "minTransferTime" : 1560.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_2",
         "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 7, 15 ],
-        "arrivalTime" : [ 8, 48 ],
-        "price" : 931.49,
-        "minTransferTime" : 1800.000000000
+        "departureTime" : [ 17, 15 ],
+        "arrivalTime" : [ 19, 17 ],
+        "price" : 366.28,
+        "minTransferTime" : 420.0
       } ]
     },
     "A_1_2" : {
@@ -218,104 +240,106 @@
         "id" : 5,
         "x" : 1,
         "y" : 2,
-        "name" : "G_1_2"
+        "name" : "G_1_2",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_1_2",
         "arrivalStationId" : "Z_1_2",
         "departureTime" : [ 4, 15 ],
-        "arrivalTime" : [ 4, 26 ],
-        "price" : 11.32,
+        "arrivalTime" : [ 4, 27 ],
+        "price" : 7.61,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_2",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 19, 15 ],
-        "arrivalTime" : [ 19, 26 ],
-        "price" : 10.31,
+        "departureTime" : [ 5, 15 ],
+        "arrivalTime" : [ 5, 30 ],
+        "price" : 5.58,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_2",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 9, 15 ],
-        "arrivalTime" : [ 9, 32 ],
-        "price" : 16.97,
+        "departureTime" : [ 22, 15 ],
+        "arrivalTime" : [ 22, 31 ],
+        "price" : 12.31,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_2",
         "arrivalStationId" : "A_0_2",
-        "departureTime" : [ 19, 30 ],
-        "arrivalTime" : [ 22, 22 ],
-        "price" : 509.29,
-        "minTransferTime" : 1380.000000000
+        "departureTime" : [ 21, 45 ],
+        "arrivalTime" : [ 0, 15 ],
+        "price" : 757.33,
+        "minTransferTime" : 360.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_2",
         "arrivalStationId" : "A_0_2",
-        "departureTime" : [ 17, 45 ],
-        "arrivalTime" : [ 18, 37 ],
-        "price" : 559.55,
-        "minTransferTime" : 1140.000000000
+        "departureTime" : [ 7, 30 ],
+        "arrivalTime" : [ 8, 25 ],
+        "price" : 295.18,
+        "minTransferTime" : 1320.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_2",
         "arrivalStationId" : "A_0_2",
+        "departureTime" : [ 5, 45 ],
+        "arrivalTime" : [ 7, 33 ],
+        "price" : 875.03,
+        "minTransferTime" : 900.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_2",
+        "arrivalStationId" : "A_2_2",
+        "departureTime" : [ 23, 45 ],
+        "arrivalTime" : [ 2, 12 ],
+        "price" : 438.45,
+        "minTransferTime" : 480.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_2",
+        "arrivalStationId" : "A_2_2",
+        "departureTime" : [ 1, 0 ],
+        "arrivalTime" : [ 3, 55 ],
+        "price" : 369.73,
+        "minTransferTime" : 1740.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_2",
+        "arrivalStationId" : "A_2_2",
+        "departureTime" : [ 8, 45 ],
+        "arrivalTime" : [ 9, 24 ],
+        "price" : 703.12,
+        "minTransferTime" : 360.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_2",
+        "arrivalStationId" : "A_1_1",
         "departureTime" : [ 1, 45 ],
-        "arrivalTime" : [ 3, 53 ],
-        "price" : 329.02,
-        "minTransferTime" : 480.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_2",
-        "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 10, 45 ],
-        "arrivalTime" : [ 13, 45 ],
-        "price" : 425.84,
-        "minTransferTime" : 780.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_2",
-        "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 6, 30 ],
-        "arrivalTime" : [ 7, 57 ],
-        "price" : 141.89,
-        "minTransferTime" : 1140.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_2",
-        "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 16, 0 ],
-        "arrivalTime" : [ 18, 55 ],
-        "price" : 817.13,
-        "minTransferTime" : 1200.000000000
+        "arrivalTime" : [ 3, 36 ],
+        "price" : 556.83,
+        "minTransferTime" : 1080.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_2",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 16, 0 ],
-        "arrivalTime" : [ 17, 31 ],
-        "price" : 767.18,
-        "minTransferTime" : 1440.000000000
+        "departureTime" : [ 23, 30 ],
+        "arrivalTime" : [ 2, 21 ],
+        "price" : 793.48,
+        "minTransferTime" : 360.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_2",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 10, 30 ],
-        "arrivalTime" : [ 11, 56 ],
-        "price" : 847.23,
-        "minTransferTime" : 540.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_2",
-        "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 2, 45 ],
-        "arrivalTime" : [ 3, 19 ],
-        "price" : 576.67,
-        "minTransferTime" : 540.000000000
+        "departureTime" : [ 0, 30 ],
+        "arrivalTime" : [ 2, 34 ],
+        "price" : 672.6,
+        "minTransferTime" : 420.0
       } ]
     },
     "A_2_1" : {
@@ -324,104 +348,106 @@
         "id" : 7,
         "x" : 2,
         "y" : 1,
-        "name" : "G_2_1"
+        "name" : "G_2_1",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_2_1",
         "arrivalStationId" : "Z_2_1",
         "departureTime" : [ 4, 15 ],
+        "arrivalTime" : [ 4, 26 ],
+        "price" : 16.05,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_2_1",
+        "arrivalStationId" : "Z_2_1",
+        "departureTime" : [ 23, 0 ],
+        "arrivalTime" : [ 23, 21 ],
+        "price" : 14.29,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_2_1",
+        "arrivalStationId" : "Z_2_1",
+        "departureTime" : [ 23, 15 ],
+        "arrivalTime" : [ 23, 38 ],
+        "price" : 13.74,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_2_1",
+        "arrivalStationId" : "A_1_1",
+        "departureTime" : [ 18, 15 ],
+        "arrivalTime" : [ 18, 59 ],
+        "price" : 857.81,
+        "minTransferTime" : 840.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_2_1",
+        "arrivalStationId" : "A_1_1",
+        "departureTime" : [ 16, 30 ],
+        "arrivalTime" : [ 17, 54 ],
+        "price" : 555.05,
+        "minTransferTime" : 1680.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_2_1",
+        "arrivalStationId" : "A_1_1",
+        "departureTime" : [ 8, 45 ],
+        "arrivalTime" : [ 9, 45 ],
+        "price" : 986.88,
+        "minTransferTime" : 1320.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_2_1",
+        "arrivalStationId" : "A_2_0",
+        "departureTime" : [ 3, 0 ],
         "arrivalTime" : [ 4, 28 ],
-        "price" : 6.98,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_2_1",
-        "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 5, 15 ],
-        "arrivalTime" : [ 5, 33 ],
-        "price" : 11.24,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_2_1",
-        "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 5, 15 ],
-        "arrivalTime" : [ 5, 44 ],
-        "price" : 18.81,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_2_1",
-        "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 3, 45 ],
-        "arrivalTime" : [ 4, 39 ],
-        "price" : 982.7,
-        "minTransferTime" : 1320.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_2_1",
-        "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 2, 30 ],
-        "arrivalTime" : [ 3, 19 ],
-        "price" : 736.91,
-        "minTransferTime" : 480.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_2_1",
-        "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 5, 30 ],
-        "arrivalTime" : [ 7, 46 ],
-        "price" : 596.35,
-        "minTransferTime" : 960.000000000
+        "price" : 535.65,
+        "minTransferTime" : 1200.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_1",
         "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 7, 30 ],
-        "arrivalTime" : [ 9, 7 ],
-        "price" : 727.82,
-        "minTransferTime" : 1560.000000000
+        "departureTime" : [ 10, 0 ],
+        "arrivalTime" : [ 11, 16 ],
+        "price" : 197.31,
+        "minTransferTime" : 1080.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_1",
         "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 12, 15 ],
-        "arrivalTime" : [ 13, 6 ],
-        "price" : 830.09,
-        "minTransferTime" : 1020.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_2_1",
-        "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 23, 30 ],
-        "arrivalTime" : [ 0, 51 ],
-        "price" : 404.41,
-        "minTransferTime" : 1140.000000000
+        "departureTime" : [ 6, 45 ],
+        "arrivalTime" : [ 7, 45 ],
+        "price" : 257.31,
+        "minTransferTime" : 780.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_1",
         "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 20, 15 ],
-        "arrivalTime" : [ 22, 4 ],
-        "price" : 849.78,
-        "minTransferTime" : 900.000000000
+        "departureTime" : [ 9, 45 ],
+        "arrivalTime" : [ 11, 22 ],
+        "price" : 124.15,
+        "minTransferTime" : 1020.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_1",
         "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 12, 45 ],
-        "arrivalTime" : [ 14, 33 ],
-        "price" : 766.98,
-        "minTransferTime" : 1320.000000000
+        "departureTime" : [ 13, 45 ],
+        "arrivalTime" : [ 14, 28 ],
+        "price" : 272.61,
+        "minTransferTime" : 1620.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_1",
         "arrivalStationId" : "A_2_2",
-        "departureTime" : [ 21, 45 ],
-        "arrivalTime" : [ 23, 53 ],
-        "price" : 318.09,
-        "minTransferTime" : 600.000000000
+        "departureTime" : [ 14, 30 ],
+        "arrivalTime" : [ 16, 46 ],
+        "price" : 690.66,
+        "minTransferTime" : 900.0
       } ]
     },
     "A_0_2" : {
@@ -430,80 +456,82 @@
         "id" : 2,
         "x" : 0,
         "y" : 2,
-        "name" : "G_0_2"
+        "name" : "G_0_2",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_0_2",
         "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 9, 30 ],
-        "arrivalTime" : [ 9, 55 ],
-        "price" : 8.5,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_0_2",
-        "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 2, 0 ],
-        "arrivalTime" : [ 2, 19 ],
-        "price" : 12.9,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_0_2",
-        "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 5, 0 ],
-        "arrivalTime" : [ 5, 24 ],
-        "price" : 7.97,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_0_2",
-        "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 13, 0 ],
-        "arrivalTime" : [ 14, 21 ],
-        "price" : 999.67,
-        "minTransferTime" : 1140.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_0_2",
-        "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 20, 30 ],
-        "arrivalTime" : [ 22, 7 ],
-        "price" : 536.82,
-        "minTransferTime" : 1260.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_0_2",
-        "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 9, 30 ],
-        "arrivalTime" : [ 10, 34 ],
-        "price" : 673.8,
-        "minTransferTime" : 1200.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_0_2",
-        "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 0, 15 ],
-        "arrivalTime" : [ 1, 37 ],
-        "price" : 554.63,
-        "minTransferTime" : 960.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_0_2",
-        "arrivalStationId" : "A_0_1",
         "departureTime" : [ 7, 45 ],
-        "arrivalTime" : [ 9, 14 ],
-        "price" : 686.83,
-        "minTransferTime" : 1440.000000000
+        "arrivalTime" : [ 8, 10 ],
+        "price" : 17.81,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_0_2",
+        "arrivalStationId" : "Z_0_2",
+        "departureTime" : [ 7, 30 ],
+        "arrivalTime" : [ 7, 59 ],
+        "price" : 16.69,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_0_2",
+        "arrivalStationId" : "Z_0_2",
+        "departureTime" : [ 22, 45 ],
+        "arrivalTime" : [ 23, 10 ],
+        "price" : 19.77,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_0_2",
+        "arrivalStationId" : "A_1_2",
+        "departureTime" : [ 13, 45 ],
+        "arrivalTime" : [ 16, 14 ],
+        "price" : 793.44,
+        "minTransferTime" : 1320.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_0_2",
+        "arrivalStationId" : "A_1_2",
+        "departureTime" : [ 19, 0 ],
+        "arrivalTime" : [ 21, 1 ],
+        "price" : 671.71,
+        "minTransferTime" : 780.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_0_2",
+        "arrivalStationId" : "A_1_2",
+        "departureTime" : [ 11, 45 ],
+        "arrivalTime" : [ 13, 29 ],
+        "price" : 839.64,
+        "minTransferTime" : 1260.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_2",
         "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 2, 30 ],
-        "arrivalTime" : [ 4, 57 ],
-        "price" : 881.81,
-        "minTransferTime" : 1560.000000000
+        "departureTime" : [ 17, 45 ],
+        "arrivalTime" : [ 19, 51 ],
+        "price" : 671.91,
+        "minTransferTime" : 1740.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_0_2",
+        "arrivalStationId" : "A_0_1",
+        "departureTime" : [ 12, 0 ],
+        "arrivalTime" : [ 14, 20 ],
+        "price" : 807.88,
+        "minTransferTime" : 900.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_0_2",
+        "arrivalStationId" : "A_0_1",
+        "departureTime" : [ 22, 30 ],
+        "arrivalTime" : [ 0, 19 ],
+        "price" : 607.08,
+        "minTransferTime" : 1260.0
       } ]
     },
     "A_1_1" : {
@@ -512,128 +540,130 @@
         "id" : 4,
         "x" : 1,
         "y" : 1,
-        "name" : "G_1_1"
+        "name" : "G_1_1",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_1_1",
         "arrivalStationId" : "Z_1_1",
+        "departureTime" : [ 7, 15 ],
+        "arrivalTime" : [ 7, 33 ],
+        "price" : 5.11,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "Z_1_1",
+        "departureTime" : [ 6, 45 ],
+        "arrivalTime" : [ 7, 11 ],
+        "price" : 18.32,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "Z_1_1",
+        "departureTime" : [ 18, 30 ],
+        "arrivalTime" : [ 18, 56 ],
+        "price" : 16.22,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_0_1",
+        "departureTime" : [ 9, 0 ],
+        "arrivalTime" : [ 10, 2 ],
+        "price" : 739.73,
+        "minTransferTime" : 300.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_0_1",
+        "departureTime" : [ 17, 0 ],
+        "arrivalTime" : [ 18, 57 ],
+        "price" : 935.07,
+        "minTransferTime" : 480.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_0_1",
+        "departureTime" : [ 22, 0 ],
+        "arrivalTime" : [ 22, 56 ],
+        "price" : 301.96,
+        "minTransferTime" : 1680.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_2_1",
+        "departureTime" : [ 20, 15 ],
+        "arrivalTime" : [ 20, 53 ],
+        "price" : 595.02,
+        "minTransferTime" : 1500.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_2_1",
+        "departureTime" : [ 10, 0 ],
+        "arrivalTime" : [ 12, 50 ],
+        "price" : 283.92,
+        "minTransferTime" : 900.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_2_1",
+        "departureTime" : [ 10, 30 ],
+        "arrivalTime" : [ 12, 5 ],
+        "price" : 467.4,
+        "minTransferTime" : 1740.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_1_0",
+        "departureTime" : [ 9, 45 ],
+        "arrivalTime" : [ 12, 40 ],
+        "price" : 796.92,
+        "minTransferTime" : 360.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_1_0",
+        "departureTime" : [ 15, 15 ],
+        "arrivalTime" : [ 16, 18 ],
+        "price" : 633.45,
+        "minTransferTime" : 360.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_1_0",
+        "departureTime" : [ 14, 45 ],
+        "arrivalTime" : [ 17, 4 ],
+        "price" : 398.94,
+        "minTransferTime" : 360.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_1_2",
+        "departureTime" : [ 21, 30 ],
+        "arrivalTime" : [ 23, 59 ],
+        "price" : 331.62,
+        "minTransferTime" : 1320.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_1_2",
+        "departureTime" : [ 1, 45 ],
+        "arrivalTime" : [ 4, 33 ],
+        "price" : 333.2,
+        "minTransferTime" : 300.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_1_1",
+        "arrivalStationId" : "A_1_2",
         "departureTime" : [ 21, 15 ],
-        "arrivalTime" : [ 21, 28 ],
-        "price" : 16.17,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 5, 15 ],
-        "arrivalTime" : [ 5, 30 ],
-        "price" : 10.0,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 11, 30 ],
-        "arrivalTime" : [ 11, 58 ],
-        "price" : 17.86,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 9, 0 ],
-        "arrivalTime" : [ 11, 27 ],
-        "price" : 757.45,
-        "minTransferTime" : 1680.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 2, 15 ],
-        "arrivalTime" : [ 3, 4 ],
-        "price" : 806.18,
-        "minTransferTime" : 720.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 2, 30 ],
-        "arrivalTime" : [ 3, 4 ],
-        "price" : 342.62,
-        "minTransferTime" : 1020.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 9, 0 ],
-        "arrivalTime" : [ 10, 26 ],
-        "price" : 943.29,
-        "minTransferTime" : 900.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 16, 45 ],
-        "arrivalTime" : [ 18, 0 ],
-        "price" : 555.89,
-        "minTransferTime" : 660.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 3, 15 ],
-        "arrivalTime" : [ 5, 34 ],
-        "price" : 191.11,
-        "minTransferTime" : 1440.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 18, 15 ],
-        "arrivalTime" : [ 21, 7 ],
-        "price" : 474.76,
-        "minTransferTime" : 720.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 8, 15 ],
-        "arrivalTime" : [ 9, 23 ],
-        "price" : 851.18,
-        "minTransferTime" : 1560.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 6, 15 ],
-        "arrivalTime" : [ 9, 13 ],
-        "price" : 309.45,
-        "minTransferTime" : 720.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 19, 0 ],
-        "arrivalTime" : [ 20, 40 ],
-        "price" : 266.22,
-        "minTransferTime" : 600.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 19, 0 ],
-        "arrivalTime" : [ 20, 24 ],
-        "price" : 995.68,
-        "minTransferTime" : 1320.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_1_1",
-        "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 16, 45 ],
-        "arrivalTime" : [ 18, 7 ],
-        "price" : 139.03,
-        "minTransferTime" : 1140.000000000
+        "arrivalTime" : [ 22, 14 ],
+        "price" : 919.45,
+        "minTransferTime" : 960.0
       } ]
     },
     "A_2_0" : {
@@ -642,80 +672,82 @@
         "id" : 6,
         "x" : 2,
         "y" : 0,
-        "name" : "G_2_0"
+        "name" : "G_2_0",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_2_0",
         "arrivalStationId" : "Z_2_0",
-        "departureTime" : [ 17, 15 ],
-        "arrivalTime" : [ 17, 28 ],
-        "price" : 12.46,
+        "departureTime" : [ 7, 15 ],
+        "arrivalTime" : [ 7, 27 ],
+        "price" : 7.35,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_0",
         "arrivalStationId" : "Z_2_0",
-        "departureTime" : [ 15, 0 ],
-        "arrivalTime" : [ 15, 21 ],
-        "price" : 9.52,
+        "departureTime" : [ 18, 15 ],
+        "arrivalTime" : [ 18, 39 ],
+        "price" : 7.92,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_0",
         "arrivalStationId" : "Z_2_0",
-        "departureTime" : [ 4, 0 ],
-        "arrivalTime" : [ 4, 20 ],
-        "price" : 8.27,
+        "departureTime" : [ 12, 15 ],
+        "arrivalTime" : [ 12, 29 ],
+        "price" : 6.69,
         "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_2_0",
-        "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 21, 30 ],
-        "arrivalTime" : [ 0, 12 ],
-        "price" : 494.32,
-        "minTransferTime" : 540.000000000
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_2_0",
-        "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 10, 15 ],
-        "arrivalTime" : [ 12, 39 ],
-        "price" : 769.86,
-        "minTransferTime" : 960.000000000
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_0",
         "arrivalStationId" : "A_1_0",
         "departureTime" : [ 9, 30 ],
-        "arrivalTime" : [ 11, 46 ],
-        "price" : 585.86,
-        "minTransferTime" : 1020.000000000
+        "arrivalTime" : [ 12, 6 ],
+        "price" : 551.89,
+        "minTransferTime" : 1560.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_0",
-        "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 11, 15 ],
-        "arrivalTime" : [ 13, 52 ],
-        "price" : 356.24,
-        "minTransferTime" : 1260.000000000
+        "arrivalStationId" : "A_1_0",
+        "departureTime" : [ 20, 45 ],
+        "arrivalTime" : [ 23, 10 ],
+        "price" : 199.58,
+        "minTransferTime" : 480.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_2_0",
+        "arrivalStationId" : "A_1_0",
+        "departureTime" : [ 20, 45 ],
+        "arrivalTime" : [ 21, 24 ],
+        "price" : 460.25,
+        "minTransferTime" : 1200.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_0",
         "arrivalStationId" : "A_2_1",
         "departureTime" : [ 23, 30 ],
-        "arrivalTime" : [ 1, 18 ],
-        "price" : 730.66,
-        "minTransferTime" : 900.000000000
+        "arrivalTime" : [ 0, 13 ],
+        "price" : 966.93,
+        "minTransferTime" : 840.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_2_0",
         "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 21, 0 ],
-        "arrivalTime" : [ 21, 55 ],
-        "price" : 888.5,
-        "minTransferTime" : 720.000000000
+        "departureTime" : [ 21, 45 ],
+        "arrivalTime" : [ 22, 42 ],
+        "price" : 651.97,
+        "minTransferTime" : 1440.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_2_0",
+        "arrivalStationId" : "A_2_1",
+        "departureTime" : [ 5, 15 ],
+        "arrivalTime" : [ 6, 16 ],
+        "price" : 483.67,
+        "minTransferTime" : 1320.0
       } ]
     },
     "A_0_1" : {
@@ -724,104 +756,106 @@
         "id" : 1,
         "x" : 0,
         "y" : 1,
-        "name" : "G_0_1"
+        "name" : "G_0_1",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "Z_0_1",
+        "departureTime" : [ 17, 0 ],
+        "arrivalTime" : [ 17, 13 ],
+        "price" : 6.43,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "autobus",
+        "departureStationId" : "A_0_1",
+        "arrivalStationId" : "Z_0_1",
         "departureTime" : [ 12, 45 ],
-        "arrivalTime" : [ 13, 14 ],
-        "price" : 9.15,
+        "arrivalTime" : [ 12, 55 ],
+        "price" : 5.12,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 6, 45 ],
-        "arrivalTime" : [ 6, 59 ],
-        "price" : 7.73,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "autobus",
-        "departureStationId" : "A_0_1",
-        "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 1, 45 ],
-        "arrivalTime" : [ 2, 9 ],
-        "price" : 14.06,
+        "departureTime" : [ 14, 30 ],
+        "arrivalTime" : [ 14, 57 ],
+        "price" : 6.45,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 12, 30 ],
-        "arrivalTime" : [ 13, 4 ],
-        "price" : 530.28,
-        "minTransferTime" : 420.000000000
+        "departureTime" : [ 16, 45 ],
+        "arrivalTime" : [ 19, 30 ],
+        "price" : 806.1,
+        "minTransferTime" : 480.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 18, 0 ],
-        "arrivalTime" : [ 20, 22 ],
-        "price" : 684.93,
-        "minTransferTime" : 480.000000000
+        "departureTime" : [ 18, 30 ],
+        "arrivalTime" : [ 20, 36 ],
+        "price" : 300.38,
+        "minTransferTime" : 480.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 3, 15 ],
-        "arrivalTime" : [ 5, 42 ],
-        "price" : 742.59,
-        "minTransferTime" : 360.000000000
+        "departureTime" : [ 12, 0 ],
+        "arrivalTime" : [ 14, 43 ],
+        "price" : 232.19,
+        "minTransferTime" : 660.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 12, 30 ],
-        "arrivalTime" : [ 13, 51 ],
-        "price" : 542.43,
-        "minTransferTime" : 360.000000000
+        "departureTime" : [ 23, 15 ],
+        "arrivalTime" : [ 0, 52 ],
+        "price" : 970.39,
+        "minTransferTime" : 660.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 2, 45 ],
-        "arrivalTime" : [ 3, 57 ],
-        "price" : 168.34,
-        "minTransferTime" : 1500.000000000
+        "departureTime" : [ 3, 30 ],
+        "arrivalTime" : [ 5, 12 ],
+        "price" : 925.04,
+        "minTransferTime" : 1080.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 17, 45 ],
-        "arrivalTime" : [ 20, 15 ],
-        "price" : 469.25,
-        "minTransferTime" : 960.000000000
+        "departureTime" : [ 22, 30 ],
+        "arrivalTime" : [ 0, 24 ],
+        "price" : 491.59,
+        "minTransferTime" : 420.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_0_2",
         "departureTime" : [ 18, 30 ],
-        "arrivalTime" : [ 19, 6 ],
-        "price" : 173.15,
-        "minTransferTime" : 1200.000000000
+        "arrivalTime" : [ 19, 3 ],
+        "price" : 114.61,
+        "minTransferTime" : 480.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_0_2",
-        "departureTime" : [ 15, 45 ],
-        "arrivalTime" : [ 17, 42 ],
-        "price" : 599.66,
-        "minTransferTime" : 660.000000000
+        "departureTime" : [ 2, 30 ],
+        "arrivalTime" : [ 5, 30 ],
+        "price" : 931.63,
+        "minTransferTime" : 1800.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_1",
         "arrivalStationId" : "A_0_2",
-        "departureTime" : [ 13, 0 ],
-        "arrivalTime" : [ 14, 33 ],
-        "price" : 652.21,
-        "minTransferTime" : 1560.000000000
+        "departureTime" : [ 22, 15 ],
+        "arrivalTime" : [ 0, 38 ],
+        "price" : 624.47,
+        "minTransferTime" : 1500.0
       } ]
     },
     "A_1_0" : {
@@ -830,104 +864,106 @@
         "id" : 3,
         "x" : 1,
         "y" : 0,
-        "name" : "G_1_0"
+        "name" : "G_1_0",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 2, 0 ],
-        "arrivalTime" : [ 2, 11 ],
-        "price" : 7.33,
+        "departureTime" : [ 23, 30 ],
+        "arrivalTime" : [ 23, 48 ],
+        "price" : 5.52,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 3, 30 ],
-        "arrivalTime" : [ 3, 46 ],
-        "price" : 14.01,
+        "departureTime" : [ 18, 0 ],
+        "arrivalTime" : [ 18, 11 ],
+        "price" : 6.89,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 8, 0 ],
-        "arrivalTime" : [ 8, 24 ],
-        "price" : 10.5,
+        "departureTime" : [ 5, 0 ],
+        "arrivalTime" : [ 5, 15 ],
+        "price" : 8.19,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 0, 30 ],
-        "arrivalTime" : [ 2, 5 ],
-        "price" : 773.72,
-        "minTransferTime" : 1500.000000000
+        "departureTime" : [ 7, 45 ],
+        "arrivalTime" : [ 8, 46 ],
+        "price" : 701.02,
+        "minTransferTime" : 540.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 11, 45 ],
-        "arrivalTime" : [ 13, 26 ],
-        "price" : 699.89,
-        "minTransferTime" : 660.000000000
+        "departureTime" : [ 15, 30 ],
+        "arrivalTime" : [ 17, 42 ],
+        "price" : 131.3,
+        "minTransferTime" : 900.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 12, 45 ],
-        "arrivalTime" : [ 14, 20 ],
-        "price" : 806.87,
-        "minTransferTime" : 480.000000000
+        "departureTime" : [ 10, 15 ],
+        "arrivalTime" : [ 11, 59 ],
+        "price" : 698.21,
+        "minTransferTime" : 540.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 6, 15 ],
-        "arrivalTime" : [ 7, 42 ],
-        "price" : 328.46,
-        "minTransferTime" : 780.000000000
+        "departureTime" : [ 10, 30 ],
+        "arrivalTime" : [ 13, 17 ],
+        "price" : 424.22,
+        "minTransferTime" : 600.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 5, 15 ],
-        "arrivalTime" : [ 5, 53 ],
-        "price" : 220.34,
-        "minTransferTime" : 1800.000000000
+        "departureTime" : [ 14, 15 ],
+        "arrivalTime" : [ 16, 28 ],
+        "price" : 762.08,
+        "minTransferTime" : 1020.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 21, 30 ],
-        "arrivalTime" : [ 22, 56 ],
-        "price" : 707.52,
-        "minTransferTime" : 840.000000000
+        "departureTime" : [ 23, 15 ],
+        "arrivalTime" : [ 1, 10 ],
+        "price" : 622.65,
+        "minTransferTime" : 360.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 0, 15 ],
-        "arrivalTime" : [ 2, 5 ],
-        "price" : 818.89,
-        "minTransferTime" : 780.000000000
+        "departureTime" : [ 13, 30 ],
+        "arrivalTime" : [ 14, 1 ],
+        "price" : 374.76,
+        "minTransferTime" : 660.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 9, 15 ],
-        "arrivalTime" : [ 11, 50 ],
-        "price" : 415.17,
-        "minTransferTime" : 780.000000000
+        "departureTime" : [ 11, 0 ],
+        "arrivalTime" : [ 13, 58 ],
+        "price" : 950.94,
+        "minTransferTime" : 720.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_1_0",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 1, 15 ],
-        "arrivalTime" : [ 2, 48 ],
-        "price" : 116.1,
-        "minTransferTime" : 1140.000000000
+        "departureTime" : [ 22, 30 ],
+        "arrivalTime" : [ 0, 45 ],
+        "price" : 968.83,
+        "minTransferTime" : 1020.0
       } ]
     },
     "A_0_0" : {
@@ -936,80 +972,82 @@
         "id" : 0,
         "x" : 0,
         "y" : 0,
-        "name" : "G_0_0"
+        "name" : "G_0_0",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "Z_0_0",
-        "departureTime" : [ 14, 45 ],
-        "arrivalTime" : [ 14, 58 ],
-        "price" : 18.83,
+        "departureTime" : [ 0, 15 ],
+        "arrivalTime" : [ 0, 31 ],
+        "price" : 13.27,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "Z_0_0",
-        "departureTime" : [ 14, 15 ],
-        "arrivalTime" : [ 14, 39 ],
-        "price" : 5.22,
+        "departureTime" : [ 18, 15 ],
+        "arrivalTime" : [ 18, 33 ],
+        "price" : 12.24,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "Z_0_0",
-        "departureTime" : [ 9, 15 ],
-        "arrivalTime" : [ 9, 30 ],
-        "price" : 10.54,
+        "departureTime" : [ 1, 45 ],
+        "arrivalTime" : [ 2, 5 ],
+        "price" : 14.92,
         "minTransferTime" : 0.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 21, 30 ],
-        "arrivalTime" : [ 23, 6 ],
-        "price" : 282.32,
-        "minTransferTime" : 1740.000000000
+        "departureTime" : [ 9, 0 ],
+        "arrivalTime" : [ 9, 39 ],
+        "price" : 720.69,
+        "minTransferTime" : 540.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 5, 15 ],
-        "arrivalTime" : [ 6, 40 ],
-        "price" : 944.06,
-        "minTransferTime" : 1320.000000000
+        "departureTime" : [ 0, 45 ],
+        "arrivalTime" : [ 2, 14 ],
+        "price" : 515.25,
+        "minTransferTime" : 1260.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 19, 15 ],
-        "arrivalTime" : [ 21, 24 ],
-        "price" : 294.79,
-        "minTransferTime" : 720.000000000
+        "departureTime" : [ 11, 45 ],
+        "arrivalTime" : [ 12, 50 ],
+        "price" : 453.09,
+        "minTransferTime" : 1020.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 13, 45 ],
-        "arrivalTime" : [ 14, 42 ],
-        "price" : 544.12,
-        "minTransferTime" : 1440.000000000
+        "departureTime" : [ 15, 15 ],
+        "arrivalTime" : [ 16, 9 ],
+        "price" : 366.73,
+        "minTransferTime" : 1140.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 5, 45 ],
-        "arrivalTime" : [ 7, 28 ],
-        "price" : 142.65,
-        "minTransferTime" : 1800.000000000
+        "departureTime" : [ 23, 0 ],
+        "arrivalTime" : [ 0, 57 ],
+        "price" : 974.95,
+        "minTransferTime" : 1560.0
       }, {
         "type" : "autobus",
         "departureStationId" : "A_0_0",
         "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 4, 45 ],
-        "arrivalTime" : [ 6, 50 ],
-        "price" : 698.55,
-        "minTransferTime" : 1620.000000000
+        "departureTime" : [ 5, 30 ],
+        "arrivalTime" : [ 6, 12 ],
+        "price" : 300.61,
+        "minTransferTime" : 840.0
       } ]
     },
     "Z_0_0" : {
@@ -1018,80 +1056,82 @@
         "id" : 0,
         "x" : 0,
         "y" : 0,
-        "name" : "G_0_0"
+        "name" : "G_0_0",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 19, 0 ],
-        "arrivalTime" : [ 19, 28 ],
-        "price" : 6.81,
+        "departureTime" : [ 5, 45 ],
+        "arrivalTime" : [ 5, 59 ],
+        "price" : 14.62,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 20, 30 ],
-        "arrivalTime" : [ 20, 54 ],
-        "price" : 6.24,
+        "departureTime" : [ 11, 30 ],
+        "arrivalTime" : [ 11, 53 ],
+        "price" : 17.06,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "A_0_0",
-        "departureTime" : [ 8, 30 ],
-        "arrivalTime" : [ 8, 42 ],
-        "price" : 5.93,
+        "departureTime" : [ 4, 30 ],
+        "arrivalTime" : [ 4, 57 ],
+        "price" : 11.15,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 14, 15 ],
-        "arrivalTime" : [ 16, 28 ],
-        "price" : 497.78,
-        "minTransferTime" : 720.000000000
+        "departureTime" : [ 15, 30 ],
+        "arrivalTime" : [ 16, 47 ],
+        "price" : 952.3,
+        "minTransferTime" : 1140.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 19, 15 ],
-        "arrivalTime" : [ 21, 59 ],
-        "price" : 735.41,
-        "minTransferTime" : 780.000000000
+        "departureTime" : [ 21, 45 ],
+        "arrivalTime" : [ 23, 42 ],
+        "price" : 889.48,
+        "minTransferTime" : 1020.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 7, 15 ],
-        "arrivalTime" : [ 8, 58 ],
-        "price" : 789.5,
-        "minTransferTime" : 420.000000000
+        "departureTime" : [ 0, 15 ],
+        "arrivalTime" : [ 2, 34 ],
+        "price" : 515.5,
+        "minTransferTime" : 1020.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 12, 45 ],
-        "arrivalTime" : [ 13, 32 ],
-        "price" : 692.71,
-        "minTransferTime" : 720.000000000
+        "departureTime" : [ 15, 45 ],
+        "arrivalTime" : [ 16, 36 ],
+        "price" : 888.0,
+        "minTransferTime" : 420.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 0, 45 ],
-        "arrivalTime" : [ 3, 7 ],
-        "price" : 342.82,
-        "minTransferTime" : 360.000000000
+        "departureTime" : [ 18, 45 ],
+        "arrivalTime" : [ 20, 40 ],
+        "price" : 498.19,
+        "minTransferTime" : 1560.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_0",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 3, 15 ],
-        "arrivalTime" : [ 4, 32 ],
-        "price" : 127.99,
-        "minTransferTime" : 1560.000000000
+        "departureTime" : [ 4, 30 ],
+        "arrivalTime" : [ 7, 10 ],
+        "price" : 968.26,
+        "minTransferTime" : 780.0
       } ]
     },
     "Z_0_1" : {
@@ -1100,104 +1140,106 @@
         "id" : 1,
         "x" : 0,
         "y" : 1,
-        "name" : "G_0_1"
+        "name" : "G_0_1",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_0_1",
         "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 17, 15 ],
-        "arrivalTime" : [ 17, 37 ],
-        "price" : 8.59,
+        "departureTime" : [ 13, 30 ],
+        "arrivalTime" : [ 13, 48 ],
+        "price" : 5.32,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_1",
         "arrivalStationId" : "A_0_1",
-        "departureTime" : [ 23, 15 ],
-        "arrivalTime" : [ 23, 30 ],
-        "price" : 11.16,
+        "departureTime" : [ 8, 45 ],
+        "arrivalTime" : [ 8, 57 ],
+        "price" : 10.68,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_1",
         "arrivalStationId" : "A_0_1",
+        "departureTime" : [ 5, 45 ],
+        "arrivalTime" : [ 6, 11 ],
+        "price" : 11.24,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_0_1",
+        "arrivalStationId" : "Z_1_1",
         "departureTime" : [ 7, 45 ],
-        "arrivalTime" : [ 8, 6 ],
-        "price" : 9.63,
-        "minTransferTime" : 0.0
+        "arrivalTime" : [ 10, 40 ],
+        "price" : 965.53,
+        "minTransferTime" : 780.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_1",
         "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 1, 30 ],
-        "arrivalTime" : [ 3, 53 ],
-        "price" : 988.17,
-        "minTransferTime" : 1560.000000000
+        "departureTime" : [ 16, 15 ],
+        "arrivalTime" : [ 17, 58 ],
+        "price" : 280.71,
+        "minTransferTime" : 1260.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_1",
         "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 3, 45 ],
-        "arrivalTime" : [ 5, 51 ],
-        "price" : 158.74,
-        "minTransferTime" : 1320.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_0_1",
-        "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 20, 45 ],
-        "arrivalTime" : [ 22, 6 ],
-        "price" : 582.1,
-        "minTransferTime" : 1620.000000000
+        "departureTime" : [ 7, 15 ],
+        "arrivalTime" : [ 9, 39 ],
+        "price" : 940.62,
+        "minTransferTime" : 360.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_1",
         "arrivalStationId" : "Z_0_0",
+        "departureTime" : [ 3, 0 ],
+        "arrivalTime" : [ 4, 47 ],
+        "price" : 762.35,
+        "minTransferTime" : 480.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_0_1",
+        "arrivalStationId" : "Z_0_0",
+        "departureTime" : [ 17, 0 ],
+        "arrivalTime" : [ 18, 59 ],
+        "price" : 549.51,
+        "minTransferTime" : 960.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_0_1",
+        "arrivalStationId" : "Z_0_0",
+        "departureTime" : [ 15, 0 ],
+        "arrivalTime" : [ 17, 43 ],
+        "price" : 365.56,
+        "minTransferTime" : 1380.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_0_1",
+        "arrivalStationId" : "Z_0_2",
         "departureTime" : [ 12, 0 ],
-        "arrivalTime" : [ 14, 12 ],
-        "price" : 696.54,
-        "minTransferTime" : 300.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_0_1",
-        "arrivalStationId" : "Z_0_0",
-        "departureTime" : [ 19, 0 ],
-        "arrivalTime" : [ 20, 37 ],
-        "price" : 784.28,
-        "minTransferTime" : 720.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_0_1",
-        "arrivalStationId" : "Z_0_0",
-        "departureTime" : [ 20, 45 ],
-        "arrivalTime" : [ 22, 32 ],
-        "price" : 489.25,
-        "minTransferTime" : 540.000000000
+        "arrivalTime" : [ 13, 49 ],
+        "price" : 473.59,
+        "minTransferTime" : 1380.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_1",
         "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 21, 30 ],
-        "arrivalTime" : [ 23, 6 ],
-        "price" : 977.85,
-        "minTransferTime" : 300.000000000
+        "departureTime" : [ 6, 0 ],
+        "arrivalTime" : [ 7, 29 ],
+        "price" : 375.0,
+        "minTransferTime" : 1560.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_1",
         "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 18, 30 ],
-        "arrivalTime" : [ 19, 21 ],
-        "price" : 231.26,
-        "minTransferTime" : 1800.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_0_1",
-        "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 21, 0 ],
-        "arrivalTime" : [ 22, 19 ],
-        "price" : 482.92,
-        "minTransferTime" : 1620.000000000
+        "departureTime" : [ 11, 30 ],
+        "arrivalTime" : [ 12, 23 ],
+        "price" : 240.04,
+        "minTransferTime" : 1680.0
       } ]
     },
     "Z_1_0" : {
@@ -1206,104 +1248,106 @@
         "id" : 3,
         "x" : 1,
         "y" : 0,
-        "name" : "G_1_0"
+        "name" : "G_1_0",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_1_0",
         "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 9, 0 ],
-        "arrivalTime" : [ 9, 19 ],
-        "price" : 9.53,
+        "departureTime" : [ 12, 0 ],
+        "arrivalTime" : [ 12, 21 ],
+        "price" : 11.23,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_0",
         "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 4, 0 ],
-        "arrivalTime" : [ 4, 20 ],
-        "price" : 12.66,
+        "departureTime" : [ 9, 30 ],
+        "arrivalTime" : [ 9, 57 ],
+        "price" : 9.89,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_0",
         "arrivalStationId" : "A_1_0",
-        "departureTime" : [ 10, 45 ],
-        "arrivalTime" : [ 11, 2 ],
-        "price" : 17.93,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_0",
-        "arrivalStationId" : "Z_0_0",
-        "departureTime" : [ 13, 15 ],
-        "arrivalTime" : [ 13, 47 ],
-        "price" : 873.11,
-        "minTransferTime" : 1740.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_0",
-        "arrivalStationId" : "Z_0_0",
-        "departureTime" : [ 16, 15 ],
-        "arrivalTime" : [ 19, 3 ],
-        "price" : 458.96,
-        "minTransferTime" : 480.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_0",
-        "arrivalStationId" : "Z_0_0",
-        "departureTime" : [ 2, 0 ],
-        "arrivalTime" : [ 3, 16 ],
-        "price" : 906.2,
-        "minTransferTime" : 840.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_0",
-        "arrivalStationId" : "Z_2_0",
-        "departureTime" : [ 5, 0 ],
-        "arrivalTime" : [ 5, 45 ],
-        "price" : 823.6,
-        "minTransferTime" : 1200.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_0",
-        "arrivalStationId" : "Z_2_0",
         "departureTime" : [ 8, 0 ],
-        "arrivalTime" : [ 8, 32 ],
-        "price" : 570.99,
-        "minTransferTime" : 1740.000000000
+        "arrivalTime" : [ 8, 19 ],
+        "price" : 13.11,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_0",
+        "arrivalStationId" : "Z_0_0",
+        "departureTime" : [ 22, 0 ],
+        "arrivalTime" : [ 23, 50 ],
+        "price" : 957.37,
+        "minTransferTime" : 660.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_0",
+        "arrivalStationId" : "Z_0_0",
+        "departureTime" : [ 17, 45 ],
+        "arrivalTime" : [ 20, 31 ],
+        "price" : 378.33,
+        "minTransferTime" : 540.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_0",
+        "arrivalStationId" : "Z_0_0",
+        "departureTime" : [ 11, 0 ],
+        "arrivalTime" : [ 13, 28 ],
+        "price" : 295.07,
+        "minTransferTime" : 1740.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_0",
         "arrivalStationId" : "Z_2_0",
-        "departureTime" : [ 14, 15 ],
-        "arrivalTime" : [ 15, 34 ],
-        "price" : 637.1,
-        "minTransferTime" : 600.000000000
+        "departureTime" : [ 1, 30 ],
+        "arrivalTime" : [ 4, 10 ],
+        "price" : 702.09,
+        "minTransferTime" : 1380.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_0",
+        "arrivalStationId" : "Z_2_0",
+        "departureTime" : [ 8, 15 ],
+        "arrivalTime" : [ 10, 0 ],
+        "price" : 131.76,
+        "minTransferTime" : 840.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_0",
+        "arrivalStationId" : "Z_2_0",
+        "departureTime" : [ 4, 15 ],
+        "arrivalTime" : [ 6, 24 ],
+        "price" : 924.12,
+        "minTransferTime" : 360.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_0",
         "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 13, 45 ],
-        "arrivalTime" : [ 15, 50 ],
-        "price" : 185.37,
-        "minTransferTime" : 780.000000000
+        "departureTime" : [ 20, 15 ],
+        "arrivalTime" : [ 21, 39 ],
+        "price" : 731.08,
+        "minTransferTime" : 1560.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_0",
         "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 10, 30 ],
-        "arrivalTime" : [ 12, 10 ],
-        "price" : 521.78,
-        "minTransferTime" : 1020.000000000
+        "departureTime" : [ 17, 15 ],
+        "arrivalTime" : [ 18, 21 ],
+        "price" : 400.28,
+        "minTransferTime" : 900.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_0",
         "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 23, 30 ],
-        "arrivalTime" : [ 1, 8 ],
-        "price" : 737.18,
-        "minTransferTime" : 720.000000000
+        "departureTime" : [ 2, 30 ],
+        "arrivalTime" : [ 4, 17 ],
+        "price" : 799.4,
+        "minTransferTime" : 540.0
       } ]
     },
     "Z_0_2" : {
@@ -1312,80 +1356,82 @@
         "id" : 2,
         "x" : 0,
         "y" : 2,
-        "name" : "G_0_2"
+        "name" : "G_0_2",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "A_0_2",
-        "departureTime" : [ 20, 45 ],
-        "arrivalTime" : [ 21, 10 ],
-        "price" : 19.69,
+        "departureTime" : [ 12, 15 ],
+        "arrivalTime" : [ 12, 42 ],
+        "price" : 17.4,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "A_0_2",
-        "departureTime" : [ 1, 45 ],
-        "arrivalTime" : [ 1, 56 ],
-        "price" : 14.1,
+        "departureTime" : [ 10, 0 ],
+        "arrivalTime" : [ 10, 18 ],
+        "price" : 14.69,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "A_0_2",
-        "departureTime" : [ 23, 15 ],
-        "arrivalTime" : [ 23, 29 ],
-        "price" : 7.46,
+        "departureTime" : [ 19, 15 ],
+        "arrivalTime" : [ 19, 35 ],
+        "price" : 15.81,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 10, 30 ],
-        "arrivalTime" : [ 12, 10 ],
-        "price" : 972.53,
-        "minTransferTime" : 600.000000000
+        "departureTime" : [ 17, 15 ],
+        "arrivalTime" : [ 19, 23 ],
+        "price" : 984.54,
+        "minTransferTime" : 420.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 19, 0 ],
-        "arrivalTime" : [ 20, 11 ],
-        "price" : 289.15,
-        "minTransferTime" : 480.000000000
+        "departureTime" : [ 15, 15 ],
+        "arrivalTime" : [ 16, 28 ],
+        "price" : 997.51,
+        "minTransferTime" : 1380.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 3, 15 ],
-        "arrivalTime" : [ 5, 55 ],
-        "price" : 305.37,
-        "minTransferTime" : 1380.000000000
+        "departureTime" : [ 18, 0 ],
+        "arrivalTime" : [ 19, 38 ],
+        "price" : 901.19,
+        "minTransferTime" : 1560.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 12, 0 ],
-        "arrivalTime" : [ 14, 16 ],
-        "price" : 757.44,
-        "minTransferTime" : 780.000000000
+        "departureTime" : [ 7, 45 ],
+        "arrivalTime" : [ 8, 26 ],
+        "price" : 779.39,
+        "minTransferTime" : 1740.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 0, 45 ],
-        "arrivalTime" : [ 3, 38 ],
-        "price" : 793.01,
-        "minTransferTime" : 1380.000000000
+        "departureTime" : [ 18, 30 ],
+        "arrivalTime" : [ 21, 13 ],
+        "price" : 328.71,
+        "minTransferTime" : 1320.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_0_2",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 20, 45 ],
-        "arrivalTime" : [ 22, 43 ],
-        "price" : 786.15,
-        "minTransferTime" : 1080.000000000
+        "departureTime" : [ 4, 30 ],
+        "arrivalTime" : [ 6, 53 ],
+        "price" : 306.24,
+        "minTransferTime" : 1020.0
       } ]
     },
     "Z_1_1" : {
@@ -1394,128 +1440,130 @@
         "id" : 4,
         "x" : 1,
         "y" : 1,
-        "name" : "G_1_1"
+        "name" : "G_1_1",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 0, 15 ],
-        "arrivalTime" : [ 0, 32 ],
-        "price" : 11.28,
+        "departureTime" : [ 2, 45 ],
+        "arrivalTime" : [ 3, 11 ],
+        "price" : 18.75,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 6, 30 ],
-        "arrivalTime" : [ 6, 54 ],
-        "price" : 10.99,
+        "departureTime" : [ 18, 45 ],
+        "arrivalTime" : [ 19, 14 ],
+        "price" : 16.02,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "A_1_1",
-        "departureTime" : [ 22, 30 ],
-        "arrivalTime" : [ 22, 44 ],
-        "price" : 13.97,
+        "departureTime" : [ 4, 0 ],
+        "arrivalTime" : [ 4, 24 ],
+        "price" : 18.77,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 17, 15 ],
-        "arrivalTime" : [ 17, 46 ],
-        "price" : 360.79,
-        "minTransferTime" : 480.000000000
+        "departureTime" : [ 21, 45 ],
+        "arrivalTime" : [ 22, 22 ],
+        "price" : 528.82,
+        "minTransferTime" : 1680.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 23, 0 ],
-        "arrivalTime" : [ 1, 42 ],
-        "price" : 983.71,
-        "minTransferTime" : 600.000000000
+        "departureTime" : [ 2, 0 ],
+        "arrivalTime" : [ 4, 12 ],
+        "price" : 663.55,
+        "minTransferTime" : 1380.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_0_1",
-        "departureTime" : [ 7, 0 ],
-        "arrivalTime" : [ 7, 45 ],
-        "price" : 746.79,
-        "minTransferTime" : 1200.000000000
+        "departureTime" : [ 12, 45 ],
+        "arrivalTime" : [ 14, 12 ],
+        "price" : 300.64,
+        "minTransferTime" : 900.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 5, 30 ],
-        "arrivalTime" : [ 6, 38 ],
-        "price" : 892.13,
-        "minTransferTime" : 1140.000000000
+        "departureTime" : [ 11, 0 ],
+        "arrivalTime" : [ 12, 16 ],
+        "price" : 641.35,
+        "minTransferTime" : 1260.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_2_1",
         "departureTime" : [ 0, 30 ],
-        "arrivalTime" : [ 1, 2 ],
-        "price" : 963.41,
-        "minTransferTime" : 1680.000000000
+        "arrivalTime" : [ 2, 46 ],
+        "price" : 139.43,
+        "minTransferTime" : 1020.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 17, 0 ],
-        "arrivalTime" : [ 17, 48 ],
-        "price" : 734.44,
-        "minTransferTime" : 480.000000000
+        "departureTime" : [ 13, 45 ],
+        "arrivalTime" : [ 15, 48 ],
+        "price" : 953.82,
+        "minTransferTime" : 840.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 15, 15 ],
+        "departureTime" : [ 18, 45 ],
+        "arrivalTime" : [ 20, 39 ],
+        "price" : 513.82,
+        "minTransferTime" : 840.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_1",
+        "arrivalStationId" : "Z_1_0",
+        "departureTime" : [ 17, 30 ],
         "arrivalTime" : [ 18, 12 ],
-        "price" : 285.72,
-        "minTransferTime" : 900.000000000
+        "price" : 222.49,
+        "minTransferTime" : 900.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 11, 30 ],
-        "arrivalTime" : [ 12, 53 ],
-        "price" : 300.58,
-        "minTransferTime" : 420.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_1",
-        "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 15, 30 ],
-        "arrivalTime" : [ 17, 59 ],
-        "price" : 565.42,
-        "minTransferTime" : 840.000000000
+        "departureTime" : [ 2, 45 ],
+        "arrivalTime" : [ 4, 37 ],
+        "price" : 236.45,
+        "minTransferTime" : 1620.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 8, 15 ],
-        "arrivalTime" : [ 11, 2 ],
-        "price" : 407.62,
-        "minTransferTime" : 900.000000000
+        "departureTime" : [ 9, 0 ],
+        "arrivalTime" : [ 11, 19 ],
+        "price" : 746.81,
+        "minTransferTime" : 1320.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 8, 30 ],
-        "arrivalTime" : [ 10, 13 ],
-        "price" : 447.34,
-        "minTransferTime" : 1740.000000000
+        "departureTime" : [ 23, 45 ],
+        "arrivalTime" : [ 1, 7 ],
+        "price" : 244.5,
+        "minTransferTime" : 1740.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_1_1",
         "arrivalStationId" : "Z_1_2",
-        "departureTime" : [ 11, 30 ],
-        "arrivalTime" : [ 13, 52 ],
-        "price" : 689.78,
-        "minTransferTime" : 1080.000000000
+        "departureTime" : [ 12, 45 ],
+        "arrivalTime" : [ 13, 36 ],
+        "price" : 215.79,
+        "minTransferTime" : 360.0
       } ]
     },
     "Z_2_0" : {
@@ -1524,80 +1572,82 @@
         "id" : 6,
         "x" : 2,
         "y" : 0,
-        "name" : "G_2_0"
+        "name" : "G_2_0",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 16, 15 ],
-        "arrivalTime" : [ 16, 34 ],
-        "price" : 17.18,
+        "departureTime" : [ 0, 45 ],
+        "arrivalTime" : [ 1, 13 ],
+        "price" : 19.04,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 10, 0 ],
-        "arrivalTime" : [ 10, 14 ],
-        "price" : 19.23,
+        "departureTime" : [ 17, 15 ],
+        "arrivalTime" : [ 17, 34 ],
+        "price" : 7.86,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "A_2_0",
-        "departureTime" : [ 6, 30 ],
-        "arrivalTime" : [ 6, 54 ],
-        "price" : 18.54,
+        "departureTime" : [ 15, 30 ],
+        "arrivalTime" : [ 15, 46 ],
+        "price" : 5.08,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 14, 0 ],
-        "arrivalTime" : [ 15, 44 ],
-        "price" : 775.19,
-        "minTransferTime" : 1320.000000000
+        "departureTime" : [ 23, 45 ],
+        "arrivalTime" : [ 0, 46 ],
+        "price" : 754.89,
+        "minTransferTime" : 1080.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 11, 45 ],
-        "arrivalTime" : [ 13, 0 ],
-        "price" : 525.03,
-        "minTransferTime" : 1800.000000000
+        "departureTime" : [ 2, 45 ],
+        "arrivalTime" : [ 4, 53 ],
+        "price" : 752.1,
+        "minTransferTime" : 1740.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "Z_1_0",
-        "departureTime" : [ 0, 15 ],
-        "arrivalTime" : [ 1, 55 ],
-        "price" : 276.28,
-        "minTransferTime" : 1800.000000000
+        "departureTime" : [ 6, 15 ],
+        "arrivalTime" : [ 8, 26 ],
+        "price" : 950.92,
+        "minTransferTime" : 1320.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 19, 0 ],
-        "arrivalTime" : [ 21, 45 ],
-        "price" : 768.03,
-        "minTransferTime" : 1740.000000000
+        "departureTime" : [ 21, 30 ],
+        "arrivalTime" : [ 22, 58 ],
+        "price" : 643.13,
+        "minTransferTime" : 1500.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 19, 0 ],
-        "arrivalTime" : [ 20, 36 ],
-        "price" : 281.2,
-        "minTransferTime" : 1560.000000000
+        "departureTime" : [ 20, 30 ],
+        "arrivalTime" : [ 22, 10 ],
+        "price" : 926.39,
+        "minTransferTime" : 840.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_0",
         "arrivalStationId" : "Z_2_1",
-        "departureTime" : [ 10, 45 ],
-        "arrivalTime" : [ 13, 39 ],
-        "price" : 649.21,
-        "minTransferTime" : 1500.000000000
+        "departureTime" : [ 4, 45 ],
+        "arrivalTime" : [ 7, 9 ],
+        "price" : 739.99,
+        "minTransferTime" : 1200.0
       } ]
     },
     "Z_1_2" : {
@@ -1606,104 +1656,106 @@
         "id" : 5,
         "x" : 1,
         "y" : 2,
-        "name" : "G_1_2"
+        "name" : "G_1_2",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_1_2",
         "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 22, 30 ],
-        "arrivalTime" : [ 22, 52 ],
-        "price" : 6.53,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 6, 0 ],
-        "arrivalTime" : [ 6, 19 ],
-        "price" : 13.71,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "A_1_2",
-        "departureTime" : [ 16, 15 ],
-        "arrivalTime" : [ 16, 44 ],
-        "price" : 6.74,
-        "minTransferTime" : 0.0
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 7, 30 ],
-        "arrivalTime" : [ 10, 18 ],
-        "price" : 905.38,
-        "minTransferTime" : 1140.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 15, 30 ],
-        "arrivalTime" : [ 16, 27 ],
-        "price" : 419.95,
-        "minTransferTime" : 1440.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_0_2",
-        "departureTime" : [ 2, 15 ],
-        "arrivalTime" : [ 4, 49 ],
-        "price" : 930.52,
-        "minTransferTime" : 420.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 17, 15 ],
-        "arrivalTime" : [ 18, 43 ],
-        "price" : 277.82,
-        "minTransferTime" : 1260.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 14, 45 ],
-        "arrivalTime" : [ 16, 28 ],
-        "price" : 118.67,
-        "minTransferTime" : 1500.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 13, 30 ],
-        "arrivalTime" : [ 16, 22 ],
-        "price" : 698.84,
-        "minTransferTime" : 840.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 17, 30 ],
-        "arrivalTime" : [ 18, 51 ],
-        "price" : 305.71,
-        "minTransferTime" : 300.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 19, 15 ],
-        "arrivalTime" : [ 20, 9 ],
-        "price" : 157.12,
-        "minTransferTime" : 720.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_1_2",
-        "arrivalStationId" : "Z_1_1",
         "departureTime" : [ 11, 45 ],
-        "arrivalTime" : [ 13, 34 ],
-        "price" : 535.22,
-        "minTransferTime" : 600.000000000
+        "arrivalTime" : [ 12, 7 ],
+        "price" : 7.64,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "A_1_2",
+        "departureTime" : [ 19, 0 ],
+        "arrivalTime" : [ 19, 25 ],
+        "price" : 16.42,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "A_1_2",
+        "departureTime" : [ 18, 0 ],
+        "arrivalTime" : [ 18, 26 ],
+        "price" : 7.65,
+        "minTransferTime" : 0.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_0_2",
+        "departureTime" : [ 3, 30 ],
+        "arrivalTime" : [ 5, 34 ],
+        "price" : 752.66,
+        "minTransferTime" : 1560.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_0_2",
+        "departureTime" : [ 22, 0 ],
+        "arrivalTime" : [ 23, 7 ],
+        "price" : 430.34,
+        "minTransferTime" : 480.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_0_2",
+        "departureTime" : [ 1, 15 ],
+        "arrivalTime" : [ 2, 11 ],
+        "price" : 289.97,
+        "minTransferTime" : 1560.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_2_2",
+        "departureTime" : [ 5, 45 ],
+        "arrivalTime" : [ 7, 18 ],
+        "price" : 770.12,
+        "minTransferTime" : 1380.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_2_2",
+        "departureTime" : [ 15, 30 ],
+        "arrivalTime" : [ 18, 23 ],
+        "price" : 349.97,
+        "minTransferTime" : 1140.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_2_2",
+        "departureTime" : [ 21, 15 ],
+        "arrivalTime" : [ 23, 40 ],
+        "price" : 495.19,
+        "minTransferTime" : 1080.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_1_1",
+        "departureTime" : [ 0, 30 ],
+        "arrivalTime" : [ 2, 42 ],
+        "price" : 635.3,
+        "minTransferTime" : 1620.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_1_1",
+        "departureTime" : [ 19, 30 ],
+        "arrivalTime" : [ 21, 42 ],
+        "price" : 927.27,
+        "minTransferTime" : 420.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_1_2",
+        "arrivalStationId" : "Z_1_1",
+        "departureTime" : [ 10, 15 ],
+        "arrivalTime" : [ 11, 40 ],
+        "price" : 847.03,
+        "minTransferTime" : 960.0
       } ]
     },
     "Z_2_1" : {
@@ -1712,104 +1764,106 @@
         "id" : 7,
         "x" : 2,
         "y" : 1,
-        "name" : "G_2_1"
+        "name" : "G_2_1",
+        "busStation" : null,
+        "trainStation" : null
       },
       "departures" : [ {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 23, 15 ],
-        "arrivalTime" : [ 23, 34 ],
-        "price" : 15.37,
+        "departureTime" : [ 10, 15 ],
+        "arrivalTime" : [ 10, 39 ],
+        "price" : 19.45,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 16, 45 ],
-        "arrivalTime" : [ 16, 58 ],
-        "price" : 5.92,
+        "departureTime" : [ 17, 45 ],
+        "arrivalTime" : [ 18, 13 ],
+        "price" : 7.24,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "A_2_1",
-        "departureTime" : [ 22, 30 ],
-        "arrivalTime" : [ 22, 48 ],
-        "price" : 13.34,
+        "departureTime" : [ 22, 45 ],
+        "arrivalTime" : [ 23, 4 ],
+        "price" : 7.19,
         "minTransferTime" : 0.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 15, 30 ],
-        "arrivalTime" : [ 16, 25 ],
-        "price" : 468.97,
-        "minTransferTime" : 1140.000000000
+        "departureTime" : [ 0, 45 ],
+        "arrivalTime" : [ 1, 35 ],
+        "price" : 830.51,
+        "minTransferTime" : 1140.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 1, 15 ],
-        "arrivalTime" : [ 4, 8 ],
-        "price" : 369.8,
-        "minTransferTime" : 420.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_2_1",
-        "arrivalStationId" : "Z_1_1",
-        "departureTime" : [ 9, 30 ],
-        "arrivalTime" : [ 11, 8 ],
-        "price" : 420.96,
-        "minTransferTime" : 420.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_2_1",
-        "arrivalStationId" : "Z_2_0",
-        "departureTime" : [ 18, 30 ],
-        "arrivalTime" : [ 20, 4 ],
-        "price" : 349.28,
-        "minTransferTime" : 1740.000000000
-      }, {
-        "type" : "voz",
-        "departureStationId" : "Z_2_1",
-        "arrivalStationId" : "Z_2_0",
         "departureTime" : [ 18, 15 ],
-        "arrivalTime" : [ 21, 4 ],
-        "price" : 882.89,
-        "minTransferTime" : 480.000000000
+        "arrivalTime" : [ 18, 47 ],
+        "price" : 278.78,
+        "minTransferTime" : 1500.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_2_1",
+        "arrivalStationId" : "Z_1_1",
+        "departureTime" : [ 19, 15 ],
+        "arrivalTime" : [ 21, 22 ],
+        "price" : 750.76,
+        "minTransferTime" : 1140.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "Z_2_0",
-        "departureTime" : [ 14, 15 ],
-        "arrivalTime" : [ 15, 33 ],
-        "price" : 774.95,
-        "minTransferTime" : 1680.000000000
+        "departureTime" : [ 0, 30 ],
+        "arrivalTime" : [ 1, 8 ],
+        "price" : 526.86,
+        "minTransferTime" : 1260.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_2_1",
+        "arrivalStationId" : "Z_2_0",
+        "departureTime" : [ 16, 30 ],
+        "arrivalTime" : [ 18, 35 ],
+        "price" : 120.97,
+        "minTransferTime" : 360.0
+      }, {
+        "type" : "voz",
+        "departureStationId" : "Z_2_1",
+        "arrivalStationId" : "Z_2_0",
+        "departureTime" : [ 12, 15 ],
+        "arrivalTime" : [ 13, 24 ],
+        "price" : 669.96,
+        "minTransferTime" : 360.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 14, 45 ],
-        "arrivalTime" : [ 16, 40 ],
-        "price" : 563.38,
-        "minTransferTime" : 1800.000000000
+        "departureTime" : [ 18, 30 ],
+        "arrivalTime" : [ 19, 56 ],
+        "price" : 550.45,
+        "minTransferTime" : 1560.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 6, 15 ],
-        "arrivalTime" : [ 8, 51 ],
-        "price" : 549.76,
-        "minTransferTime" : 1560.000000000
+        "departureTime" : [ 22, 30 ],
+        "arrivalTime" : [ 0, 45 ],
+        "price" : 961.52,
+        "minTransferTime" : 1140.0
       }, {
         "type" : "voz",
         "departureStationId" : "Z_2_1",
         "arrivalStationId" : "Z_2_2",
-        "departureTime" : [ 2, 45 ],
-        "arrivalTime" : [ 4, 16 ],
-        "price" : 445.17,
-        "minTransferTime" : 360.000000000
+        "departureTime" : [ 4, 30 ],
+        "arrivalTime" : [ 5, 19 ],
+        "price" : 546.55,
+        "minTransferTime" : 300.0
       } ]
     }
   }

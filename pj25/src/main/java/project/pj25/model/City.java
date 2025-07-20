@@ -7,6 +7,8 @@ public class City {
     private int x;  // Red u matrici
     private int y;  // Kolona u matrici
     private String name; // Možemo dodati ime, ili je ID dovoljan
+    private BusStation busStation;
+    private TrainStation trainStation;
 
     public City(int id, int x, int y) {
         this.id = id;
@@ -31,6 +33,26 @@ public class City {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BusStation getBusStation() {
+        return busStation;
+    }
+
+    public void setBusStation(BusStation busStation) {
+        this.busStation = busStation;
+    }
+
+    public TrainStation getTrainStation() {
+        return trainStation;
+    }
+
+    public void setTrainStation(TrainStation trainStation) {
+        this.trainStation = trainStation;
+    }
+
     // Opciono: Setteri ako je potrebno mijenjati atribute nakon kreiranja
     // public void setId(int id) { this.id = id; }
     // public void setX(int x) { this.x = x; }
@@ -44,6 +66,8 @@ public class City {
                 ", name='" + name + '\'' +
                 ", x=" + x +
                 ", y=" + y +
+                ", busStationId=" + (busStation != null ? busStation.getId() : "N/A") +
+                ", trainStationId=" + (trainStation != null ? trainStation.getId() : "N/A") +
                 '}';
     }
 

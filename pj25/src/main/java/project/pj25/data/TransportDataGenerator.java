@@ -3,7 +3,10 @@ package project.pj25.data;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import project.pj25.model.*; // Uvozimo sve iz model paketa
+import com.fasterxml.jackson.databind.module.SimpleModule; // Važan import!
+import project.pj25.model.*;
+import project.pj25.util.LocalTimeSerializer;
+import project.pj25.util.DurationSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,18 +32,33 @@ public class TransportDataGenerator {
     }
 
     public static void main(String[] args) {
-        // Kreira generator sa defaultnim dimenzijama
         TransportDataGenerator generator = new TransportDataGenerator(DEFAULT_SIZE_N, DEFAULT_SIZE_M);
         TransportMap transportMap = generator.generateData();
 
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule()); // Registrujemo modul za java.time objekte
+        mapper.registerModule(new JavaTimeModule()); // Registruj standardni modul za java.time
+        // (koristiće se za tipove koje mi ne override-ujemo)
+
+        // Registrujemo custom serializere koji će override-ovati defaultno ponašanje JavaTimeModule-a
+        // za LocalTime i Duration
+        SimpleModule customModule = new SimpleModule();
+        customModule.addSerializer(LocalTime.class, new LocalTimeSerializer());
+        customModule.addSerializer(Duration.class, new DurationSerializer());
+        mapper.registerModule(customModule); // Registruj custom modul
+
         mapper.enable(SerializationFeature.INDENT_OUTPUT); // Za ljepši ispis JSON-a
 
         try {
             // Serijalizacija TransportMap objekta direktno
             mapper.writeValue(new File("transport_data.json"), transportMap);
             System.out.println("Podaci su generisani i sacuvani kao transport_data.json");
+
+            // Opciono: Testiraj učitavanje podataka odmah nakon generisanja
+            System.out.println("\n--- Pokusavam da ucitam generisani JSON sa DataLoaderom ---");
+            // Uvjeri se da DataLoader.loadTransportData() metoda postoji i da je javno dostupna
+            project.pj25.data.DataLoader.loadTransportData("transport_data.json");
+            System.out.println("--- Ucitavanje zavrseno ---");
+
         } catch (IOException e) {
             System.err.println("Greska prilikom cuvanja podataka u JSON fajl: " + e.getMessage());
             e.printStackTrace();
@@ -74,22 +92,18 @@ public class TransportDataGenerator {
         }
 
         // 3. Generisanje polazaka
-        // Za svaku stanicu generišemo polaske ka susjednim gradovima i stanicama unutar istog grada
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < m; y++) {
                 City currentCity = transportMap.getCity(x, y);
                 BusStation currentBusStation = (BusStation) transportMap.getStation("A_" + x + "_" + y);
                 TrainStation currentTrainStation = (TrainStation) transportMap.getStation("Z_" + x + "_" + y);
 
-                // Polasci unutar istog grada (transferi između autobuskih i željezničkih stanica)
                 if (currentBusStation != null && currentTrainStation != null) {
-                    // Autobus -> Voz
                     for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
                         currentBusStation.addDeparture(generateDeparture(
                                 "autobus", currentBusStation.getId(), currentTrainStation.getId(), true
                         ));
                     }
-                    // Voz -> Autobus
                     for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
                         currentTrainStation.addDeparture(generateDeparture(
                                 "voz", currentTrainStation.getId(), currentBusStation.getId(), true
@@ -97,7 +111,6 @@ public class TransportDataGenerator {
                     }
                 }
 
-                // Polasci ka susjednim gradovima
                 List<City> neighborCities = getNeighborCities(x, y, transportMap);
                 for (City neighborCity : neighborCities) {
                     BusStation neighborBusStation = (BusStation) transportMap.getStation("A_" + neighborCity.getX() + "_" + neighborCity.getY());
@@ -123,27 +136,22 @@ public class TransportDataGenerator {
         return transportMap;
     }
 
-    // Generiše jedan polazak
+    // Metoda generateDeparture ostaje ista jer ona vraća Departure OBJEKAT,
+    // a Jackson serijalizator će se pobrinuti za formatiranje.
     private Departure generateDeparture(String type, String fromStationId, String toStationId, boolean isLocalTransfer) {
-        // Generisanje vremena polaska (svakih 15 minuta)
         int hour = random.nextInt(24);
         int minute = random.nextInt(4) * 15;
         LocalTime departureTime = LocalTime.of(hour, minute);
 
-        // Generisanje trajanja putovanja (duration)
-        // Lokalni transferi su kraći, dalji duži
         int durationMinutes = isLocalTransfer ? (10 + random.nextInt(20)) : (30 + random.nextInt(151));
         Duration duration = Duration.ofMinutes(durationMinutes);
 
-        // Generisanje vremena dolaska (može preći ponoć)
         LocalTime arrivalTime = departureTime.plus(duration);
 
-        // Generisanje cijene
         double price = isLocalTransfer ? (5.0 + random.nextDouble() * 15.0) : (100.0 + random.nextDouble() * 900.0);
-        price = Math.round(price * 100.0) / 100.0; // Zaokruživanje na dvije decimale
+        price = Math.round(price * 100.0) / 100.0;
 
-        // Generisanje minimalnog vremena čekanja za transfer
-        int minTransferMinutes = isLocalTransfer ? 0 : (5 + random.nextInt(26)); // Lokalni transferi obično nemaju čekanje
+        int minTransferMinutes = isLocalTransfer ? 0 : (5 + random.nextInt(26));
         Duration minTransferTime = Duration.ofMinutes(minTransferMinutes);
 
         return new Departure(type, fromStationId, toStationId, departureTime, arrivalTime, price, minTransferTime);

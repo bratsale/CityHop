@@ -1,3 +1,4 @@
+// TransportMap.java
 package project.pj25.model;
 
 import java.util.HashMap;
@@ -5,11 +6,16 @@ import java.util.Map;
 import java.util.Objects;
 
 public class TransportMap {
-    private City[][] cities; // Matrica gradova, n x m
-    private Map<String, Station> stations; // Mapa svih stanica, ključ je ID stanice (npr. "A_0_0")
-    private int numRows; // n
-    private int numCols; // m
+    private City[][] cities;
+    private Map<String, Station> stations;
+    private int numRows;
+    private int numCols;
 
+    public TransportMap() {
+        this.stations = new HashMap<>(); // Inicijalizuj mapu u no-arg konstruktoru
+    }
+
+    // Konstruktor koji prima dimenzije (može biti koristan za rucno inicijalizovanje)
     public TransportMap(int numRows, int numCols) {
         this.numRows = numRows;
         this.numCols = numCols;
@@ -17,11 +23,19 @@ public class TransportMap {
         this.stations = new HashMap<>();
     }
 
-    // Važno: Jackson će trebati no-arg konstruktor i settere za deserijalizaciju
-    public TransportMap() {
-        // Prazan konstruktor za Jackson
-    }
+    public City[][] getCities() { return cities; }
+    public void setCities(City[][] cities) { this.cities = cities; } // Setter za Jackson
 
+    public Map<String, Station> getAllStations() { return stations; }
+    public void setStations(Map<String, Station> stations) { this.stations = stations; } // Setter za Jackson (možda neće biti direktno popunjen)
+
+    public int getNumRows() { return numRows; }
+    public void setNumRows(int numRows) { this.numRows = numRows; } // Setter za Jackson
+
+    public int getNumCols() { return numCols; }
+    public void setNumCols(int numCols) { this.numCols = numCols; } // Setter za Jackson
+
+    // Pomoćne metode za dodavanje
     public void addCity(int x, int y, City city) {
         if (x >= 0 && x < numRows && y >= 0 && y < numCols) {
             this.cities[x][y] = city;
@@ -38,7 +52,7 @@ public class TransportMap {
     }
 
     public void addStation(Station station) {
-        if (station != null && station.getId() != null) {
+        if (station != null) {
             this.stations.put(station.getId(), station);
         }
     }
@@ -47,44 +61,13 @@ public class TransportMap {
         return this.stations.get(stationId);
     }
 
-    public City[][] getCities() {
-        return cities;
-    }
-
-    public Map<String, Station> getAllStations() { // Promijenjeno ime iz getStations da bude jasnije
-        return stations;
-    }
-
-    public int getNumRows() {
-        return numRows;
-    }
-
-    public int getNumCols() {
-        return numCols;
-    }
-
-    // --- Setteri (za Jackson) ---
-    // Jackson će možda koristiti ove settere ako ne koristi direktno konstruktor
-    public void setCities(City[][] cities) { this.cities = cities; }
-    public void setStations(Map<String, Station> stations) { this.stations = stations; } // Jackson će trebati ovo
-    public void setNumRows(int numRows) { this.numRows = numRows; }
-    public void setNumCols(int numCols) { this.numCols = numCols; }
-
-
     @Override
     public String toString() {
         return "TransportMap{" +
                 "numRows=" + numRows +
                 ", numCols=" + numCols +
-                ", totalCities=" + (cities != null ? cities.length * cities[0].length : 0) +
+                ", totalCities=" + (cities != null && cities.length > 0 ? cities.length * cities[0].length : 0) +
                 ", totalStations=" + stations.size() +
                 '}';
     }
-
-    // Ovde equals i hashCode mogu biti kompleksni zbog matrica i mapa.
-    // Za sada, neka bude jednostavna implementacija, ili se fokusirajte na logiku.
-    // @Override
-    // public boolean equals(Object o) { ... }
-    // @Override
-    // public int hashCode() { ... }
 }

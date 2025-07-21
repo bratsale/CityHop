@@ -35,7 +35,6 @@ public class TransportMap {
     public int getNumCols() { return numCols; }
     public void setNumCols(int numCols) { this.numCols = numCols; } // Setter za Jackson
 
-    // Pomoćne metode za dodavanje
     public void addCity(int x, int y, City city) {
         if (x >= 0 && x < numRows && y >= 0 && y < numCols) {
             this.cities[x][y] = city;

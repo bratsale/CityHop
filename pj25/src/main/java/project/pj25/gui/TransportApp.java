@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import project.pj25.model.*;
 import project.pj25.data.*;
 import project.pj25.util.*;
+import project.pj25.algorithm.*; // Dodaj import za RouteFinder
 
 import java.util.Comparator;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class TransportApp extends Application {
 
     private TransportMap transportMap; // Učitani podaci o mapi
+    private RouteFinder routeFinder;   // Instanca RouteFinder-a
     private ComboBox<City> startCityComboBox;
     private ComboBox<City> endCityComboBox;
     private ToggleGroup optimizationCriteriaGroup;
@@ -40,7 +42,6 @@ public class TransportApp extends Application {
 
         if (transportMap == null) {
             System.err.println("Greška prilikom učitavanja podataka. Aplikacija se neće pokrenuti.");
-            // Prikazati grešku korisniku
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Greška pri učitavanju");
             alert.setHeaderText("Nije moguće učitati transportne podatke.");
@@ -50,25 +51,24 @@ public class TransportApp extends Application {
         }
         System.out.println("Podaci uspešno učitani. Ukupan broj gradova: " + (transportMap.getNumRows() * transportMap.getNumCols()));
 
+        // Inicijalizacija RouteFinder-a nakon učitavanja transportMap
+        this.routeFinder = new RouteFinder(transportMap); // KLJUČNA IZMENA: Inicijalizacija RouteFinder-a
+
         // Konfiguracija GUI komponenti
-        // ComboBox za odabir početnog grada
         startCityComboBox = new ComboBox<>();
         startCityComboBox.setPromptText("Odaberi početni grad");
-        // Popuni ComboBox sa gradovima
         populateCityComboBox(startCityComboBox);
 
-        // ComboBox za odabir odredišnog grada
         endCityComboBox = new ComboBox<>();
         endCityComboBox.setPromptText("Odaberi odredišni grad");
         populateCityComboBox(endCityComboBox);
 
-        // RadioButtons za kriterijume optimizacije
         optimizationCriteriaGroup = new ToggleGroup();
 
         RadioButton timeRadio = new RadioButton("Najkraće vreme putovanja");
         timeRadio.setToggleGroup(optimizationCriteriaGroup);
         timeRadio.setUserData("time");
-        timeRadio.setSelected(true); // Podrazumevano odabran
+        timeRadio.setSelected(true);
 
         RadioButton priceRadio = new RadioButton("Najniža cena");
         priceRadio.setToggleGroup(optimizationCriteriaGroup);
@@ -82,11 +82,9 @@ public class TransportApp extends Application {
         criteriaBox.setPadding(new Insets(10));
         criteriaBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;");
 
-        // Dugme za pronalaženje rute
         findRouteButton = new Button("Pronađi rutu");
-        findRouteButton.setOnAction(e -> findOptimalRoute()); // Dodajemo akciju za dugme
+        findRouteButton.setOnAction(e -> findOptimalRoute());
 
-        // Layout za kontrole (ComboBoxes, RadioButtons, Button)
         VBox controlsLayout = new VBox(20);
         controlsLayout.setPadding(new Insets(20));
         controlsLayout.setAlignment(Pos.TOP_LEFT);
@@ -97,29 +95,22 @@ public class TransportApp extends Application {
                 findRouteButton
         );
 
-        // TextArea za prikaz rezultata
         resultTextArea = new TextArea();
         resultTextArea.setEditable(false);
         resultTextArea.setWrapText(true);
         resultTextArea.setPromptText("Optimalna ruta će biti prikazana ovde...");
 
-        // Glavni layout aplikacije
         BorderPane root = new BorderPane();
         root.setLeft(controlsLayout);
-        root.setCenter(resultTextArea); // Privremeno, ovde će kasnije biti mapa/vizualizacija
+        root.setCenter(resultTextArea);
 
-        Scene scene = new Scene(root, 800, 600); // Širina i visina prozora
+        Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    /**
-     * Popunjava ComboBox sa gradovima iz transportne mape.
-     * @param comboBox ComboBox koji treba popuniti.
-     */
     private void populateCityComboBox(ComboBox<City> comboBox) {
         if (transportMap != null && transportMap.getCities() != null) {
-            // Sakupljamo sve gradove u jednu listu
             List<City> allCities = new ArrayList<>();
             for (int i = 0; i < transportMap.getNumRows(); i++) {
                 for (int j = 0; j < transportMap.getNumCols(); j++) {
@@ -129,12 +120,10 @@ public class TransportApp extends Application {
                     }
                 }
             }
-            // Sortiramo gradove po imenu radi lakšeg pronalaženja
             allCities.sort(Comparator.comparing(City::getName));
 
             ObservableList<City> cityList = FXCollections.observableArrayList(allCities);
             comboBox.setItems(cityList);
-            // Postavljamo CellFactory da prikaže samo ime grada u ComboBoxu
             comboBox.setCellFactory(lv -> new ListCell<City>() {
                 @Override
                 protected void updateItem(City item, boolean empty) {
@@ -178,11 +167,15 @@ public class TransportApp extends Application {
         resultTextArea.setText("Tražim rutu od " + startCity.getName() + " do " + endCity.getName() +
                 " po kriterijumu: " + criteria + "...\n");
 
-        // OVDE ĆE DOĆI ALGORITAM ZA PRONALAŽENJE RUTE
-        // Za sada, samo placeholder poruka
-        resultTextArea.appendText("\nLogika za pronalaženje rute još uvek nije implementirana.");
-        resultTextArea.appendText("\nOdabrani gradovi: " + startCity.getName() + " -> " + endCity.getName());
-        resultTextArea.appendText("\nOdabrani kriterijum: " + criteria);
+        // KLJUČNA IZMENA: Pozivanje findBestRoute metode
+        Path bestRoute = routeFinder.findBestRoute(startCity, endCity, criteria);
+
+        if (bestRoute != null) {
+            resultTextArea.appendText("\nOptimalna ruta pronađena:\n");
+            resultTextArea.appendText(bestRoute.toString()); // Path klasa ima dobar toString() metod
+        } else {
+            resultTextArea.appendText("\nNije pronađena ruta od " + startCity.getName() + " do " + endCity.getName() + ".");
+        }
     }
 
     private void showAlert(String title, String message) {
@@ -194,6 +187,6 @@ public class TransportApp extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args); // Pokreće JavaFX aplikaciju
+        launch(args);
     }
 }

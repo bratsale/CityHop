@@ -14,9 +14,10 @@ module project.pj25 {
     requires com.fasterxml.jackson.annotation;
 
     // EXPORTS: Omogućava da tvoji paketi budu dostupni drugim modulima (npr. JavaFX-u za lansiranje)
-    exports project.pj25.gui; // OBRATITI PAŽNJU NA PROVJERU OVDJE
-    exports project.pj25.model; // Izvozi model paket
-    exports project.pj25.data;  // Izvozi data paket
+    exports project.pj25.gui; // OBRATITI PAŽNJU NA PROVJERU OVDJE ZA SVE PAKETE KOJE SE IZVOZE
+    exports project.pj25.model;
+    exports project.pj25.data;
+    exports project.pj25.algorithm;
     //exports project.pj25.graph; // Izvozi graph paket
     //exports project.pj25.util;  // Izvozi util paket
 

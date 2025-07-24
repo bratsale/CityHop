@@ -9,18 +9,26 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import project.pj25.model.*;
 import project.pj25.data.*;
 import project.pj25.util.*;
-import project.pj25.algorithm.*; // Dodaj import za RouteFinder
+import project.pj25.algorithm.*;
 
 import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+// importi za grafiku
+// NOVI IMPORTI ZA GRAFIKU
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext; // Iako se ne koristi direktno ovde, obično ide uz Canvas
+import javafx.scene.paint.Color; // Za boje (za kasniju upotrebu)
+import javafx.scene.text.Font; // Za tekst (za kasniju upotrebu)
 
 public class TransportApp extends Application {
 
@@ -31,6 +39,8 @@ public class TransportApp extends Application {
     private ToggleGroup optimizationCriteriaGroup;
     private Button findRouteButton;
     private TextArea resultTextArea; // Za prikaz rute
+    private Canvas mapCanvas;
+    private GraphRenderer graphRenderer;
 
     @Override
     public void start(Stage primaryStage) {
@@ -95,16 +105,32 @@ public class TransportApp extends Application {
                 findRouteButton
         );
 
+        mapCanvas = new Canvas(700, 600); // Početna veličina Canvasa
+
+        graphRenderer = new GraphRenderer(mapCanvas, transportMap);
+        graphRenderer.drawInitialMap();
+
         resultTextArea = new TextArea();
         resultTextArea.setEditable(false);
         resultTextArea.setWrapText(true);
         resultTextArea.setPromptText("Optimalna ruta će biti prikazana ovde...");
+        resultTextArea.setPrefHeight(200); // Povećao visinu na 200 (sa 150)
+        resultTextArea.setPrefWidth(550); // Možeš dodati i preferiranu širinu ako želiš da bude šira od canvasa
 
+        VBox mapAndResultsLayout = new VBox(10);
+        mapAndResultsLayout.setPadding(new Insets(10));
+        mapAndResultsLayout.getChildren().addAll(mapCanvas, resultTextArea);
+        VBox.setVgrow(mapCanvas, Priority.ALWAYS); // Dodaj ovu liniju
+// Postavi fiksnu visinu za TextArea
+        resultTextArea.setPrefHeight(200);
+
+// Glavni layout prozora
         BorderPane root = new BorderPane();
         root.setLeft(controlsLayout);
-        root.setCenter(resultTextArea);
+        root.setCenter(mapAndResultsLayout);
 
-        Scene scene = new Scene(root, 800, 600);
+// Povećaj veličinu prozora
+        Scene scene = new Scene(root, 1200, 800); // Povećao sam širinu na 1100, visinu na 750
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -112,9 +138,12 @@ public class TransportApp extends Application {
     private void populateCityComboBox(ComboBox<City> comboBox) {
         if (transportMap != null && transportMap.getCities() != null) {
             List<City> allCities = new ArrayList<>();
+            // Imaj na umu da transportMap.getCities() može vratiti mapu, ili dvodimenzionalni niz,
+            // proveri tačno kako je implementirano u tvom DataLoader-u.
+            // Ova petlja pretpostavlja da getCities vraća mapu ili da imaš getCity(row, col).
             for (int i = 0; i < transportMap.getNumRows(); i++) {
                 for (int j = 0; j < transportMap.getNumCols(); j++) {
-                    City city = transportMap.getCity(i, j);
+                    City city = transportMap.getCity(i, j); // Ako transportMap ima getCity(row, col)
                     if (city != null) {
                         allCities.add(city);
                     }
@@ -143,7 +172,6 @@ public class TransportApp extends Application {
 
     /**
      * Metoda koja se poziva kada korisnik klikne na "Pronađi rutu".
-     * Ovde će biti implementirana logika za pronalaženje rute.
      */
     private void findOptimalRoute() {
         City startCity = startCityComboBox.getSelectionModel().getSelectedItem();
@@ -167,14 +195,17 @@ public class TransportApp extends Application {
         resultTextArea.setText("Tražim rutu od " + startCity.getName() + " do " + endCity.getName() +
                 " po kriterijumu: " + criteria + "...\n");
 
-        // KLJUČNA IZMENA: Pozivanje findBestRoute metode
         Path bestRoute = routeFinder.findBestRoute(startCity, endCity, criteria);
 
         if (bestRoute != null) {
             resultTextArea.appendText("\nOptimalna ruta pronađena:\n");
-            resultTextArea.appendText(bestRoute.toString()); // Path klasa ima dobar toString() metod
+            resultTextArea.appendText(bestRoute.toString());
+            // Pozovi GraphRenderer da istakne pronađenu rutu
+            graphRenderer.highlightRoute(bestRoute);
         } else {
             resultTextArea.appendText("\nNije pronađena ruta od " + startCity.getName() + " do " + endCity.getName() + ".");
+            // Ako ruta nije pronađena, vrati mapu na početno stanje (bez isticanja)
+            graphRenderer.drawInitialMap();
         }
     }
 

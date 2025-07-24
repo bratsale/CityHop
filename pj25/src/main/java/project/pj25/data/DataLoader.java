@@ -58,6 +58,49 @@ public class DataLoader {
                 System.err.println("Upozorenje: Nije pronađen 'cities' deo u JSON-u. TransportMap neće biti potpuno inicijalizovan.");
             }
 
+            // --- NOVI KORAK 2.5: DODAVANJE TRANSFER VEZA IZMEĐU STANICA ISTOG GRADA ---
+            System.out.println("Dodajem transfer veze između autobuskih i železničkih stanica unutar istih gradova...");
+            int transferConnectionsAdded = 0;
+            for (int r = 0; r < numRows; r++) {
+                for (int c = 0; c < numCols; c++) {
+                    City currentCity = transportMap.getCity(r, c);
+                    if (currentCity != null) {
+                        Station busSt = transportMap.getStation("A_" + currentCity.getX() + "_" + currentCity.getY());
+                        Station trainSt = transportMap.getStation("Z_" + currentCity.getX() + "_" + currentCity.getY());
+
+                        if (busSt != null && trainSt != null) {
+                            // Transfer iz BusStation u TrainStation
+                            Departure busToTrainTransfer = new Departure(
+                                    "transfer", // Tip "transfer"
+                                    busSt.getId(),
+                                    trainSt.getId(),
+                                    LocalTime.MIDNIGHT, // Vreme polaska (nije bitno, jer je trajanje 0)
+                                    LocalTime.MIDNIGHT, // Vreme dolaska
+                                    0.0,                // Cena 0
+                                    Duration.ZERO       // Vreme trajanja 0, ali ovo se računa kao 1 presedanje
+                            );
+                            busSt.addDeparture(busToTrainTransfer);
+                            transferConnectionsAdded++;
+
+                            // Transfer iz TrainStation u BusStation
+                            Departure trainToBusTransfer = new Departure(
+                                    "transfer", // Tip "transfer"
+                                    trainSt.getId(),
+                                    busSt.getId(),
+                                    LocalTime.MIDNIGHT,
+                                    LocalTime.MIDNIGHT,
+                                    0.0,
+                                    Duration.ZERO
+                            );
+                            trainSt.addDeparture(trainToBusTransfer);
+                            transferConnectionsAdded++;
+                        }
+                    }
+                }
+            }
+            System.out.println("Ukupno dodato transfer veza: " + transferConnectionsAdded);
+            // --- KRAJ NOVOG KORAKA 2.5 ---
+
 
             // KORAK 3: Učitavanje svih polazaka i dodavanje postojećim stanicama
             // Sada kada je transportMap inicijalizovan i sadrži sve stanice, možemo dodavati polaske

@@ -73,6 +73,26 @@ public class RouteSegment {
         return endStation.getCity().getName();
     }
 
+    // geteri za table view
+
+    public String getDepartureType() {
+        return departure.getType();
+    }
+
+    public String getDepartureStationId() {
+        return departure.getDepartureStationId();
+    }
+
+    public String getArrivalStationId() {
+        return departure.getArrivalStationId();
+    }
+
+    public double getPrice() {
+        return departure.getPrice();
+    }
+
+
+
     // Možda i toString za lakši prikaz
     @Override
     public String toString() {

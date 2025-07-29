@@ -1,15 +1,15 @@
-package project.pj25.algorithm; // Proveri da li je ovo ispravan paket. Ako je model, trebalo bi biti project.pj25.model.
+package project.pj25.algorithm;
 
-import project.pj25.model.*; // Važno je da su ovi modeli dostupni
-import java.time.Duration; // Dodaj import za Duration
+import project.pj25.model.*;
+import java.time.Duration;
 import java.time.LocalTime;
 
 public class RouteSegment {
     private Departure departure;
-    private Station startStation; // Stvarna početna stanica polaska
-    private Station endStation;   // Stvarna krajnja stanica polaska
-    private LocalTime actualDepartureTime; // Stvarno vreme polaska (može biti kasnije od planiranog zbog transfera)
-    private LocalTime actualArrivalTime;   // Stvarno vreme dolaska
+    private Station startStation;
+    private Station endStation;
+    private LocalTime actualDepartureTime;
+    private LocalTime actualArrivalTime;
 
     public RouteSegment(Departure departure, Station startStation, Station endStation, LocalTime actualDepartureTime, LocalTime actualArrivalTime) {
         this.departure = departure;
@@ -49,7 +49,7 @@ public class RouteSegment {
         // Izračunaj trajanje između stvarnog vremena polaska i stvarnog vremena dolaska za ovaj segment
         Duration duration = Duration.between(actualDepartureTime, actualArrivalTime);
 
-        // Ako je vreme dolaska hronološki ranije od vremena polaska, to znači da segment prelazi preko ponoći
+        // Ako je vrijeme dolaska hronološki ranije od vremena polaska, to znači da segment prelazi preko ponoći
         if (duration.isNegative()) {
             // Dodaj 24 sata da bi se ispravno uračunalo prelaženje preko ponoći
             duration = duration.plusDays(1);
@@ -73,7 +73,7 @@ public class RouteSegment {
         return endStation.getCity().getName();
     }
 
-    // geteri za table view
+    // Geteri za table view
 
     public String getDepartureType() {
         return departure.getType();
@@ -93,15 +93,15 @@ public class RouteSegment {
 
 
 
-    // Možda i toString za lakši prikaz
+    // Možda nam sad i ne treba to string kako smo prešli na tabelarni prikaz al neka ga
     @Override
     public String toString() {
         // Koristimo getDepartureStationCityName() i getArrivalStationCityName()
         return String.format("%s: %s (%s) -> %s (%s) | Polazak: %s, Dolazak: %s, Cena: %.2f",
                 departure.getType(),
-                getDepartureStationCityName(), // Pozivamo novu metodu
+                getDepartureStationCityName(),
                 startStation.getId(),
-                getArrivalStationCityName(),   // Pozivamo novu metodu
+                getArrivalStationCityName(),
                 endStation.getId(),
                 actualDepartureTime,
                 actualArrivalTime,

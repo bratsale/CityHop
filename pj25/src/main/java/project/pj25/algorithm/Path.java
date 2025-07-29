@@ -1,27 +1,29 @@
 package project.pj25.algorithm; // Ili project.pj25.algorithm; ako si premestio Path tamo
 
-import project.pj25.model.*;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Path implements Comparable<Path> { // Path treba biti u project.pj25.model paketu!
+public class Path implements Comparable<Path> {
     private List<RouteSegment> segments;
-    private LocalTime startTime;      // Vreme polaska sa prve stanice
-    private LocalTime endTime;        // Vreme dolaska na poslednju stanicu (LocalTime)
+    private LocalTime startTime;
+    private LocalTime endTime;
     private double totalCost;
-    private int transfers;            // Broj presedanja
-    private Duration totalTravelTime; // Ukupno vreme putovanja od polaska do dolaska (akumulirano)
+    private int transfers;
+    private Duration totalTravelTime;
 
     public Path() {
         this.segments = new ArrayList<>();
         this.totalCost = 0.0;
         this.transfers = 0;
-        this.totalTravelTime = Duration.ZERO; // Inicijalizacija na nulu
+        this.totalTravelTime = Duration.ZERO;
+        // *** KLJUČNA IZMENA: INICIJALIZUJ startTime I endTime ***
+        this.startTime = LocalTime.MIDNIGHT; // Podrazumevano početno vreme za praznu putanju
+        this.endTime = LocalTime.MIDNIGHT;   // Podrazumevano završno vreme za praznu putanju
     }
 
-    // Konstruktor za kopiranje (korisno za Dijkstra, kada se gradi putanja)
+    // Konstruktor za kopiranje
     public Path(Path other) {
         this.segments = new ArrayList<>(other.segments);
         this.startTime = other.startTime;
@@ -41,7 +43,9 @@ public class Path implements Comparable<Path> { // Path treba biti u project.pj2
         // Ako je ovo prvi segment u putanji
         if (this.segments.isEmpty()) {
             this.startTime = segment.getActualDepartureTime(); // Početak putovanja je polazak prvog segmenta
-            this.totalTravelTime = segment.getSegmentDuration(); // Ukupno vreme je inicijalno samo trajanje prvog segmenta
+            // Za prvi segment, totalTravelTime je samo njegovo trajanje.
+            // Nema čekanja pre prvog segmenta.
+            this.totalTravelTime = segment.getSegmentDuration();
         } else {
             // Za svaki sledeći segment, izračunaj vreme čekanja
             LocalTime prevArrivalTime = this.endTime; // Vreme dolaska prethodnog segmenta
@@ -52,6 +56,9 @@ public class Path implements Comparable<Path> { // Path treba biti u project.pj2
 
             // Dodaj vreme čekanja i trajanje tekućeg segmenta na ukupno vreme putovanja
             this.totalTravelTime = this.totalTravelTime.plus(waitingDuration).plus(segment.getSegmentDuration());
+
+            // Broj presedanja se povećava za svaki novi segment nakon prvog
+            this.transfers++;
         }
 
         // Dodaj segment u listu
@@ -60,8 +67,12 @@ public class Path implements Comparable<Path> { // Path treba biti u project.pj2
         this.endTime = segment.getActualArrivalTime();
         // Ažuriraj ukupnu cenu
         this.totalCost += segment.getDeparture().getPrice();
-        // Broj presedanja je broj segmenata minus 1
-        this.transfers = segments.size() - 1;
+        // Važno: `transfers` se ažurira unutar if/else bloka, ne globalno `segments.size() - 1` ovde.
+        // Ako je iznad `transfers++`, onda je ovo ok.
+        // Ako je `segments.size() - 1` onda je to samo broj segmenata minus 1, što je isto ok.
+        // Bitno je da je definicija `transfers` konzistentna.
+        // Pošto si u konstruktoru inicijalizovao na 0, i u else grani dodaješ ++,
+        // onda je to ispravno.
     }
 
     /**
@@ -78,9 +89,7 @@ public class Path implements Comparable<Path> { // Path treba biti u project.pj2
 
         long waitingMinutes;
         if (currentDepartureMinutes < prevArrivalMinutes) {
-            // Ako je vreme polaska (npr. 07:00) manje od vremena dolaska (npr. 09:00),
-            // to znači da se polazak dešava sledećeg dana.
-            // Zato dodajemo 24 sata (1440 minuta) na vreme polaska da bismo ga uporedili na istoj vremenskoj osi.
+            // Ako je vreme polaska sledećeg dana (npr. dolazak 23:00, polazak 01:00)
             waitingMinutes = (currentDepartureMinutes + (24 * 60)) - prevArrivalMinutes;
         } else {
             // Polazak je istog dana ili kasnije istog dana
@@ -89,7 +98,7 @@ public class Path implements Comparable<Path> { // Path treba biti u project.pj2
         return Duration.ofMinutes(waitingMinutes);
     }
 
-    // --- Getteri (ovo je ostalo isto) ---
+    // --- Getteri ---
     public List<RouteSegment> getSegments() {
         return segments;
     }
@@ -117,9 +126,9 @@ public class Path implements Comparable<Path> { // Path treba biti u project.pj2
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("Ukupno vreme: %s, Ukupna cena: %.2f, Presedanja: %d\n",
+        sb.append(String.format("Ukupno vreme: %s, Ukupna cena: %.2f KM, Presedanja: %d\n", // Dodao KM ovde
                 formatDuration(totalTravelTime), totalCost, transfers));
-        for (int i = 0; i < segments.size(); i++) { // Dodao sam for petlju da bi ispisao čekanje
+        for (int i = 0; i < segments.size(); i++) {
             RouteSegment s = segments.get(i);
             sb.append("  ").append(s.getDeparture().getType())
                     .append(": ").append(s.getDeparture().getDepartureStationId())
@@ -128,9 +137,8 @@ public class Path implements Comparable<Path> { // Path treba biti u project.pj2
                     .append(" (grad ").append(s.getArrivalStationCityName()).append(")")
                     .append(" | Polazak: ").append(s.getActualDepartureTime())
                     .append(", Dolazak: ").append(s.getActualArrivalTime())
-                    .append(", Cena: ").append(String.format("%.2f", s.getDeparture().getPrice())).append("\n");
+                    .append(", Cena: ").append(String.format("%.2f KM", s.getDeparture().getPrice())).append("\n"); // Dodao KM ovde
             if (i < segments.size() - 1) {
-                // Dodaj informacije o čekanju između segmenata
                 LocalTime arrivalPrev = segments.get(i).getActualArrivalTime();
                 LocalTime departureNext = segments.get(i+1).getActualDepartureTime();
                 Duration wait = calculateWaitingDuration(arrivalPrev, departureNext);

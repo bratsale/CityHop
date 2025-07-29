@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Random;
 
 public class TransportDataGenerator {
-    private static final int DEFAULT_SIZE_N = 3; // Broj redova gradova
-    private static final int DEFAULT_SIZE_M = 3; // Broj kolona gradova
+    private static final int DEFAULT_SIZE_N = 5; // Broj redova gradova
+    private static final int DEFAULT_SIZE_M = 5; // Broj kolona gradova
     private static final int DEPARTURES_PER_STATION_TYPE_PER_DESTINATION = 3; // Broj polazaka po tipu stanice do odredišta
     private static final Random random = new Random();
 

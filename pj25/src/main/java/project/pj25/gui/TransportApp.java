@@ -1,4 +1,4 @@
-package project.pj25.gui; // PROVERI: ako je tvoj paket project.pj25.gui, onda je OK
+package project.pj25.gui;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -6,31 +6,28 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*; // Uključi sve kontrole
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox; // Verovatno ti ne treba ako je samo VBox
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+// Uklonjen import javafx.scene.layout.Priority; jer ga više ne koristimo
 import javafx.stage.Stage;
 
-import project.pj25.model.*; // Proveri pakete
+import project.pj25.model.*;
 import project.pj25.data.*;
 import project.pj25.util.*;
 import project.pj25.algorithm.*;
 
-import java.time.Duration; // DODAJ OVO
-import java.time.LocalTime; // DODAJ OVO
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// importi za grafiku
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import project.pj25.gui.TopRoutesDialog;
 
 public class TransportApp extends Application {
 
@@ -40,13 +37,15 @@ public class TransportApp extends Application {
     private ComboBox<City> endCityComboBox;
     private ToggleGroup optimizationCriteriaGroup;
     private Button findRouteButton;
-    // private TextArea resultTextArea; // <--- OVO UKLONI!
     private Canvas mapCanvas;
     private GraphRenderer graphRenderer;
 
-    // *** NOVE VARIJABLE ZA TABELARNI PRIKAZ ***
     private TableView<RouteSegment> routeDetailsTable;
     private Label bestRouteSummaryLabel;
+
+    private Button showAdditionalRoutesButton;
+    private Button buyBestRouteTicketButton;
+    private Path currentBestRoute;
 
     @Override
     public void start(Stage primaryStage) {
@@ -68,13 +67,15 @@ public class TransportApp extends Application {
 
         this.routeFinder = new RouteFinder(transportMap);
 
-        // ... (KOD ZA COMBOBOXES I RADIOBUTTONS JE ISTI) ...
+        // --- Kontrole za izbor grada i kriterijuma (LEVA STRANA) ---
         startCityComboBox = new ComboBox<>();
         startCityComboBox.setPromptText("Odaberi početni grad");
+        startCityComboBox.setMaxWidth(Double.MAX_VALUE); // Omogući da se ComboBox rastegne
         populateCityComboBox(startCityComboBox);
 
         endCityComboBox = new ComboBox<>();
         endCityComboBox.setPromptText("Odaberi odredišni grad");
+        endCityComboBox.setMaxWidth(Double.MAX_VALUE); // Omogući da se ComboBox rastegne
         populateCityComboBox(endCityComboBox);
 
         optimizationCriteriaGroup = new ToggleGroup();
@@ -95,8 +96,10 @@ public class TransportApp extends Application {
         VBox criteriaBox = new VBox(10, new Label("Kriterijum optimizacije:"), timeRadio, priceRadio, transfersRadio);
         criteriaBox.setPadding(new Insets(10));
         criteriaBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5;");
+        criteriaBox.setMaxWidth(Double.MAX_VALUE); // Omogući da se criteriaBox rastegne
 
         findRouteButton = new Button("Pronađi rutu");
+        findRouteButton.setMaxWidth(Double.MAX_VALUE); // Omogući dugmetu da se raširi
         findRouteButton.setOnAction(e -> findOptimalRoute());
 
         VBox controlsLayout = new VBox(20);
@@ -108,66 +111,128 @@ public class TransportApp extends Application {
                 criteriaBox,
                 findRouteButton
         );
+        controlsLayout.setPrefWidth(250); // Postavi preferiranu širinu
+        controlsLayout.setMaxWidth(300); // Postavi maksimalnu širinu da se ne rasteže previše
 
+        // --- Grafički prikaz mape (CENTAR) ---
         mapCanvas = new Canvas(700, 600); // Početna veličina Canvasa
         graphRenderer = new GraphRenderer(mapCanvas, transportMap);
         graphRenderer.drawInitialMap();
 
-        // *** NOVE LINIJE ZA TABELARNI PRIKAZ NA MESTU GDE JE BIO resultTextArea ***
+        BorderPane mapPane = new BorderPane();
+        mapPane.setCenter(mapCanvas);
+        // Oslanjamo se na bindProperty za skaliranje, bez Vgrow/Hgrow
+        mapCanvas.widthProperty().bind(mapPane.widthProperty());
+        mapCanvas.heightProperty().bind(mapPane.heightProperty());
+        mapPane.setPrefSize(700, 600); // Početna preferirana veličina
+
+        // --- Tabelarni prikaz najbolje rute i dugmad (ISPOD MAPE) ---
         bestRouteSummaryLabel = new Label("Najbolja ruta: N/A");
-        bestRouteSummaryLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.1em; -fx-padding: 5 0 5 0;"); // Dodaj stil
+        bestRouteSummaryLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.1em; -fx-padding: 5 0 5 0;");
+        bestRouteSummaryLabel.setAlignment(Pos.CENTER_LEFT);
 
         routeDetailsTable = new TableView<>();
         routeDetailsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         routeDetailsTable.setPlaceholder(new Label("Nema segmenata rute za prikaz."));
 
-        // Definisanje kolona
+        // Definisanje kolona (isto kao pre)
         TableColumn<RouteSegment, String> typeCol = new TableColumn<>("Tip");
         typeCol.setCellValueFactory(new PropertyValueFactory<>("departureType"));
+        typeCol.setPrefWidth(50);
 
         TableColumn<RouteSegment, String> fromCol = new TableColumn<>("Od (stanica)");
         fromCol.setCellValueFactory(new PropertyValueFactory<>("departureStationId"));
+        fromCol.setPrefWidth(80);
 
         TableColumn<RouteSegment, String> fromCityCol = new TableColumn<>("Od (grad)");
         fromCityCol.setCellValueFactory(new PropertyValueFactory<>("departureStationCityName"));
+        fromCityCol.setPrefWidth(80);
 
         TableColumn<RouteSegment, String> toCol = new TableColumn<>("Do (stanica)");
         toCol.setCellValueFactory(new PropertyValueFactory<>("arrivalStationId"));
+        toCol.setPrefWidth(80);
 
         TableColumn<RouteSegment, String> toCityCol = new TableColumn<>("Do (grad)");
         toCityCol.setCellValueFactory(new PropertyValueFactory<>("arrivalStationCityName"));
+        toCityCol.setPrefWidth(80);
 
         TableColumn<RouteSegment, LocalTime> depTimeCol = new TableColumn<>("Polazak");
         depTimeCol.setCellValueFactory(new PropertyValueFactory<>("actualDepartureTime"));
+        depTimeCol.setPrefWidth(70);
 
         TableColumn<RouteSegment, LocalTime> arrTimeCol = new TableColumn<>("Dolazak");
         arrTimeCol.setCellValueFactory(new PropertyValueFactory<>("actualArrivalTime"));
+        arrTimeCol.setPrefWidth(70);
 
         TableColumn<RouteSegment, Double> priceCol = new TableColumn<>("Cena");
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        priceCol.setPrefWidth(60);
 
-        // Dodavanje kolona u tabelu
         routeDetailsTable.getColumns().addAll(typeCol, fromCol, fromCityCol, toCol, toCityCol, depTimeCol, arrTimeCol, priceCol);
-        // Postavi preferiranu visinu tabele
-        routeDetailsTable.setPrefHeight(200); // Možeš prilagoditi ovu vrednost
+
+        routeDetailsTable.setPrefHeight(200); // Postavi preferiranu visinu tabele
+        routeDetailsTable.setMaxHeight(Double.MAX_VALUE); // Dozvoli joj da se rastegne vertikalno
+
+        // Dugmad
+        showAdditionalRoutesButton = new Button("Prikaži dodatne rute");
+        showAdditionalRoutesButton.setOnAction(e -> {
+            City start = startCityComboBox.getSelectionModel().getSelectedItem();
+            City end = endCityComboBox.getSelectionModel().getSelectedItem();
+            String criterion = getSelectedCriterion();
+
+            if (start != null && end != null && criterion != null) {
+                List<Path> topRoutes = routeFinder.findTopNRoutes(start, end, criterion, 5);
+                TopRoutesDialog dialog = new TopRoutesDialog(primaryStage, topRoutes, criterion);
+                dialog.show();
+            } else {
+                showAlert("Greška", "Molimo odaberite početni i krajnji grad, te kriterijum optimizacije pre prikaza dodatnih ruta.");
+            }
+        });
+
+        buyBestRouteTicketButton = new Button("Kupovina karte (za najbolju rutu)");
+        buyBestRouteTicketButton.setOnAction(e -> {
+            if (currentBestRoute != null) {
+                System.out.println("Kupujem kartu za najbolju rutu: " + currentBestRoute.toString());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Kupovina karte");
+                alert.setHeaderText("Karta uspešno kupljena!");
+                alert.setContentText("Račun za najbolju rutu je generisan. Detalji:\n" +
+                        String.format("Vreme: %s, Cena: %.2f KM, Presedanja: %d",
+                                formatDuration(currentBestRoute.getTotalTravelTime()),
+                                currentBestRoute.getTotalCost(),
+                                currentBestRoute.getTransfers()));
+                alert.showAndWait();
+            } else {
+                showAlert("Nema rute", "Molimo prvo pronađite rutu.");
+            }
+        });
+
+        HBox actionButtonsBox = new HBox(15);
+        actionButtonsBox.setAlignment(Pos.CENTER);
+        actionButtonsBox.setPadding(new Insets(10, 0, 0, 0));
+        actionButtonsBox.getChildren().addAll(showAdditionalRoutesButton, buyBestRouteTicketButton);
+        actionButtonsBox.setMaxWidth(Double.MAX_VALUE); // Omogući dugmadima da se rašire horizontalno
+
+        // Glavni layout za desnu stranu (mapa, tabela, dugmad)
+        VBox rightSideLayout = new VBox(10);
+        rightSideLayout.setPadding(new Insets(10));
+        rightSideLayout.getChildren().addAll(mapPane, bestRouteSummaryLabel, routeDetailsTable, actionButtonsBox);
+        rightSideLayout.setMaxWidth(Double.MAX_VALUE); // Omogući da se rastegne horizontalno
+        rightSideLayout.setMaxHeight(Double.MAX_VALUE); // Omogući da se rastegne vertikalno
+
 
         // Glavni layout prozora
-        VBox mapAndResultsLayout = new VBox(10);
-        mapAndResultsLayout.setPadding(new Insets(10));
-        // *** OVDE ZAMENJUJEŠ resultTextArea sa novim elementima ***
-        mapAndResultsLayout.getChildren().addAll(mapCanvas, bestRouteSummaryLabel, routeDetailsTable);
-        VBox.setVgrow(mapCanvas, Priority.ALWAYS);
-
         BorderPane root = new BorderPane();
         root.setLeft(controlsLayout);
-        root.setCenter(mapAndResultsLayout);
+        root.setCenter(rightSideLayout);
+        // Nema BorderPane.setHgrow/Vgrow ovde, BorderPane će sam rasporediti po zonama.
 
         Scene scene = new Scene(root, 1200, 800);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    // ... (populateCityComboBox metoda je ista) ...
+    // --- Pomoćne metode (iste kao pre) ---
     private void populateCityComboBox(ComboBox<City> comboBox) {
         if (transportMap != null && transportMap.getCities() != null) {
             List<City> allCities = new ArrayList<>();
@@ -200,53 +265,55 @@ public class TransportApp extends Application {
         }
     }
 
-    /**
-     * Metoda koja se poziva kada korisnik klikne na "Pronađi rutu".
-     */
     private void findOptimalRoute() {
         City startCity = startCityComboBox.getSelectionModel().getSelectedItem();
         City endCity = endCityComboBox.getSelectionModel().getSelectedItem();
-        String criteria = (optimizationCriteriaGroup.getSelectedToggle() != null) ?
-                (String) optimizationCriteriaGroup.getSelectedToggle().getUserData() : null;
+        String criteria = getSelectedCriterion();
 
         if (startCity == null || endCity == null) {
             showAlert("Greška pri odabiru", "Molimo odaberite i početni i odredišni grad.");
+            currentBestRoute = null;
+            showRouteDetails(null, criteria);
             return;
         }
         if (startCity.equals(endCity)) {
             showAlert("Greška pri odabiru", "Početni i odredišni grad moraju biti različiti.");
+            currentBestRoute = null;
+            showRouteDetails(null, criteria);
             return;
         }
         if (criteria == null) {
             showAlert("Greška pri odabiru", "Molimo odaberite kriterijum optimizacije.");
+            currentBestRoute = null;
+            showRouteDetails(null, criteria);
             return;
         }
 
-        // resultTextArea.setText("Tražim rutu od " + startCity.getName() + " do " + endCity.getName() + // <--- UKLONI OVO
-        //         " po kriterijumu: " + criteria + "...\n"); // <--- UKLONI OVO
         bestRouteSummaryLabel.setText("Tražim rutu od " + startCity.getName() + " do " + endCity.getName() +
-                " po kriterijumu: " + criteria + "..."); // Postavi inicijalni tekst pretrage
+                " po kriterijumu: " + formatCriterionNameForDisplay(criteria) + "...");
 
-        Path bestRoute = routeFinder.findBestRoute(startCity, endCity, criteria);
+        List<Path> bestRoutes = routeFinder.findTopNRoutes(startCity, endCity, criteria, 1);
+        Path bestRoute = null;
+        if (!bestRoutes.isEmpty()) {
+            bestRoute = bestRoutes.get(0);
+        }
 
-        showRouteDetails(bestRoute, criteria); // <--- POZIVI NOVU METODU OVDE
+        currentBestRoute = bestRoute;
+
+        showRouteDetails(bestRoute, criteria);
 
         if (bestRoute != null) {
-            // resultTextArea.appendText("\nOptimalna ruta pronađena:\n"); // <--- UKLONI OVO
-            // resultTextArea.appendText(bestRoute.toString()); // <--- UKLONI OVO
-            graphRenderer.highlightRoute(bestRoute); // I dalje istakni rutu na grafu
+            graphRenderer.highlightRoute(bestRoute);
         } else {
-            // resultTextArea.appendText("\nNije pronađena ruta od " + startCity.getName() + " do " + endCity.getName() + "."); // <--- UKLONI OVO
             graphRenderer.drawInitialMap();
         }
     }
 
-    // *** NOVA METODA ZA PRIKAZ DETALJA RUTE U TABELI ***
     private void showRouteDetails(Path path, String criterion) {
         if (path != null) {
             bestRouteSummaryLabel.setText(
-                    String.format("Najbolja ruta (%s): Vreme: %s, Cena: %.2f, Presedanja: %d",
-                            criterion.toLowerCase(),
+                    String.format("Najbolja ruta (%s): Vreme: %s, Cena: %.2f KM, Presedanja: %d",
+                            formatCriterionNameForDisplay(criterion),
                             formatDuration(path.getTotalTravelTime()),
                             path.getTotalCost(),
                             path.getTransfers()));
@@ -255,11 +322,10 @@ public class TransportApp extends Application {
             routeDetailsTable.setItems(segments);
         } else {
             bestRouteSummaryLabel.setText("Najbolja ruta: Nema pronađenih ruta.");
-            routeDetailsTable.setItems(FXCollections.emptyObservableList()); // Isprazni tabelu
+            routeDetailsTable.setItems(FXCollections.emptyObservableList());
         }
     }
 
-    // *** POMOĆNA METODA ZA FORMATIRANJE DURATION (kopiraj iz Path klase ako već nemaš) ***
     private String formatDuration(Duration duration) {
         long totalMinutes = duration.toMinutes();
         long hours = totalMinutes / 60;
@@ -267,6 +333,23 @@ public class TransportApp extends Application {
         return String.format("%dč %dmin", hours, minutes);
     }
 
+    private String getSelectedCriterion() {
+        Toggle selectedToggle = optimizationCriteriaGroup.getSelectedToggle();
+        if (selectedToggle != null) {
+            return (String) selectedToggle.getUserData();
+        }
+        return null;
+    }
+
+    private String formatCriterionNameForDisplay(String criterion) {
+        if (criterion == null) return "N/A";
+        switch (criterion.toLowerCase()) {
+            case "time": return "Najkraće vreme putovanja";
+            case "price": return "Najniža cena";
+            case "transfers": return "Najmanji broj presedanja";
+            default: return criterion;
+        }
+    }
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -276,7 +359,6 @@ public class TransportApp extends Application {
         alert.showAndWait();
     }
 
-    // ... (main metoda je ista) ...
     public static void main(String[] args) {
         launch(args);
     }

@@ -11,7 +11,7 @@ import project.pj25.model.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Random; // Nije više neophodan, ali može ostati
 import java.util.stream.Collectors;
 
 public class GraphRenderer {
@@ -20,252 +20,389 @@ public class GraphRenderer {
     private TransportMap transportMap;
 
     private Map<Station, Point2D> stationDisplayCoordinates;
+    private Map<City, CityGateways> cityGatewayCoordinates;
 
-    // Fiksne konstante za RELATIVNE bazne veličine
-    private static final double STATION_RADIUS_BASE = 5.0; // Bazni radijus stanice
-    private static final double CITY_BOX_PADDING_BASE = 20.0; // Bazni padding oko grada
-    private static final double CANVAS_MARGIN_BASE = 40.0; // Bazna margina od ivica Canvasa
-    private static final double STATION_OFFSET_MAGNITUDE_BASE = 40.0; // Bazni ofset stanica unutar grada
+    // Fiksne konstante - ove sada postaju VIŠE "odnosne" nego apsolutne veličine
+    private static final double STATION_RADIUS_RATIO = 0.03; // Udeo radijusa stanice u veličini gradske kutije
+    private static final double INTER_STATION_SPACING_RATIO = 0.15; // Udeo razmaka stanica u veličini gradske kutije
+    private static final double CANVAS_MARGIN_RATIO = 0.05; // Udeo margine u ukupnoj dimenziji Canvasa
+    private static final double CITY_BOX_DIM_BASE = 150.0; // Bazna dimenzija stranice "kvadrata" grada - REFERENTNA VREDNOST
 
     // Dinamički izračunati faktori i dimenzije
-    private double overallScaleFactor; // Glavni faktor skaliranja za ceo graf
+    private double overallScaleFactor; // Sada manje bitno, jer se dimenzije direktno računaju
     private double currentStationRadius;
-    private double currentCityBoxPadding;
+    private double currentCityBoxDim; // Dinamička dimenzija kutije grada
     private double currentCanvasMargin;
-    private double currentStationOffsetMagnitude; // Dinamički ofset stanica unutar grada
+    private double currentInterStationSpacingInCity;
 
-    // Razmaci između centara gradova
-    private double horzCitySpacing;
+    private double horzCitySpacing; // Stvarni razmak između centara gradova
     private double vertCitySpacing;
+
+    // Pomoćne klase za koordinate
+    private static class Point2D {
+        double x, y;
+        Point2D(double x, double y) { this.x = x; this.y = y; }
+    }
+
+    private static class CityGateways {
+        Point2D busGateway;
+        Point2D trainGateway;
+        Point2D cityCenter;
+
+        CityGateways(Point2D busGateway, Point2D trainGateway, Point2D cityCenter) {
+            this.busGateway = busGateway;
+            this.trainGateway = trainGateway;
+            this.cityCenter = cityCenter;
+        }
+    }
 
     public GraphRenderer(Canvas canvas, TransportMap transportMap) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
         this.transportMap = transportMap;
         this.stationDisplayCoordinates = new HashMap<>();
+        this.cityGatewayCoordinates = new HashMap<>();
 
-        // Inicijalizacija default vrednosti pre prve kalkulacije
+        // Inicijalizacija default vrednosti (ove će se odmah prepisati)
         this.overallScaleFactor = 1.0;
-        this.currentStationRadius = STATION_RADIUS_BASE;
-        this.currentCityBoxPadding = CITY_BOX_PADDING_BASE;
-        this.currentCanvasMargin = CANVAS_MARGIN_BASE;
-        this.currentStationOffsetMagnitude = STATION_OFFSET_MAGNITUDE_BASE;
+        this.currentStationRadius = 0; // Inicijalizacija na 0 jer će se izračunati
+        this.currentCityBoxDim = 0;
+        this.currentCanvasMargin = 0;
+        this.currentInterStationSpacingInCity = 0;
 
-        // Pridruži listenere za promenu veličine Canvasa
-        // Ovo je KLJUČNO! Kada se veličina canvasa promeni, preračunaj koordinate i ponovo nacrtaj.
         this.canvas.widthProperty().addListener((obs, oldVal, newVal) -> {
-            calculateStationDisplayCoordinates();
+            calculateAndLayoutGraph();
             drawInitialMap();
         });
         this.canvas.heightProperty().addListener((obs, oldVal, newVal) -> {
-            calculateStationDisplayCoordinates();
+            calculateAndLayoutGraph();
             drawInitialMap();
         });
 
-        // Početna kalkulacija
-        calculateStationDisplayCoordinates();
+        calculateAndLayoutGraph();
     }
 
-    private static class Point2D {
-        double x, y;
-        Point2D(double x, double y) { this.x = x; this.y = y; }
-    }
-
-    private void calculateStationDisplayCoordinates() {
+    private void calculateAndLayoutGraph() {
         stationDisplayCoordinates.clear();
+        cityGatewayCoordinates.clear();
 
         int numRows = transportMap.getNumRows();
         int numCols = transportMap.getNumCols();
 
-        // 1. Dinamičko izračunavanje razmaka i dimenzija
-        // Minimum je 1 za računanje razmaka, da se izbegne deljenje sa nulom
-        double effectiveNumCols = Math.max(1, numCols);
-        double effectiveNumRows = Math.max(1, numRows);
+        // Osnovne dimenzije Canvasa
+        double canvasWidth = canvas.getWidth();
+        double canvasHeight = canvas.getHeight();
 
-        // Bazne dimenzije koje bi zauzeo jedan "kvadrat" grada uključujući njegov padding i ofset stanica
-        double baseCitySquareSide = (STATION_OFFSET_MAGNITUDE_BASE * 2 + CITY_BOX_PADDING_BASE * 2);
+        // Izračunaj dinamičku marginu baziranu na dimenzijama Canvasa
+        currentCanvasMargin = Math.min(canvasWidth, canvasHeight) * CANVAS_MARGIN_RATIO;
 
-        // Ukupna širina/visina koju bi *sadržaj* (svi gradovi i njihove stanice) zauzeo
-        // kada bi se koristile bazne dimenzije bez ukupnog skaliranja
-        double contentWidthNeededBase = (effectiveNumCols * baseCitySquareSide) + (effectiveNumCols - 1) * 0; // Dodali smo 0, jer ćemo razmak izračunati kasnije
-        double contentHeightNeededBase = (effectiveNumRows * baseCitySquareSide) + (effectiveNumRows - 1) * 0;
+        // Dostupni prostor za mrežu gradova (Canvas minus margine)
+        double usableWidth = canvasWidth - (2 * currentCanvasMargin);
+        double usableHeight = canvasHeight - (2 * currentCanvasMargin);
 
-        // Dostupna širina/visina Canvasa umanjena za bazne margine
-        double availableWidth = canvas.getWidth() - (2 * CANVAS_MARGIN_BASE);
-        double availableHeight = canvas.getHeight() - (2 * CANVAS_MARGIN_BASE);
+        // Izračunaj optimalnu dimenziju jedne gradske kutije
+        // Ako je samo jedan grad, on zauzima ceo usableSpace
+        if (numCols == 0 || numRows == 0) { // Ne bi trebalo da se desi, ali za sigurnost
+            currentCityBoxDim = Math.min(usableWidth, usableHeight);
+            horzCitySpacing = currentCityBoxDim; // Nema razmaka, samo dimenzija
+            vertCitySpacing = currentCityBoxDim;
+        } else {
+            // Izračunaj maksimalnu dimenziju kutije po širini i visini
+            // (N-1) je broj "razmaka" između N gradova
+            // Pretpostavljamo da želimo da `currentCityBoxDim` bude jednaka i horizontalno i vertikalno
+            // `(numCols - 1)` * (razmak_izmedju_centara) + `currentCityBoxDim` = `usableWidth`
+            // `currentCityBoxDim` + `razmak_procenat_od_kutije` * `currentCityBoxDim`
+            // Pokušajmo da svaki grad + razmak bude isti "segment"
+            double segmentWidth = usableWidth / numCols;
+            double segmentHeight = usableHeight / numRows;
 
-        // Izračunaj faktore skaliranja na osnovu dostupnog i potrebnog prostora
-        // Ako je baseCitySquareSide 0 (npr. nema stanica, ali ne bi trebalo), postavi scale na 1
-        double scaleFactorX = (contentWidthNeededBase > 0) ? availableWidth / contentWidthNeededBase : 1.0;
-        double scaleFactorY = (contentHeightNeededBase > 0) ? availableHeight / contentHeightNeededBase : 1.0;
+            // Određujemo dimenziju kutije kao manju od ova dva segmenta
+            currentCityBoxDim = Math.min(segmentWidth, segmentHeight);
 
-        overallScaleFactor = Math.min(scaleFactorX, scaleFactorY);
+            // Prilagodite currentCityBoxDim da omogući i razmake.
+            // Npr., neka kutija zauzima 80% prostora segmenta, a 20% je razmak
+            currentCityBoxDim = currentCityBoxDim * 0.8; // Prilagodite ovaj faktor (npr. 0.7-0.9)
 
-        // Ograniči minimalni i maksimalni overallScaleFactor
-        overallScaleFactor = Math.max(overallScaleFactor, 0.2); // Npr. ne manje od 20% originalne veličine
-        overallScaleFactor = Math.min(overallScaleFactor, 1.5); // Npr. ne više od 150% originalne veličine
+            // Razmak između centara gradova će biti dimenzija segmenta
+            horzCitySpacing = usableWidth / numCols;
+            vertCitySpacing = usableHeight / numRows;
 
-        // Ažuriraj dinamičke dimenzije na osnovu overallScaleFactor
-        currentStationRadius = STATION_RADIUS_BASE * overallScaleFactor;
-        currentCityBoxPadding = CITY_BOX_PADDING_BASE * overallScaleFactor;
-        currentCanvasMargin = CANVAS_MARGIN_BASE * overallScaleFactor;
-        currentStationOffsetMagnitude = STATION_OFFSET_MAGNITUDE_BASE * overallScaleFactor;
-
-
-        // 2. Izračunaj dinamičke razmake između centara gradova (koji uključuju i veličinu grada)
-        // Ukupna širina/visina koju zauzima sadržaj nakon skaliranja
-        double scaledContentWidth = numCols * (currentStationOffsetMagnitude * 2 + currentCityBoxPadding * 2);
-        double scaledContentHeight = numRows * (currentStationOffsetMagnitude * 2 + currentCityBoxPadding * 2);
-
-        // Preostali prostor za distribuciju kao razmaka
-        double remainingWidthForSpacing = canvas.getWidth() - (2 * currentCanvasMargin) - scaledContentWidth;
-        double remainingHeightForSpacing = canvas.getHeight() - (2 * currentCanvasMargin) - scaledContentHeight;
-
-        // Podeli preostali prostor ravnomerno između gradova
-        horzCitySpacing = (numCols > 1) ? remainingWidthForSpacing / (numCols - 1) : 0;
-        vertCitySpacing = (numRows > 1) ? remainingHeightForSpacing / (numRows - 1) : 0;
-
-        // Osiguraj minimalni razmak (opciono, može pomoći da se gradovi ne spoje previše)
-        horzCitySpacing = Math.max(horzCitySpacing, currentCityBoxPadding / 2); // Minimalni razmak pola paddinga
-        vertCitySpacing = Math.max(vertCitySpacing, currentCityBoxPadding / 2);
+            // Ako je samo 1 grad, horz/vertCitySpacing treba da bude jednak currentCityBoxDim
+            if (numCols == 1) horzCitySpacing = currentCityBoxDim;
+            if (numRows == 1) vertCitySpacing = currentCityBoxDim;
+        }
 
 
-        // 3. Izračunaj koordinate za svaki grad i njegove stanice
-        Random rand = new Random(42); // Koristi fiksni seed za konzistentan raspored stanica
+        // Ažuriraj dinamičke dimenzije na osnovu izračunatog currentCityBoxDim
+        currentStationRadius = currentCityBoxDim * STATION_RADIUS_RATIO;
+        currentInterStationSpacingInCity = currentCityBoxDim * INTER_STATION_SPACING_RATIO;
 
+        // Podesi početnu X i Y poziciju da centriras mrežu gradova
+        // Totalna širina/visina koju graf stvarno zauzima (od početka prve kutije do kraja poslednje)
+        double actualGraphWidth = (numCols - 1) * horzCitySpacing + currentCityBoxDim;
+        double actualGraphHeight = (numRows - 1) * vertCitySpacing + currentCityBoxDim;
+
+        // Centriranje unutar raspoloživog prostora Canvasa
+        double startX = currentCanvasMargin + (usableWidth - actualGraphWidth) / 2;
+        double startY = currentCanvasMargin + (usableHeight - actualGraphHeight) / 2;
+
+
+        // Rasporedi gradove, stanice i kapije
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 City city = transportMap.getCity(i, j);
                 if (city != null) {
                     // Centralna tačka grada u skaliranom prostoru
-                    // Pozicija se izračunava na osnovu indeksa (i, j) i dinamičkih razmaka
-                    double cityCenterX = currentCanvasMargin + j * (currentStationOffsetMagnitude * 2 + currentCityBoxPadding * 2 + horzCitySpacing) + currentStationOffsetMagnitude + currentCityBoxPadding;
-                    double cityCenterY = currentCanvasMargin + i * (currentStationOffsetMagnitude * 2 + currentCityBoxPadding * 2 + vertCitySpacing) + currentStationOffsetMagnitude + currentCityBoxPadding;
+                    double cityCenterX = startX + j * horzCitySpacing + currentCityBoxDim / 2;
+                    double cityCenterY = startY + i * vertCitySpacing + currentCityBoxDim / 2;
+
+                    Point2D cityCenter = new Point2D(cityCenterX, cityCenterY);
+
+                    // Gornji levi ugao gradske kutije
+                    double cityBoxX = cityCenterX - currentCityBoxDim / 2;
+                    double cityBoxY = cityCenterY - currentCityBoxDim / 2;
+
+                    // Pozicije kapija (na ivicama gradskog okvira)
+                    Point2D busGateway = new Point2D(cityCenterX, cityBoxY); // Gornja ivica
+                    Point2D trainGateway = new Point2D(cityCenterX, cityBoxY + currentCityBoxDim); // Donja ivica
+
+                    cityGatewayCoordinates.put(city, new CityGateways(busGateway, trainGateway, cityCenter));
 
                     List<Station> stationsInCity = transportMap.getAllStations().values().stream()
                             .filter(s -> s.getCity().equals(city))
                             .collect(Collectors.toList());
 
-                    int numStations = stationsInCity.size();
-                    if (numStations > 0) {
-                        // Distribuiraj stanice u krug oko centra grada
-                        double angleStep = 2 * Math.PI / numStations;
-                        for (int k = 0; k < numStations; k++) {
-                            Station station = stationsInCity.get(k);
-                            double offsetX = currentStationOffsetMagnitude * Math.cos(k * angleStep);
-                            double offsetY = currentStationOffsetMagnitude * Math.sin(k * angleStep);
+                    List<BusStation> busStations = stationsInCity.stream()
+                            .filter(s -> s instanceof BusStation)
+                            .map(s -> (BusStation) s)
+                            .collect(Collectors.toList());
 
-                            stationDisplayCoordinates.put(station, new Point2D(cityCenterX + offsetX, cityCenterY + offsetY));
-                        }
+                    List<TrainStation> trainStations = stationsInCity.stream()
+                            .filter(s -> s instanceof TrainStation)
+                            .map(s -> (TrainStation) s)
+                            .collect(Collectors.toList());
+
+                    // Raspored autobuskih stanica (npr. gornji red, horizontalno centrirano)
+                    double busY = cityBoxY + currentInterStationSpacingInCity;
+                    double busStartX = cityCenterX - (busStations.size() - 1) * currentInterStationSpacingInCity / 2;
+                    if (busStartX < cityBoxX + currentStationRadius) { // Osiguraj da ne izađe iz kutije
+                        busStartX = cityBoxX + currentStationRadius;
+                    }
+
+                    for (int k = 0; k < busStations.size(); k++) {
+                        Station station = busStations.get(k);
+                        stationDisplayCoordinates.put(station, new Point2D(busStartX + k * currentInterStationSpacingInCity, busY));
+                    }
+
+                    // Raspored železničkih stanica (npr. donji red, horizontalno centrirano)
+                    double trainY = cityBoxY + currentCityBoxDim - currentInterStationSpacingInCity;
+                    double trainStartX = cityCenterX - (trainStations.size() - 1) * currentInterStationSpacingInCity / 2;
+                    if (trainStartX < cityBoxX + currentStationRadius) { // Osiguraj da ne izađe iz kutije
+                        trainStartX = cityBoxX + currentStationRadius;
+                    }
+
+                    for (int k = 0; k < trainStations.size(); k++) {
+                        Station station = trainStations.get(k);
+                        stationDisplayCoordinates.put(station, new Point2D(trainStartX + k * currentInterStationSpacingInCity, trainY));
                     }
                 }
             }
         }
     }
 
+
     public void drawInitialMap() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setLineWidth(1.0 * overallScaleFactor);
 
-        // Draw city boundaries
+        // 1. Crtanje gradskih okvira i labela
         for (int i = 0; i < transportMap.getNumRows(); i++) {
             for (int j = 0; j < transportMap.getNumCols(); j++) {
                 City city = transportMap.getCity(i, j);
                 if (city != null) {
-                    List<Station> stationsInCity = transportMap.getAllStations().values().stream()
-                            .filter(s -> s.getCity().equals(city))
-                            .collect(Collectors.toList());
+                    CityGateways gateways = cityGatewayCoordinates.get(city);
+                    if (gateways != null) {
+                        double cityBoxX = gateways.cityCenter.x - currentCityBoxDim / 2;
+                        double cityBoxY = gateways.cityCenter.y - currentCityBoxDim / 2;
 
-                    if (stationsInCity.isEmpty()) continue;
+                        gc.setStroke(Color.DARKGRAY);
+                        gc.strokeRect(cityBoxX, cityBoxY, currentCityBoxDim, currentCityBoxDim);
 
-                    double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE;
-                    double maxX = Double.MIN_VALUE, maxY = Double.MIN_VALUE;
-
-                    // Pronađi bounding box za stanice unutar grada
-                    for (Station station : stationsInCity) {
-                        Point2D p = stationDisplayCoordinates.get(station);
-                        if (p != null) {
-                            minX = Math.min(minX, p.x);
-                            minY = Math.min(minY, p.y);
-                            maxX = Math.max(maxX, p.x);
-                            maxY = Math.max(maxY, p.y);
-                        }
+                        gc.setFill(Color.BLACK);
+                        // Smanjivanje veličine fonta za imena gradova za bolju preglednost
+                        gc.setFont(new Font("Arial", 20 * (currentCityBoxDim / CITY_BOX_DIM_BASE))); // Faktor skale je sada vezan za kutiju
+                        gc.setTextAlign(TextAlignment.CENTER);
+                        // Pomeranje labela malo niže unutar kutije ako je to potrebno, ali za sad ostavljamo ovako
+                        gc.fillText(city.getName(), gateways.cityCenter.x, cityBoxY - 5 * (currentCityBoxDim / CITY_BOX_DIM_BASE));
                     }
-
-                    // Dodaj dinamički padding na okvir grada
-                    minX -= currentCityBoxPadding;
-                    minY -= currentCityBoxPadding;
-                    maxX += currentCityBoxPadding;
-                    maxY += currentCityBoxPadding;
-
-                    gc.setStroke(Color.DARKGRAY);
-                    gc.setLineWidth(1.0);
-                    gc.strokeRect(minX, minY, maxX - minX, maxY - minY);
-
-                    gc.setFill(Color.BLACK);
-                    gc.setFont(new Font("Arial", 12 * overallScaleFactor)); // Skaliraj font
-                    gc.setTextAlign(TextAlignment.CENTER);
-                    gc.fillText(city.getName(), minX + (maxX - minX) / 2, minY - 5 * overallScaleFactor); // Skaliraj i ofset teksta
                 }
             }
         }
 
-        // Draw all connections (lines between stations)
+        // 2. Crtanje međugradskih veza (između "kapija")
+        gc.setStroke(Color.LIGHTGRAY.darker());
+        gc.setLineWidth(1.5 * overallScaleFactor);
+
+        for (int i = 0; i < transportMap.getNumRows(); i++) {
+            for (int j = 0; j < transportMap.getNumCols(); j++) {
+                City currentCity = transportMap.getCity(i, j);
+                if (currentCity == null) continue;
+
+                CityGateways currentCityGateways = cityGatewayCoordinates.get(currentCity);
+                if (currentCityGateways == null) continue;
+
+                int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Gore, dole, levo, desno
+                for (int[] dir : directions) {
+                    int neighborX = i + dir[0];
+                    int neighborY = j + dir[1];
+
+                    if (neighborX >= 0 && neighborX < transportMap.getNumRows() &&
+                            neighborY >= 0 && neighborY < transportMap.getNumCols()) {
+
+                        City neighborCity = transportMap.getCity(neighborX, neighborY);
+                        if (neighborCity == null) continue;
+
+                        CityGateways neighborCityGateways = cityGatewayCoordinates.get(neighborCity);
+                        if (neighborCityGateways == null) continue;
+
+                        // Provera postojanja autobuske veze
+                        boolean hasBusConnection = transportMap.getAllStations().values().stream()
+                                .filter(s -> s instanceof BusStation && s.getCity().equals(currentCity))
+                                .anyMatch(s -> s.getDepartures().stream()
+                                        .anyMatch(d -> transportMap.getStation(d.getArrivalStationId()) != null &&
+                                                transportMap.getStation(d.getArrivalStationId()).getCity().equals(neighborCity) &&
+                                                d.getType().equals("autobus")));
+
+                        if (hasBusConnection) {
+                            gc.strokeLine(currentCityGateways.busGateway.x, currentCityGateways.busGateway.y,
+                                    neighborCityGateways.busGateway.x, neighborCityGateways.busGateway.y);
+                        }
+
+                        // Provera postojanja železničke veze
+                        boolean hasTrainConnection = transportMap.getAllStations().values().stream()
+                                .filter(s -> s instanceof TrainStation && s.getCity().equals(currentCity))
+                                .anyMatch(s -> s.getDepartures().stream()
+                                        .anyMatch(d -> transportMap.getStation(d.getArrivalStationId()) != null &&
+                                                transportMap.getStation(d.getArrivalStationId()).getCity().equals(neighborCity) &&
+                                                d.getType().equals("voz")));
+
+                        if (hasTrainConnection) {
+                            gc.strokeLine(currentCityGateways.trainGateway.x, currentCityGateways.trainGateway.y,
+                                    neighborCityGateways.trainGateway.x, neighborCityGateways.trainGateway.y);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3. Crtanje unutar-gradskih transfer linija
         gc.setStroke(Color.LIGHTGRAY);
-        gc.setLineWidth(1.0 * overallScaleFactor); // Skaliraj debljinu linija
+        gc.setLineWidth(0.8 * overallScaleFactor);
         for (Station station : transportMap.getAllStations().values()) {
             Point2D startPoint = stationDisplayCoordinates.get(station);
             if (startPoint == null) continue;
 
-            for (Departure departure : station.getDepartures()) {
-                Station endStation = transportMap.getStation(departure.getArrivalStationId());
-                if (endStation == null) {
-                    System.err.println("Upozorenje: Polazak sa ID-jem dolazne stanice " + departure.getArrivalStationId() + " ne vodi nigde.");
-                    continue;
-                }
-                Point2D endPoint = stationDisplayCoordinates.get(endStation);
-                if (endPoint == null) continue;
-
-                gc.strokeLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
-            }
+            station.getDepartures().stream()
+                    .filter(d -> transportMap.getStation(d.getArrivalStationId()) != null)
+                    .map(d -> transportMap.getStation(d.getArrivalStationId()))
+                    .filter(endStation -> endStation.getCity().equals(station.getCity()))
+                    .forEach(endStation -> {
+                        Point2D endPoint = stationDisplayCoordinates.get(endStation);
+                        if (endPoint != null) {
+                            gc.strokeLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+                        }
+                    });
         }
 
-        // Draw all stations (nodes)
+        // 4. Crtanje svih stanica (čvorova)
         for (Station station : transportMap.getAllStations().values()) {
             Point2D p = stationDisplayCoordinates.get(station);
             if (p == null) continue;
 
-            gc.setFill(Color.BLUE);
+            if (station instanceof BusStation) {
+                gc.setFill(Color.ORANGE);
+            } else if (station instanceof TrainStation) {
+                gc.setFill(Color.PURPLE);
+            } else {
+                gc.setFill(Color.BLUE);
+            }
+
             gc.fillOval(p.x - currentStationRadius, p.y - currentStationRadius, 2 * currentStationRadius, 2 * currentStationRadius);
             gc.setStroke(Color.DARKBLUE);
-            gc.setLineWidth(1.0 * overallScaleFactor); // Skaliraj debljinu okvira
+            gc.setLineWidth(1.0 * overallScaleFactor);
             gc.strokeOval(p.x - currentStationRadius, p.y - currentStationRadius, 2 * currentStationRadius, 2 * currentStationRadius);
 
-            gc.setFill(Color.BLACK);
-            gc.setFont(new Font("Arial", 10 * overallScaleFactor)); // Skaliraj font stanice
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText(station.getId(), p.x, p.y + currentStationRadius + 10 * overallScaleFactor);
+            // NE CRTAMO station.getId() na drawInitialMap() da smanjimo pretrpanost.
+            // ID-evi će biti prikazani samo kada je ruta istaknuta.
         }
     }
 
+    // Ukloni @Override ako GraphRenderer ne implementira interfejs
+    // ili ne proširuje klasu koja deklariše highlightRoute metodu.
+    // Ako postoji interfejs, npr. MapRenderer, onda dodaj 'implements MapRenderer'
+    // na deklaraciju klase GraphRenderer.
+    // @Override
     public void highlightRoute(Path route) {
-        drawInitialMap(); // Clear and redraw base map
+        // Ponovo nacrtaj početnu mapu bez ID-eva stanica
+        drawInitialMap();
 
-        gc.setStroke(Color.RED);
-        gc.setLineWidth(3.0 * overallScaleFactor); // Skaliraj debljinu highlight linije
+        gc.setLineWidth(3.0 * overallScaleFactor);
 
-        for (RouteSegment segment : route.getSegments()) {
+        Color intercityColor = Color.RED;
+        Color intraCityColor = Color.ORANGE;
+
+        for (int i = 0; i < route.getSegments().size(); i++) {
+            RouteSegment segment = route.getSegments().get(i);
             Station startStation = segment.getStartStation();
             Station endStation = segment.getEndStation();
 
-            Point2D startPoint = stationDisplayCoordinates.get(startStation);
-            Point2D endPoint = stationDisplayCoordinates.get(endStation);
+            City startCity = startStation.getCity();
+            City endCity = endStation.getCity();
 
-            if (startPoint != null && endPoint != null) {
-                gc.strokeLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+            Point2D actualStartPoint = stationDisplayCoordinates.get(startStation);
+            Point2D actualEndPoint = stationDisplayCoordinates.get(endStation);
+
+            if (actualStartPoint == null || actualEndPoint == null) {
+                System.err.println("Upozorenje: Koordinate za stanicu " + startStation.getId() + " ili " + endStation.getId() + " nisu pronađene prilikom highlighta rute.");
+                continue;
+            }
+
+            if (startCity.equals(endCity)) {
+                gc.setStroke(intraCityColor);
+                gc.strokeLine(actualStartPoint.x, actualStartPoint.y, actualEndPoint.x, actualEndPoint.y);
+            } else {
+                CityGateways currentCityGateways = cityGatewayCoordinates.get(startCity);
+                CityGateways nextCityGateways = cityGatewayCoordinates.get(endCity);
+
+                if (currentCityGateways != null && nextCityGateways != null) {
+                    Point2D segmentStartPointForDrawing = null;
+                    Point2D segmentEndPointForDrawing = null;
+
+                    if (segment.getDeparture() != null) {
+                        String departureType = segment.getDeparture().getType();
+
+                        if (departureType.equals("autobus")) {
+                            segmentStartPointForDrawing = currentCityGateways.busGateway;
+                            segmentEndPointForDrawing = nextCityGateways.busGateway;
+                        } else if (departureType.equals("voz")) {
+                            segmentStartPointForDrawing = currentCityGateways.trainGateway;
+                            segmentEndPointForDrawing = nextCityGateways.trainGateway;
+                        }
+                    }
+
+                    if (segmentStartPointForDrawing != null && segmentEndPointForDrawing != null) {
+                        gc.setStroke(intercityColor);
+                        gc.strokeLine(segmentStartPointForDrawing.x, segmentStartPointForDrawing.y, segmentEndPointForDrawing.x, segmentEndPointForDrawing.y);
+                    } else {
+                        System.err.println("Upozorenje: Nije moguće dobiti tip polaska ili koordinate kapija za segment rute: " + startStation.getId() + " -> " + endStation.getId());
+                    }
+                } else {
+                    System.err.println("Upozorenje: Koordinate kapija grada " + startCity.getName() + " ili " + endCity.getName() + " nisu pronađene prilikom highlighta rute.");
+                }
             }
         }
 
-        // Re-draw stations (and their labels) on top, highlighting path stations
+        // Ponovno crtanje svih stanica, ali ovoga puta sa isticanjem i prikazom ID-a za stanice na ruti
         for (Station station : transportMap.getAllStations().values()) {
             Point2D p = stationDisplayCoordinates.get(station);
             if (p == null) continue;
@@ -274,16 +411,30 @@ public class GraphRenderer {
                     s.getStartStation().equals(station) || s.getEndStation().equals(station)
             );
 
-            gc.setFill(isOnRoute ? Color.GREEN : Color.BLUE);
+            if (isOnRoute) {
+                gc.setFill(Color.GREEN); // Zelena za stanice na ruti
+            } else {
+                // Originalne boje za stanice koje nisu na ruti (nacrtane u drawInitialMap(), ali se ponavljaju da se osigura redosled)
+                if (station instanceof BusStation) {
+                    gc.setFill(Color.ORANGE);
+                } else if (station instanceof TrainStation) {
+                    gc.setFill(Color.PURPLE);
+                } else {
+                    gc.setFill(Color.BLUE);
+                }
+            }
             gc.fillOval(p.x - currentStationRadius, p.y - currentStationRadius, 2 * currentStationRadius, 2 * currentStationRadius);
             gc.setStroke(Color.DARKBLUE);
             gc.setLineWidth(1.0 * overallScaleFactor);
             gc.strokeOval(p.x - currentStationRadius, p.y - currentStationRadius, 2 * currentStationRadius, 2 * currentStationRadius);
 
-            gc.setFill(Color.BLACK);
-            gc.setFont(new Font("Arial", 10 * overallScaleFactor));
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText(station.getId(), p.x, p.y + currentStationRadius + 10 * overallScaleFactor);
+
+            if (isOnRoute) { // SAMO AKO JE STANICA NA RUTI, PRIKAŽI ID
+                gc.setFill(Color.BLACK);
+                gc.setFont(new Font("Arial", 12 * overallScaleFactor));
+                gc.setTextAlign(TextAlignment.CENTER);
+                gc.fillText(station.getId(), p.x, p.y + currentStationRadius + 8 * overallScaleFactor);
+            }
         }
     }
 }

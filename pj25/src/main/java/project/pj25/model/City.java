@@ -1,63 +1,53 @@
 package project.pj25.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo; // DODAJ OVO
+import com.fasterxml.jackson.annotation.ObjectIdGenerators; // DODAJ OVO
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@JsonIdentityInfo( // <-- DODAJ OVU ANOTACIJU NA KLASU
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id" // Koristi 'id' polje kao jedinstveni identifikator
+)
 public class City {
-    private int id; // Jedinstveni ID za grad, npr. x * m + y
-    private int x;  // Red u matrici
-    private int y;  // Kolona u matrici
-    private String name; // Možemo dodati ime, ili je ID dovoljan
-    private BusStation busStation;
-    private TrainStation trainStation;
+    private int id;
+    private int x;
+    private int y;
+    private String name;
+    private List<Station> stations;
 
     public City(int id, int x, int y) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.name = "G_" + x + "_" + y; // U skladu sa generatorom
+        this.name = "G_" + x + "_" + y;
+        this.stations = new ArrayList<>();
     }
 
-    public int getId() {
-        return id;
+    // Prazan konstruktor za Jackson
+    public City() {} // Dodajte ako već nemate
+
+    public int getId() { return id; }
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public List<Station> getStations() {
+        return stations;
     }
 
-    public int getX() {
-        return x;
+    public void setStations(List<Station> stations) { // Dodaj setter za Jackson deserializaciju
+        this.stations = stations;
     }
 
-    public int getY() {
-        return y;
+    public void addStation(Station station) {
+        if (this.stations == null) {
+            this.stations = new ArrayList<>();
+        }
+        this.stations.add(station);
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BusStation getBusStation() {
-        return busStation;
-    }
-
-    public void setBusStation(BusStation busStation) {
-        this.busStation = busStation;
-    }
-
-    public TrainStation getTrainStation() {
-        return trainStation;
-    }
-
-    public void setTrainStation(TrainStation trainStation) {
-        this.trainStation = trainStation;
-    }
-
-    // Opciono: Setteri ako je potrebno mijenjati atribute nakon kreiranja
-    // public void setId(int id) { this.id = id; }
-    // public void setX(int x) { this.x = x; }
-    // public void setY(int y) { this.y = y; }
-    // public void setName(String name) { this.name = name; }
 
     @Override
     public String toString() {
@@ -66,12 +56,10 @@ public class City {
                 ", name='" + name + '\'' +
                 ", x=" + x +
                 ", y=" + y +
-                ", busStationId=" + (busStation != null ? busStation.getId() : "N/A") +
-                ", trainStationId=" + (trainStation != null ? trainStation.getId() : "N/A") +
+                ", numStations=" + (stations != null ? stations.size() : 0) +
                 '}';
     }
 
-    // Override equals i hashCode za pravilno poređenje objekata
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

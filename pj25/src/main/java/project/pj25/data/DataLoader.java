@@ -2,173 +2,55 @@ package project.pj25.data;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature; // Dodato
+import com.fasterxml.jackson.databind.module.SimpleModule; // Dodato
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule; // Dodato
+
 import project.pj25.model.*; // Import svih neophodnih model klasa
+import project.pj25.util.DurationDeserializer; // Dodato
+import project.pj25.util.LocalTimeDeserializer; // Dodato
+
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration; // Ne treba direktno ako se Jackson brine
+import java.time.LocalTime; // Ne treba direktno ako se Jackson brine
+// import java.util.ArrayList; // Ne treba direktno ako se Jackson brine
+// import java.util.List; // Ne treba direktno ako se Jackson brine
+// import java.util.Map; // Ne treba direktno ako se Jackson brine
 
 public class DataLoader {
 
     public static TransportMap loadTransportData(String filePath) {
         ObjectMapper objectMapper = new ObjectMapper();
-        TransportMap transportMap = null; // Inicijalizovan na null, biće postavljen ispod
+
+        // REGISTRUJ ISTE MODULE KAO U DATA GENERATORU
+        objectMapper.registerModule(new JavaTimeModule());
+
+        SimpleModule customModule = new SimpleModule();
+        customModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer()); // KORISTI DESERIALIZERE OVDE
+        customModule.addDeserializer(Duration.class, new DurationDeserializer());  // KORISTI DESERIALIZERE OVDE
+        objectMapper.registerModule(customModule);
+
+        // Opcionalno, ali korisno za debugging i čitanje JSON-a
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         try {
             File file = new File(filePath);
-            // Učitavamo JSON u generičku Mapu, kako bismo ručno popunili TransportMap
-            Map<String, Object> rawData = objectMapper.readValue(file, new TypeReference<Map<String, Object>>() {});
+            // Jackson će SVE učitati direktno u TransportMap objekat,
+            // uključujući sve gradove, stanice i polaske,
+            // zahvaljujući @JsonIdentityInfo i pravilnim strukturama klasa.
+            TransportMap transportMap = objectMapper.readValue(file, TransportMap.class);
 
-            // KORAK 1: Preuzimanje osnovnih dimenzija i inicijalizacija TransportMap
-            // Sada koristimo stvarne podatke iz JSON-a za kreiranje TransportMap
-            int numRows = (Integer) rawData.get("numRows");
-            int numCols = (Integer) rawData.get("numCols");
-            transportMap = new TransportMap(numRows, numCols); // TransportMap je SADA inicijalizovan
-
-            // KORAK 2: Učitavanje gradova i inicijalizacija stanica (autobuske i železničke)
-            // Ove podatke čitamo iz 'cities' dela JSON-a
-            List<List<Map<String, Object>>> citiesRaw = (List<List<Map<String, Object>>>) rawData.get("cities");
-            if (citiesRaw != null) {
-                for (int r = 0; r < numRows; r++) {
-                    for (int c = 0; c < numCols; c++) {
-                        Map<String, Object> cityData = citiesRaw.get(r).get(c);
-                        int id = (Integer) cityData.get("id");
-                        int x = (Integer) cityData.get("x");
-                        int y = (Integer) cityData.get("y");
-                        String name = (String) cityData.get("name");
-
-                        City city = new City(id, x, y);
-                        transportMap.addCity(x, y, city);
-
-                        // Inicijalizacija i dodavanje stanica za svaki grad
-                        // OVO JE KRITIČNO: Stanice se kreiraju i dodaju u transportMap.stations mapu
-                        // PRE nego što pokušamo da im dodamo polaske.
-                        BusStation bs = new BusStation(city);
-                        TrainStation ts = new TrainStation(city);
-                        transportMap.addStation(bs);
-                        transportMap.addStation(ts);
-                    }
-                }
-                System.out.println("Gradovi i osnovne stanice inicijalizovani na osnovu JSON podataka.");
-            } else {
-                System.err.println("Upozorenje: Nije pronađen 'cities' deo u JSON-u. TransportMap neće biti potpuno inicijalizovan.");
-            }
-
-            // --- NOVI KORAK 2.5: DODAVANJE TRANSFER VEZA IZMEĐU STANICA ISTOG GRADA ---
-            System.out.println("Dodajem transfer veze između autobuskih i železničkih stanica unutar istih gradova...");
-            int transferConnectionsAdded = 0;
-            for (int r = 0; r < numRows; r++) {
-                for (int c = 0; c < numCols; c++) {
-                    City currentCity = transportMap.getCity(r, c);
-                    if (currentCity != null) {
-                        Station busSt = transportMap.getStation("A_" + currentCity.getX() + "_" + currentCity.getY());
-                        Station trainSt = transportMap.getStation("Z_" + currentCity.getX() + "_" + currentCity.getY());
-
-                        if (busSt != null && trainSt != null) {
-                            // Transfer iz BusStation u TrainStation
-                            Departure busToTrainTransfer = new Departure(
-                                    "transfer", // Tip "transfer"
-                                    busSt.getId(),
-                                    trainSt.getId(),
-                                    LocalTime.MIDNIGHT, // Vreme polaska (nije bitno, jer je trajanje 0)
-                                    LocalTime.MIDNIGHT, // Vreme dolaska
-                                    0.0,                // Cena 0
-                                    Duration.ZERO       // Vreme trajanja 0, ali ovo se računa kao 1 presedanje
-                            );
-                            busSt.addDeparture(busToTrainTransfer);
-                            transferConnectionsAdded++;
-
-                            // Transfer iz TrainStation u BusStation
-                            Departure trainToBusTransfer = new Departure(
-                                    "transfer", // Tip "transfer"
-                                    trainSt.getId(),
-                                    busSt.getId(),
-                                    LocalTime.MIDNIGHT,
-                                    LocalTime.MIDNIGHT,
-                                    0.0,
-                                    Duration.ZERO
-                            );
-                            trainSt.addDeparture(trainToBusTransfer);
-                            transferConnectionsAdded++;
-                        }
-                    }
-                }
-            }
-            System.out.println("Ukupno dodato transfer veza: " + transferConnectionsAdded);
-            // --- KRAJ NOVOG KORAKA 2.5 ---
-
-
-            // KORAK 3: Učitavanje svih polazaka i dodavanje postojećim stanicama
-            // Sada kada je transportMap inicijalizovan i sadrži sve stanice, možemo dodavati polaske
-            Map<String, Map<String, Object>> allStationsRaw = (Map<String, Map<String, Object>>) rawData.get("allStations");
-
-            if (allStationsRaw != null) {
-                int departuresCount = 0;
-                for (Map.Entry<String, Map<String, Object>> entry : allStationsRaw.entrySet()) {
-                    String stationId = entry.getKey();
-                    Map<String, Object> stationData = entry.getValue();
-
-                    List<Map<String, Object>> departuresListRaw = (List<Map<String, Object>>) stationData.get("departures");
-
-                    if (departuresListRaw != null) {
-                        // Sada bi transportMap.getStation(stationId) trebalo da vrati ispravnu stanicu
-                        Station currentStation = transportMap.getStation(stationId);
-
-                        if (currentStation != null) {
-                            for (Map<String, Object> departureData : departuresListRaw) {
-                                // Deserijalizacija Departure objekta
-                                String type = (String) departureData.get("type");
-                                String depStationId = (String) departureData.get("departureStationId");
-                                String arrStationId = (String) departureData.get("arrivalStationId");
-
-                                List<Integer> depTimeList = (List<Integer>) departureData.get("departureTime");
-                                LocalTime departureTime = LocalTime.of(depTimeList.get(0), depTimeList.get(1));
-
-                                List<Integer> arrTimeList = (List<Integer>) departureData.get("arrivalTime");
-                                LocalTime arrivalTime = LocalTime.of(arrTimeList.get(0), arrTimeList.get(1));
-
-                                double price = ((Number) departureData.get("price")).doubleValue();
-
-                                Duration minTransferTime = Duration.ZERO;
-                                Object minTransferObj = departureData.get("minTransferTime");
-                                if (minTransferObj instanceof Number) {
-                                    minTransferTime = Duration.ofMinutes(((Number) minTransferObj).longValue());
-                                }
-
-                                Departure departure = new Departure(
-                                        type, depStationId, arrStationId,
-                                        departureTime, arrivalTime, price, minTransferTime
-                                );
-                                currentStation.addDeparture(departure);
-                                departuresCount++;
-                                // Ostavio sam System.out.println() zakomentarisano zbog velike količine ispisa.
-                                // System.out.println("Processing departure: " + departure.getDepartureStationId() + " -> " + departure.getArrivalStationId() + " (" + departure.getType() + ")");
-                            }
-                        } else {
-                            // Ovo upozorenje bi trebalo da bude vrlo retko ili nikada, ako su stanice ispravno inicijalizovane
-                            System.err.println("Upozorenje: Stanica sa ID-em '" + stationId + "' nije pronađena u transportnoj mapi prilikom dodavanja polazaka.");
-                        }
-                    }
-                }
-                System.out.println("Ukupno učitano polazaka: " + departuresCount);
-            } else {
-                System.err.println("Upozorenje: Nije pronađen 'allStations' deo u JSON-u.");
-            }
+            System.out.println("Podaci uspešno učitani iz " + filePath);
+            System.out.println("Učitana transportna mapa: " + transportMap.toString());
+            return transportMap;
 
         } catch (IOException e) {
             System.err.println("Greška prilikom čitanja JSON fajla: " + e.getMessage());
             e.printStackTrace();
-        } catch (ClassCastException e) {
-            System.err.println("Neočekivana greška prilikom parsiranja podataka: " + e.getMessage());
-            System.err.println("Problematična klasa: " + e.getClass().getName());
-            System.err.println("Poruka: " + e.getMessage());
-            e.printStackTrace();
+            return null;
         }
-        return transportMap;
     }
 
     public static void main(String[] args) {
@@ -177,7 +59,7 @@ public class DataLoader {
         TransportMap transportMap = loadTransportData(filePath);
 
         if (transportMap != null) {
-            System.out.println("Transportna mapa uspešno učitana: " + transportMap.toString());
+            System.out.println("Transportna mapa uspešno učitana.");
             int totalDepartures = 0;
             if (transportMap.getAllStations() != null) {
                 for (Station station : transportMap.getAllStations().values()) {
@@ -186,53 +68,38 @@ public class DataLoader {
             }
             System.out.println("Ukupan broj polazaka u mapi: " + totalDepartures);
 
-            // --- Dodatne provere učitanih podataka ---
-            System.out.println("\n--- Detaljna provera učitanih podataka ---");
+            // --- Dodatne provere učitanih podataka (primera radi) ---
+            System.out.println("\n--- Detaljna provera učitanih podataka (prvih nekoliko) ---");
 
-            // 1. Provera grada G_0_0
-            City city00 = transportMap.getCity(0, 0);
+            // Učitavanje i provera grada na (0,0)
+            City city00 = transportMap.getCity(0, 0); // Pretpostavka da getCity radi na osnovu x,y
             if (city00 != null) {
-                System.out.println("Grad na (0,0): " + city00);
-            } else {
-                System.out.println("Grad na (0,0) nije pronađen.");
-            }
-
-            // 2. Provera stanica za grad G_0_0
-            Station busStation00 = transportMap.getStation("A_0_0");
-            Station trainStation00 = transportMap.getStation("Z_0_0");
-
-            if (busStation00 != null) {
-                System.out.println("Autobuska stanica A_0_0: " + busStation00.toString());
-                System.out.println("Broj polazaka sa A_0_0: " + busStation00.getDepartures().size());
-                if (!busStation00.getDepartures().isEmpty()) {
-                    System.out.println("Prvi polazak sa A_0_0: " + busStation00.getDepartures().get(0));
+                System.out.println("Grad na (0,0): " + city00.getName() + " (ID: " + city00.getId() + ")");
+                System.out.println("Broj stanica u gradu (0,0): " + city00.getStations().size());
+                if (!city00.getStations().isEmpty()) {
+                    System.out.println("Prva stanica u gradu (0,0): " + city00.getStations().get(0).getId());
+                    // Provera da li referenca nazad na grad radi
+                    System.out.println("Grad prve stanice: " + city00.getStations().get(0).getCity().getName());
                 }
-            } else {
-                System.out.println("Autobuska stanica A_0_0 nije pronađena.");
-            }
 
-            if (trainStation00 != null) {
-                System.out.println("Železnička stanica Z_0_0: " + trainStation00.toString());
-                System.out.println("Broj polazaka sa Z_0_0: " + trainStation00.getDepartures().size());
-                if (!trainStation00.getDepartures().isEmpty()) {
-                    System.out.println("Prvi polazak sa Z_0_0: " + trainStation00.getDepartures().get(0));
+                // Provera polazaka za jednu od stanica u gradu (0,0)
+                // Moramo da znamo ID, npr. "A_0_0_0"
+                Station sampleBusStation = transportMap.getStation("A_0_0_0");
+                if (sampleBusStation != null) {
+                    System.out.println("Provera stanice A_0_0_0:");
+                    System.out.println("  ID: " + sampleBusStation.getId());
+                    System.out.println("  Tip: " + sampleBusStation.getType());
+                    System.out.println("  Grad: " + (sampleBusStation.getCity() != null ? sampleBusStation.getCity().getName() : "N/A"));
+                    System.out.println("  Broj polazaka: " + sampleBusStation.getDepartures().size());
+                    if (!sampleBusStation.getDepartures().isEmpty()) {
+                        System.out.println("  Prvi polazak sa A_0_0_0: " + sampleBusStation.getDepartures().get(0));
+                    }
+                } else {
+                    System.out.println("Stanica A_0_0_0 nije pronađena.");
                 }
-            } else {
-                System.out.println("Železnička stanica Z_0_0 nije pronađena.");
-            }
 
-            // Provera neke druge stanice, npr. Z_2_2
-            Station trainStation22 = transportMap.getStation("Z_2_2");
-            if (trainStation22 != null) {
-                System.out.println("Železnička stanica Z_2_2: " + trainStation22.toString());
-                System.out.println("Broj polazaka sa Z_2_2: " + trainStation22.getDepartures().size());
-                if (!trainStation22.getDepartures().isEmpty()) {
-                    System.out.println("Prvi polazak sa Z_2_2: " + trainStation22.getDepartures().get(0));
-                    System.out.println("Drugi polazak sa Z_2_2: " + trainStation22.getDepartures().get(1));
-                    System.out.println("Treći polazak sa Z_2_2: " + trainStation22.getDepartures().get(2));
-                }
             } else {
-                System.out.println("Železnička stanica Z_2_2 nije pronađena.");
+                System.out.println("TransportMap ili grad na (0,0) je null nakon učitavanja.");
             }
 
         } else {

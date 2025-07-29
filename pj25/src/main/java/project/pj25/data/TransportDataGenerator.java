@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.Random;
 
 public class TransportDataGenerator {
-    private static final int DEFAULT_SIZE_N = 5; // Broj redova gradova
-    private static final int DEFAULT_SIZE_M = 5; // Broj kolona gradova
-    private static final int DEPARTURES_PER_STATION_TYPE_PER_DESTINATION = 3; // Broj polazaka po tipu stanice do odredišta
+    private static final int DEFAULT_SIZE_N = 5;
+    private static final int DEFAULT_SIZE_M = 5;
+    private static final int DEPARTURES_PER_STATION_TYPE_PER_DESTINATION = 3;
+    private static final int MIN_STATIONS_PER_CITY = 1; // Minimalno stanica po gradu
+    private static final int MAX_STATIONS_PER_CITY = 3; // Maksimalno stanica po gradu (3 kao što si tražio)
     private static final Random random = new Random();
 
     private final int n; // Broj redova
@@ -85,51 +87,105 @@ public class TransportDataGenerator {
             for (int y = 0; y < m; y++) {
                 City currentCity = transportMap.getCity(x, y);
 
-                BusStation busStation = new BusStation(currentCity);
-                transportMap.addStation(busStation);
+                // Generisanje nasumičnog broja autobuskih stanica (1 do MAX_STATIONS_PER_CITY)
+                int numBusStations = MIN_STATIONS_PER_CITY + random.nextInt(MAX_STATIONS_PER_CITY - MIN_STATIONS_PER_CITY + 1);
+                for (int i = 0; i < numBusStations; i++) {
+                    // Generiši jedinstveni ID za autobusku stanicu u datom gradu
+                    // Npr. A_X_Y_Index (A_0_0_0, A_0_0_1, itd.)
+                    String busStationId = "A_" + x + "_" + y + "_" + i;
+                    BusStation busStation = new BusStation(busStationId, currentCity); // Ažuriran konstruktor
+                    currentCity.addStation(busStation); // Dodaj stanicu u grad
+                    transportMap.addStation(busStation); // Dodaj stanicu u globalnu mapu transporta
+                }
 
-                TrainStation trainStation = new TrainStation(currentCity);
-                transportMap.addStation(trainStation);
+                // Generisanje nasumičnog broja železničkih stanica (1 do MAX_STATIONS_PER_CITY)
+                int numTrainStations = MIN_STATIONS_PER_CITY + random.nextInt(MAX_STATIONS_PER_CITY - MIN_STATIONS_PER_CITY + 1);
+                for (int i = 0; i < numTrainStations; i++) {
+                    // Generiši jedinstveni ID za železničku stanicu u datom gradu
+                    // Npr. Z_X_Y_Index (Z_0_0_0, Z_0_0_1, itd.)
+                    String trainStationId = "Z_" + x + "_" + y + "_" + i;
+                    TrainStation trainStation = new TrainStation(trainStationId, currentCity); // Ažuriran konstruktor
+                    currentCity.addStation(trainStation); // Dodaj stanicu u grad
+                    transportMap.addStation(trainStation); // Dodaj stanicu u globalnu mapu transporta
+                }
             }
         }
 
         // 3. Generisanje polazaka
+        // Ova logika će morati biti kompleksnija jer sada imamo više stanica po gradu.
+        // Morate odabrati nasumične stanice unutar gradova za polaske.
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < m; y++) {
                 City currentCity = transportMap.getCity(x, y);
-                BusStation currentBusStation = (BusStation) transportMap.getStation("A_" + x + "_" + y);
-                TrainStation currentTrainStation = (TrainStation) transportMap.getStation("Z_" + x + "_" + y);
+                List<Station> currentCityStations = currentCity.getStations();
 
-                if (currentBusStation != null && currentTrainStation != null) {
-                    for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
-                        currentBusStation.addDeparture(generateDeparture(
-                                "autobus", currentBusStation.getId(), currentTrainStation.getId(), true
-                        ));
+                // Filtriraj autobuske i železničke stanice za tekući grad
+                List<BusStation> currentBusStations = currentCityStations.stream()
+                        .filter(s -> s instanceof BusStation)
+                        .map(s -> (BusStation) s)
+                        .collect(ArrayList::new, ArrayList::add, ArrayList::addAll); // Koristimo ArrayList::new, ArrayList::add, ArrayList::addAll za toList() kompatibilnost
+
+                List<TrainStation> currentTrainStations = currentCityStations.stream()
+                        .filter(s -> s instanceof TrainStation)
+                        .map(s -> (TrainStation) s)
+                        .collect(ArrayList::new, ArrayList::add, ArrayList::addAll); // Koristimo ArrayList::new, ArrayList::add, ArrayList::addAll za toList() kompatibilnost
+
+
+                // Generisanje polazaka unutar istog grada (između autobuskih i železničkih)
+                if (!currentBusStations.isEmpty() && !currentTrainStations.isEmpty()) {
+                    for (BusStation busStation : currentBusStations) {
+                        for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
+                            TrainStation randomTrainStation = currentTrainStations.get(random.nextInt(currentTrainStations.size()));
+                            busStation.addDeparture(generateDeparture(
+                                    "autobus", busStation.getId(), randomTrainStation.getId(), true
+                            ));
+                        }
                     }
-                    for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
-                        currentTrainStation.addDeparture(generateDeparture(
-                                "voz", currentTrainStation.getId(), currentBusStation.getId(), true
-                        ));
+                    for (TrainStation trainStation : currentTrainStations) {
+                        for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
+                            BusStation randomBusStation = currentBusStations.get(random.nextInt(currentBusStations.size()));
+                            trainStation.addDeparture(generateDeparture(
+                                    "voz", trainStation.getId(), randomBusStation.getId(), true
+                            ));
+                        }
                     }
                 }
 
                 List<City> neighborCities = getNeighborCities(x, y, transportMap);
                 for (City neighborCity : neighborCities) {
-                    BusStation neighborBusStation = (BusStation) transportMap.getStation("A_" + neighborCity.getX() + "_" + neighborCity.getY());
-                    TrainStation neighborTrainStation = (TrainStation) transportMap.getStation("Z_" + neighborCity.getX() + "_" + neighborCity.getY());
+                    List<Station> neighborCityStations = neighborCity.getStations();
+                    List<BusStation> neighborBusStations = neighborCityStations.stream()
+                            .filter(s -> s instanceof BusStation)
+                            .map(s -> (BusStation) s)
+                            .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-                    if (currentBusStation != null && neighborBusStation != null) {
-                        for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
-                            currentBusStation.addDeparture(generateDeparture(
-                                    "autobus", currentBusStation.getId(), neighborBusStation.getId(), false
-                            ));
+                    List<TrainStation> neighborTrainStations = neighborCityStations.stream()
+                            .filter(s -> s instanceof TrainStation)
+                            .map(s -> (TrainStation) s)
+                            .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+
+
+                    // Polasci između autobuskih stanica (između gradova)
+                    if (!currentBusStations.isEmpty() && !neighborBusStations.isEmpty()) {
+                        for (BusStation currentBusStation : currentBusStations) {
+                            for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
+                                BusStation randomNeighborBusStation = neighborBusStations.get(random.nextInt(neighborBusStations.size()));
+                                currentBusStation.addDeparture(generateDeparture(
+                                        "autobus", currentBusStation.getId(), randomNeighborBusStation.getId(), false
+                                ));
+                            }
                         }
                     }
-                    if (currentTrainStation != null && neighborTrainStation != null) {
-                        for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
-                            currentTrainStation.addDeparture(generateDeparture(
-                                    "voz", currentTrainStation.getId(), neighborTrainStation.getId(), false
-                            ));
+
+                    // Polasci između železničkih stanica (između gradova)
+                    if (!currentTrainStations.isEmpty() && !neighborTrainStations.isEmpty()) {
+                        for (TrainStation currentTrainStation : currentTrainStations) {
+                            for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
+                                TrainStation randomNeighborTrainStation = neighborTrainStations.get(random.nextInt(neighborTrainStations.size()));
+                                currentTrainStation.addDeparture(generateDeparture(
+                                        "voz", currentTrainStation.getId(), randomNeighborTrainStation.getId(), false
+                                ));
+                            }
                         }
                     }
                 }

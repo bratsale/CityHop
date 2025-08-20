@@ -1,0 +1,17 @@
+--- Račun za kartu ---
+Datum i vreme kupovine: 20.08.2025. 16:46:19
+Relacija: G_0_1 -> G_1_3
+-----------------------
+Ukupna cena: 367.08 KM
+Ukupno vreme putovanja: 41č 5min
+Broj presedanja: 3
+-----------------------
+Detalji rute:
+Ukupno vreme: 41č 5min, Ukupna cena: 367.08 KM, Presedanja: 3
+  voz: Z_0_1_0 (grad G_0_1) -> Z_1_1_0 (grad G_1_1) | Polazak: 05:30, Dolazak: 06:41, Cena: 112.99 KM
+     [Čekanje na presedanje: 20č 49min]
+  voz: Z_1_1_0 (grad G_1_1) -> Z_1_2_0 (grad G_1_2) | Polazak: 03:30, Dolazak: 04:52, Cena: 102.62 KM
+     [Čekanje na presedanje: 10č 53min]
+  voz: Z_1_2_0 (grad G_1_2) -> A_1_2_0 (grad G_1_2) | Polazak: 15:45, Dolazak: 15:58, Cena: 7.54 KM
+     [Čekanje na presedanje: 5č 17min]
+  autobus: A_1_2_0 (grad G_1_2) -> A_1_3_0 (grad G_1_3) | Polazak: 21:15, Dolazak: 22:35, Cena: 143.93 KM

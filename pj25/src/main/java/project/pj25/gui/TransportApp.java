@@ -6,12 +6,12 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Separator;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-// Uklonjen import javafx.scene.layout.Priority; jer ga više ne koristimo
 import javafx.stage.Stage;
 
 import project.pj25.model.*;
@@ -47,8 +47,16 @@ public class TransportApp extends Application {
     private Button buyBestRouteTicketButton;
     private Path currentBestRoute;
 
+    private Label salesInfoLabel;
+
     @Override
     public void start(Stage primaryStage) {
+
+        // Ucitavanje podataka o prodaji na pocetku
+        SalesData sales = InvoiceManager.loadSalesData();
+        salesInfoLabel = new Label(String.format("Ukupno prodato karata: %d\nUkupan prihod: %.2f KM", sales.totalTickets(), sales.totalRevenue()));
+        salesInfoLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.1em; -fx-padding: 0 0 10 0;"); // Dodatni stil za bolji izgled i razmak
+
         primaryStage.setTitle("CityHop - Pronađi Optimalnu Rutu");
 
         System.out.println("Učitavam transportne podatke...");
@@ -102,17 +110,22 @@ public class TransportApp extends Application {
         findRouteButton.setMaxWidth(Double.MAX_VALUE); // Omogući dugmetu da se raširi
         findRouteButton.setOnAction(e -> findOptimalRoute());
 
+        VBox salesInfoBox = new VBox(5);
+        salesInfoBox.getChildren().addAll(salesInfoLabel, new Separator());
+        salesInfoBox.setPadding(new Insets(0, 0, 10, 0));
+
         VBox controlsLayout = new VBox(20);
         controlsLayout.setPadding(new Insets(20));
         controlsLayout.setAlignment(Pos.TOP_LEFT);
         controlsLayout.getChildren().addAll(
+                salesInfoBox, // Dodaj salesInfoBox na vrh
                 new Label("Početni grad:"), startCityComboBox,
                 new Label("Odredišni grad:"), endCityComboBox,
                 criteriaBox,
                 findRouteButton
         );
-        controlsLayout.setPrefWidth(250); // Postavi preferiranu širinu
-        controlsLayout.setMaxWidth(300); // Postavi maksimalnu širinu da se ne rasteže previše
+        controlsLayout.setPrefWidth(250);
+        controlsLayout.setMaxWidth(300);
 
         // --- Grafički prikaz mape (CENTAR) ---
         mapCanvas = new Canvas(700, 600); // Početna veličina Canvasa
@@ -121,10 +134,9 @@ public class TransportApp extends Application {
 
         BorderPane mapPane = new BorderPane();
         mapPane.setCenter(mapCanvas);
-        // Oslanjamo se na bindProperty za skaliranje, bez Vgrow/Hgrow
-        mapCanvas.widthProperty().bind(mapPane.widthProperty());
+        mapCanvas.widthProperty().bind(mapPane.widthProperty()); // BEZ HGROW !
         mapCanvas.heightProperty().bind(mapPane.heightProperty());
-        mapPane.setPrefSize(700, 600); // Početna preferirana veličina
+        mapPane.setPrefSize(700, 600);
 
         // --- Tabelarni prikaz najbolje rute i dugmad (ISPOD MAPE) ---
         bestRouteSummaryLabel = new Label("Najbolja ruta: N/A");
@@ -135,7 +147,7 @@ public class TransportApp extends Application {
         routeDetailsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         routeDetailsTable.setPlaceholder(new Label("Nema segmenata rute za prikaz."));
 
-        // Definisanje kolona (isto kao pre)
+        // Definisanje kolona
         TableColumn<RouteSegment, String> typeCol = new TableColumn<>("Tip");
         typeCol.setCellValueFactory(new PropertyValueFactory<>("departureType"));
         typeCol.setPrefWidth(50);
@@ -170,7 +182,7 @@ public class TransportApp extends Application {
 
         routeDetailsTable.getColumns().addAll(typeCol, fromCol, fromCityCol, toCol, toCityCol, depTimeCol, arrTimeCol, priceCol);
 
-        routeDetailsTable.setPrefHeight(200); // Postavi preferiranu visinu tabele
+        routeDetailsTable.setPrefHeight(200);
         routeDetailsTable.setMaxHeight(Double.MAX_VALUE); // Dozvoli joj da se rastegne vertikalno
 
         // Dugmad
@@ -185,23 +197,30 @@ public class TransportApp extends Application {
                 TopRoutesDialog dialog = new TopRoutesDialog(primaryStage, topRoutes, criterion);
                 dialog.show();
             } else {
-                showAlert("Greška", "Molimo odaberite početni i krajnji grad, te kriterijum optimizacije pre prikaza dodatnih ruta.");
+                showAlert("Greška", "Molimo odaberite početni i krajnji grad, te kriterijum optimizacije prije prikaza dodatnih ruta.");
             }
         });
 
         buyBestRouteTicketButton = new Button("Kupovina karte (za najbolju rutu)");
         buyBestRouteTicketButton.setOnAction(e -> {
             if (currentBestRoute != null) {
-                System.out.println("Kupujem kartu za najbolju rutu: " + currentBestRoute.toString());
+                // Pronađi nazive početnog i krajnjeg grada
+                String startCityName = currentBestRoute.getSegments().get(0).getDepartureStationCityName();
+                String endCityName = currentBestRoute.getSegments().get(currentBestRoute.getSegments().size() - 1).getArrivalStationCityName();
+
+                // Pozovi metodu za generisanje računa
+                InvoiceManager.generateInvoice(currentBestRoute, startCityName, endCityName);
+
+                // Ispravka: Samo dodeli novu vrednost varijabli sales
+                salesInfoLabel.setText(String.format("Ukupno prodato karata: %d, Ukupan prihod: %.2f KM", sales.totalTickets(), sales.totalRevenue()));
+
+                // Prikaz potvrde
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Kupovina karte");
-                alert.setHeaderText("Karta uspešno kupljena!");
-                alert.setContentText("Račun za najbolju rutu je generisan. Detalji:\n" +
-                        String.format("Vreme: %s, Cena: %.2f KM, Presedanja: %d",
-                                formatDuration(currentBestRoute.getTotalTravelTime()),
-                                currentBestRoute.getTotalCost(),
-                                currentBestRoute.getTransfers()));
+                alert.setHeaderText("Karta uspješno kupljena!");
+                alert.setContentText("Račun za najbolju rutu je generisan i sačuvan u folderu 'racuni'.");
                 alert.showAndWait();
+
             } else {
                 showAlert("Nema rute", "Molimo prvo pronađite rutu.");
             }
@@ -232,7 +251,6 @@ public class TransportApp extends Application {
         primaryStage.show();
     }
 
-    // --- Pomoćne metode (iste kao pre) ---
     private void populateCityComboBox(ComboBox<City> comboBox) {
         if (transportMap != null && transportMap.getCities() != null) {
             List<City> allCities = new ArrayList<>();
@@ -312,7 +330,7 @@ public class TransportApp extends Application {
     private void showRouteDetails(Path path, String criterion) {
         if (path != null) {
             bestRouteSummaryLabel.setText(
-                    String.format("Najbolja ruta (%s): Vreme: %s, Cena: %.2f KM, Presedanja: %d",
+                    String.format("Najbolja ruta (%s): Vrieme: %s, Cijena: %.2f KM, Presjedanja: %d",
                             formatCriterionNameForDisplay(criterion),
                             formatDuration(path.getTotalTravelTime()),
                             path.getTotalCost(),
@@ -344,9 +362,9 @@ public class TransportApp extends Application {
     private String formatCriterionNameForDisplay(String criterion) {
         if (criterion == null) return "N/A";
         switch (criterion.toLowerCase()) {
-            case "time": return "Najkraće vreme putovanja";
-            case "price": return "Najniža cena";
-            case "transfers": return "Najmanji broj presedanja";
+            case "time": return "Najkraće vrijeme putovanja";
+            case "price": return "Najniža cijena";
+            case "transfers": return "Najmanji broj presjedanja";
             default: return criterion;
         }
     }

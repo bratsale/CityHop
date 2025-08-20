@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory; // Potrebno za TableView
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import project.pj25.data.InvoiceManager;
 import project.pj25.model.*;// Proveri paket za Path i RouteSegment
 import project.pj25.algorithm.*;
 
@@ -105,13 +106,17 @@ public class TopRoutesDialog extends Stage {
                 Button buyButton = new Button("Kupi kartu za rutu " + (i + 1));
                 buyButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 1.0em;");
                 buyButton.setOnAction(e -> {
-                    System.out.println("Kupujem kartu za rutu: " + path.toString());
+                    // Pozovi metodu za generisanje racuna
+                    String startCityName = path.getSegments().get(0).getDepartureStationCityName();
+                    String endCityName = path.getSegments().get(path.getSegments().size() - 1).getArrivalStationCityName();
+                    InvoiceManager.generateInvoice(path, startCityName, endCityName);
+
+                    // Prikaz potvrde
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Kupovina karte");
-                    alert.setHeaderText("Karta uspešno kupljena!");
-                    alert.setContentText("Račun za rutu je generisan. Detalji:\n" + summaryLabel.getText());
+                    alert.setHeaderText("Karta uspješno kupljena!");
+                    alert.setContentText("Račun za rutu je generisan i sačuvan u folderu 'racuni'.");
                     alert.showAndWait();
-                    // Ovde pozvati pravu logiku za generisanje računa
                 });
                 buyButton.setMaxWidth(Double.MAX_VALUE); // Da se dugme raširi
 

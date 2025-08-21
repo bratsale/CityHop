@@ -1,19 +1,38 @@
 package project.pj25.model;
 
-// Uklonite ove importe ako ih ne koristite direktno za anotacije parametara konstruktora
-// import com.fasterxml.jackson.annotation.JsonCreator;
-// import com.fasterxml.jackson.annotation.JsonProperty;
-
+/**
+ * Klasa koja predstavlja autobusku stanicu.
+ *
+ * <p>Ova klasa nasljeđuje sva svojstva i ponašanje od apstraktne klase {@link Station}.
+ * Njena primarna uloga je da definiše specifičan tip stanice za potrebe serijalizacije
+ * (Jackson) i logike unutar aplikacije. Po polju 'type' Jackson prepoznaje
+ * koji konkretan objekat treba da kreira tokom učitavanja podataka.</p>
+ *
+ * @author bratsale
+ * @version 1.0
+ * @see Station
+ * @see TrainStation
+ */
 public class BusStation extends Station {
 
-    // Konstruktor za generisanje podataka (koristi ga TransportDataGenerator)
+    /**
+     * Konstruktor za kreiranje objekta autobuske stanice sa zadanim ID-om i gradom.
+     * Koristi ga TransportDataGenerator prilikom generisanja transportne mape.
+     *
+     * @param id Jedinstveni ID stanice (npr. 'A_1_1').
+     * @param city Grad kojem stanica pripada.
+     */
     public BusStation(String id, City city) {
-        super(id, city, "autobus"); // Poziva glavni konstruktor nadklase
+        super(id, city, "autobus");
     }
 
-    // Prazan konstruktor za Jackson deserializaciju
+    /**
+     * Prazan konstruktor.
+     * Koristi ga Jackson za deserializaciju objekta iz JSON-a, nakon čega
+     * popunjava polja.
+     */
     public BusStation() {
-        super(); // Poziva prazan konstruktor nadklase, koji SADA inicijalizuje 'departures'
-        this.type = "autobus"; // Postavlja tip
+        super();
+        this.type = "autobus";
     }
 }

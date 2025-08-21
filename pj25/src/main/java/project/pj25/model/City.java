@@ -1,22 +1,57 @@
 package project.pj25.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo; // DODAJ OVO
-import com.fasterxml.jackson.annotation.ObjectIdGenerators; // DODAJ OVO
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@JsonIdentityInfo( // <-- DODAJ OVU ANOTACIJU NA KLASU
+/**
+ * Klasa koja predstavlja grad unutar transportne mape.
+ * <p>
+ * Svaki grad ima jedinstveni ID, koordinate (x, y) i listu saobraćajnih stanica
+ * koje mu pripadaju. Klasa koristi Jackson anotacije
+ * (<code>@JsonIdentityInfo</code>) kako bi se osigurala pravilna serijalizacija
+ * i deserializacija objekata, sprječavajući duplikate referenci u JSON fajlu.
+ * </p>
+ *
+ * @author bratsale
+ * @version 1.0
+ */
+@JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id" // Koristi 'id' polje kao jedinstveni identifikator
+        property = "id"
 )
 public class City {
+    /**
+     * Jedinstveni identifikator grada.
+     */
     private int id;
+    /**
+     * X koordinata grada na mapi.
+     */
     private int x;
+    /**
+     * Y koordinata grada na mapi.
+     */
     private int y;
+    /**
+     * Naziv grada.
+     */
     private String name;
+    /**
+     * Lista saobraćajnih stanica koje pripadaju gradu.
+     * @see Station
+     */
     private List<Station> stations;
 
+    /**
+     * Konstruktor za kreiranje novog objekta grada.
+     *
+     * @param id Jedinstveni ID grada.
+     * @param x X koordinata grada.
+     * @param y Y koordinata grada.
+     */
     public City(int id, int x, int y) {
         this.id = id;
         this.x = x;
@@ -25,23 +60,68 @@ public class City {
         this.stations = new ArrayList<>();
     }
 
-    // Prazan konstruktor za Jackson
-    public City() {} // Dodajte ako već nemate
+    /**
+     * Prazan konstruktor.
+     * <p>
+     * Neophodan za rad Jackson biblioteke prilikom deserializacije objekata iz JSON-a.
+     * </p>
+     */
+    public City() {}
 
+    /**
+     * Vraća ID grada.
+     * @return ID grada.
+     */
     public int getId() { return id; }
+
+    /**
+     * Vraća X koordinatu grada.
+     * @return X koordinata.
+     */
     public int getX() { return x; }
+
+    /**
+     * Vraća Y koordinatu grada.
+     * @return Y koordinata.
+     */
     public int getY() { return y; }
+
+    /**
+     * Vraća naziv grada.
+     * @return Naziv grada.
+     */
     public String getName() { return name; }
+
+    /**
+     * Postavlja naziv grada.
+     * @param name Novi naziv grada.
+     */
     public void setName(String name) { this.name = name; }
 
+    /**
+     * Vraća listu stanica u gradu.
+     * @return Lista {@link Station} objekata.
+     */
     public List<Station> getStations() {
         return stations;
     }
 
-    public void setStations(List<Station> stations) { // Dodaj setter za Jackson deserializaciju
+    /**
+     * Postavlja listu stanica u gradu.
+     * <p>
+     * Ova metoda se primarno koristi od strane Jackson deserializatora.
+     * </p>
+     * @param stations Nova lista stanica.
+     */
+    public void setStations(List<Station> stations) {
         this.stations = stations;
     }
 
+    /**
+     * Dodaje novu stanicu u listu stanica koje pripadaju gradu.
+     *
+     * @param station Objekat stanice koji treba dodati.
+     */
     public void addStation(Station station) {
         if (this.stations == null) {
             this.stations = new ArrayList<>();
@@ -49,6 +129,10 @@ public class City {
         this.stations.add(station);
     }
 
+    /**
+     * Vraća string reprezentaciju objekta grada.
+     * @return Formatirani string sa detaljima grada.
+     */
     @Override
     public String toString() {
         return "City{" +
@@ -60,6 +144,13 @@ public class City {
                 '}';
     }
 
+    /**
+     * Poredi ovaj objekat grada sa drugim objektom. Gradovi se smatraju jednakim
+     * ako imaju isti ID.
+     *
+     * @param o Drugi objekat za poređenje.
+     * @return {@code true} ako su objekti jednaki, {@code false} inače.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,6 +159,10 @@ public class City {
         return id == city.id;
     }
 
+    /**
+     * Generiše hash kod za objekat grada na osnovu ID-a.
+     * @return Hash kod objekta.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id);

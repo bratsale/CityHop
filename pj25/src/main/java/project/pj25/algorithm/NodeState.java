@@ -1,36 +1,93 @@
-package project.pj25.algorithm; // Proveri da li je ispravan paket
+package project.pj25.algorithm;
 
 import project.pj25.model.*;
 import java.time.LocalTime;
 import java.util.Objects;
 
+/**
+ * Pomoćna klasa koja predstavlja stanje čvora u algoritmu pretrage rute.
+ *
+ * <p>Ova klasa čuva trenutno stanje tokom pretrage: stanicu, vrijeme dolaska
+ * na tu stanicu i putanju do te tačke. Implementira interfejs {@link Comparable}
+ * kako bi se omogućilo poređenje stanja na osnovu različitih kriterijuma
+ * (vrijeme, cijena, presjedanja). Ovo je ključno za rad algoritma sa prioritetnim redom
+ * kao što je A* ili Dijkstra.</p>
+ *
+ * @author Tvoje Ime
+ * @version 1.0
+ * @see RouteFinder
+ * @see Path
+ */
 public class NodeState implements Comparable<NodeState> {
+    /**
+     * Trenutna stanica na kojoj se stanje nalazi.
+     */
     private Station station;
+    /**
+     * Vrijeme dolaska na ovu stanicu.
+     */
     private LocalTime arrivalTime;
+    /**
+     * Kumulativna putanja do trenutnog stanja.
+     */
     private Path currentPath;
-    private String optimizationCriterion; // <--- NOVO: Polje za kriterijum optimizacije
+    /**
+     * Kriterijum optimizacije koji se koristi za poređenje stanja.
+     */
+    private String optimizationCriterion;
 
-    // Ažuriran konstruktor da prihvati kriterijum
+    /**
+     * Konstruktor za kreiranje novog stanja čvora.
+     *
+     * @param station Trenutna stanica.
+     * @param arrivalTime Vrijeme dolaska.
+     * @param currentPath Kumulativna putanja do trenutnog stanja.
+     * @param optimizationCriterion Kriterijum optimizacije (npr. "time", "price", "transfers").
+     */
     public NodeState(Station station, LocalTime arrivalTime, Path currentPath, String optimizationCriterion) {
         this.station = station;
         this.arrivalTime = arrivalTime;
         this.currentPath = currentPath;
-        this.optimizationCriterion = optimizationCriterion; // Inicijalizacija novog polja
+        this.optimizationCriterion = optimizationCriterion;
     }
 
-    // Getteri (dodaj getter za optimizationCriterion ako već nemaš)
-    public Station getStation() { return station; }
-    public LocalTime getArrivalTime() { return arrivalTime; }
-    public Path getCurrentPath() { return currentPath; }
-    public String getOptimizationCriterion() { return optimizationCriterion; } // <-- Novi getter
+    // Getteri i setteri
 
-    // *** KLJUČNA IZMENA: compareTo metoda sada koristi kriterijum ***
+    /**
+     * Vraća stanicu trenutnog stanja.
+     * @return {@link Station} objekat.
+     */
+    public Station getStation() { return station; }
+
+    /**
+     * Vraća putanju do trenutnog stanja.
+     * @return {@link Path} objekat.
+     */
+    public Path getCurrentPath() { return currentPath; }
+
+    /**
+     * Poredi dva objekta {@code NodeState} na osnovu definisanog kriterijuma optimizacije.
+     *
+     * <p>Kriterijumi poređenja su:
+     * <ul>
+     * <li><b>"time"</b>: Primarno se poredi ukupno vrijeme putovanja. Ako je jednako,
+     * porede se cijene, a zatim broj presjedanja.</li>
+     * <li><b>"price"</b>: Primarno se poredi ukupna cijena. Ako je jednaka,
+     * porede se vremena putovanja, a zatim broj presjedanja.</li>
+     * <li><b>"transfers"</b>: Primarno se poredi broj presjedanja. Ako je jednak,
+     * porede se vremena putovanja, a zatim cijene.</li>
+     * </ul>
+     * </p>
+     *
+     * @param other Drugi objekat {@code NodeState} za poređenje.
+     * @return Negativan cijeli broj, nula, ili pozitivan cijeli broj ako je ovaj
+     * objekat manji od, jednak, ili veći od navedenog objekta.
+     * @throws IllegalArgumentException ako je kriterijum optimizacije nepoznat.
+     */
     @Override
     public int compareTo(NodeState other) {
-        // Logika poređenja zavisi od izabranog kriterijuma
-        switch (this.optimizationCriterion.toLowerCase()) { // Koristi toLowerCase() za robustnost
-            case "time": // Odgovara stringu koji dolazi iz GUI/RouteFinder-a
-                // Primarni kriterijum: vreme putovanja. Sekundarni: cena. Tercijarni: presedanja.
+        switch (this.optimizationCriterion.toLowerCase()) {
+            case "time":
                 int timeCmp = this.currentPath.getTotalTravelTime().compareTo(other.currentPath.getTotalTravelTime());
                 if (timeCmp == 0) {
                     int costCmp = Double.compare(this.currentPath.getTotalCost(), other.currentPath.getTotalCost());
@@ -41,8 +98,7 @@ public class NodeState implements Comparable<NodeState> {
                 }
                 return timeCmp;
 
-            case "price": // Odgovara stringu koji dolazi iz GUI/RouteFinder-a
-                // Primarni kriterijum: cena. Sekundarni: vreme putovanja. Tercijarni: presedanja.
+            case "price":
                 int costCmp = Double.compare(this.currentPath.getTotalCost(), other.currentPath.getTotalCost());
                 if (costCmp == 0) {
                     int timeCmpSecondary = this.currentPath.getTotalTravelTime().compareTo(other.currentPath.getTotalTravelTime());
@@ -53,8 +109,7 @@ public class NodeState implements Comparable<NodeState> {
                 }
                 return costCmp;
 
-            case "transfers": // Odgovara stringu koji dolazi iz GUI/RouteFinder-a
-                // Primarni kriterijum: broj presedanja. Sekundarni: vreme putovanja. Tercijarni: cena.
+            case "transfers":
                 int transfersCmp = Integer.compare(this.currentPath.getTransfers(), other.currentPath.getTransfers());
                 if (transfersCmp == 0) {
                     int timeCmpSecondary = this.currentPath.getTotalTravelTime().compareTo(other.currentPath.getTotalTravelTime());
@@ -70,17 +125,25 @@ public class NodeState implements Comparable<NodeState> {
         }
     }
 
+    /**
+     * Poredi ovaj objekat stanja sa drugim objektom.
+     * <p>Dva objekta {@code NodeState} su jednaka ako se odnose na istu stanicu (na osnovu ID-a).</p>
+     * @param o Drugi objekat za poređenje.
+     * @return {@code true} ako su objekti jednaki, {@code false} inače.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NodeState nodeState = (NodeState) o;
-        // Za Dijkstra, NodeState se obično smatra istim ako je ista stanica (i eventualno vreme dolaska za time-dependent)
-        // Pošto ti u RouteFinderu koristiš Map<Station, Path> i 'comparePaths' za validaciju,
-        // ovde je dovoljno da jednakost bude samo po stanici.
         return Objects.equals(station.getId(), nodeState.station.getId());
     }
 
+    /**
+     * Generiše hash kod za objekat stanja čvora.
+     * <p>Hash kod je baziran isključivo na ID-u stanice, što je u skladu sa metodom {@code equals()}.</p>
+     * @return Hash kod objekta.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(station.getId());

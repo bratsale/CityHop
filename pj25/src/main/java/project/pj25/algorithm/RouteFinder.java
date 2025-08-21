@@ -6,81 +6,102 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Klasa za pronalazak optimalnih ruta unutar transportne mape.
+ * <p>
+ * Koristi modifikovani algoritam sličan Dijkstrinom za efikasno pronalaženje
+ * više optimalnih putanja između dva grada, na osnovu različitih kriterijuma
+ * (vrijeme, cijena, broj presjedanja). Umjesto da se zaustavi nakon pronalaska
+ * prve rute, algoritam nastavlja da istražuje kako bi pronašao i druge dobre
+ * alternative.
+ * </p>
+ *
+ * @author Tvoje Ime
+ * @version 1.0
+ * @see TransportMap
+ * @see Path
+ * @see NodeState
+ */
 public class RouteFinder {
+
+    /**
+     * Podrazumijevano minimalno vrijeme za presjedanje.
+     */
     private static final Duration DEFAULT_MIN_TRANSFER_TIME = Duration.ofMinutes(15);
+
+    /**
+     * Instanca transportne mape na kojoj se vrši pretraga.
+     */
     private final TransportMap transportMap;
 
+    /**
+     * Konstruktor za kreiranje objekta {@code RouteFinder}.
+     *
+     * @param transportMap Transportna mapa koja se koristi za pretragu.
+     */
     public RouteFinder(TransportMap transportMap) {
         this.transportMap = transportMap;
     }
 
     /**
-     * Pronalazi do N optimalnih ruta između dva grada na osnovu zadatog kriterijuma.
-     * Algoritam nastavlja pretragu i nakon pronalaska prve rute do odredišta kako bi prikupio više opcija.
+     * Pronalazi do N optimalnih ruta između početnog i krajnjeg grada,
+     * na osnovu zadatog kriterijuma optimizacije.
+     * <p>
+     * Algoritam nastavlja pretragu i nakon pronalaska prve rute do odredišta kako bi
+     * prikupio više opcija. Putanje se prate u prioritetnom redu, a za svaku stanicu
+     * se čuva lista najboljih putanja kako bi se spriječilo preplavljivanje
+     * memorije.
+     * </p>
      *
      * @param startCity           Početni grad.
      * @param endCity             Odredišni grad.
      * @param optimizationCriterion Kriterijum optimizacije ("time", "price", "transfers").
      * @param limit               Maksimalan broj ruta koje treba vratiti (npr. 5).
-     * @return Lista pronađenih ruta (Path objekata), sortirana po kriterijumu.
+     * @return Lista pronađenih {@link Path} objekata, sortirana po kriterijumu.
      */
     public List<Path> findTopNRoutes(City startCity, City endCity, String optimizationCriterion, int limit) {
-        // Izmena 1: Umesto da čuvamo samo jednu najbolju putanju do svake stanice, čuvaćemo više njih.
-        // Ovo omogućava algoritam da ne odbacuje odmah alternative.
         Map<Station, List<Path>> foundPathsToStation = new HashMap<>();
-
         PriorityQueue<NodeState> pq = new PriorityQueue<>();
+        List<Path> foundRoutes = new ArrayList<>();
 
-        List<Path> foundRoutes = new ArrayList<>(); // Lista za čuvanje svih validnih ruta do odredišnog grada
-
-        // 1. Inicijalizacija: Dodaj sve početne stanice u PriorityQueue
+        // 1. Inicijalizacija
         for (Station startStation : getStationsInCity(startCity)) {
             Path initialPath = new Path();
             LocalTime initialDepartureTime = LocalTime.MIDNIGHT;
-
             NodeState initialState = new NodeState(startStation, initialDepartureTime, initialPath, optimizationCriterion);
             pq.add(initialState);
 
-            // Izmena 2: Inicijalizacija liste putanja za početnu stanicu
             List<Path> initialPaths = new ArrayList<>();
             initialPaths.add(initialPath);
             foundPathsToStation.put(startStation, initialPaths);
         }
 
-        // 2. Glavni Dijkstra algoritam (modifikovan da ne prestaje odmah)
+        // 2. Glavni algoritam pretrage
         while (!pq.isEmpty()) {
             NodeState currentNodeState = pq.poll();
             Station currentStation = currentNodeState.getStation();
             Path currentPath = currentNodeState.getCurrentPath();
 
-            // Izmena 3: Zadržavamo proveru, ali ne prekidamo uvek.
-            // Ako trenutna putanja nije među 'limit * 2' najboljih do te stanice, preskoči.
-            // Ovo je heuristika da ne preplavimo memoriju, a da i dalje nađemo alternative.
             List<Path> pathsToCurrentStation = foundPathsToStation.getOrDefault(currentStation, new ArrayList<>());
             if (!pathsToCurrentStation.isEmpty() && pathsToCurrentStation.size() >= limit * 2) {
-                // Ako je trenutna putanja gora od najgore putanje u listi za tu stanicu, preskoči
                 Path worstPath = pathsToCurrentStation.get(pathsToCurrentStation.size() - 1);
                 if (comparePaths(currentPath, worstPath, optimizationCriterion) > 0) {
                     continue;
                 }
             }
 
-            // Ako smo stigli do odredišnog grada, dodaj putanju u listu pronađenih ruta
             if (currentStation.getCity().equals(endCity)) {
                 foundRoutes.add(currentPath);
-                // Nastavljamo petlju da bismo pronašli i druge "dobre" rute.
-                // Izmena 4: Dodajmo prag za zaustavljanje pretrage da ne ide u beskonačnost
-                if (foundRoutes.size() >= limit * 2) { // Nađi dvostruko više ruta pa ih filtriraj
+                if (foundRoutes.size() >= limit * 2) {
                     break;
                 }
             }
 
-            // Iteriraj kroz sve polaske (Departure) sa trenutne stanice
             for (Departure departure : currentStation.getDepartures()) {
                 Station nextStation = transportMap.getStation(departure.getArrivalStationId());
 
                 if (nextStation == null) {
-                    System.err.println("Upozorenje: Polazak sa ID-jem dolazne stanice " + departure.getArrivalStationId() + " ne vodi nigde.");
+                    System.err.println("Upozorenje: Polazak sa ID-jem dolazne stanice " + departure.getArrivalStationId() + " ne vodi nigdje.");
                     continue;
                 }
 
@@ -109,7 +130,6 @@ public class RouteFinder {
                     continue;
                 }
 
-                // Kreiraj novi segment rute
                 RouteSegment newSegment = new RouteSegment(
                         departure,
                         currentStation,
@@ -118,38 +138,27 @@ public class RouteFinder {
                         departure.getArrivalTime()
                 );
 
-                // Kreiraj novu putanju produžujući trenutnu putanju
                 Path newPath = new Path(currentPath);
                 newPath.addSegment(newSegment);
-
                 LocalTime newArrivalTime = newPath.getEndTime();
 
-                // Izmena 5: Proveri da li je putanja do sledeće stanice dovoljno dobra da se doda u PQ.
-                // Umesto da proveravamo samo najbolju putanju (shortestPaths),
-                // proveravamo da li je nova putanja bolja od najgore do te stanice.
                 List<Path> pathsToNextStation = foundPathsToStation.getOrDefault(nextStation, new ArrayList<>());
 
                 if (pathsToNextStation.size() < limit * 2 || comparePaths(newPath, pathsToNextStation.get(pathsToNextStation.size() - 1), optimizationCriterion) < 0) {
-
                     pathsToNextStation.add(newPath);
-                    // Održavaj listu sortiranom da bismo uvek mogli da uzmemo "najgoru"
                     pathsToNextStation.sort((p1, p2) -> comparePaths(p1, p2, optimizationCriterion));
-                    // Ograniči veličinu liste
                     if (pathsToNextStation.size() > limit * 2) {
                         pathsToNextStation = pathsToNextStation.subList(0, limit * 2);
                     }
                     foundPathsToStation.put(nextStation, pathsToNextStation);
-
                     pq.add(new NodeState(nextStation, newArrivalTime, newPath, optimizationCriterion));
                 }
             }
         }
 
-        // 3. Filtriranje i sortiranje pronađenih ruta
-        // Sortiraj sve pronađene rute po izabranom kriterijumu
+        // 3. Filtriranje, sortiranje i vraćanje rezultata
         foundRoutes.sort((p1, p2) -> comparePaths(p1, p2, optimizationCriterion));
 
-        // Izmena 6: Ukloni duplikate (rute sa identičnom sekvencom stanica) pre limitiranja.
         List<Path> uniqueRoutes = foundRoutes.stream()
                 .filter(p -> p.getSegments().size() > 0)
                 .collect(Collectors.toMap(
@@ -164,14 +173,17 @@ public class RouteFinder {
                 .sorted((p1, p2) -> comparePaths(p1, p2, optimizationCriterion))
                 .collect(Collectors.toList());
 
-
-        // Vrati samo top 'limit' ruta
         return uniqueRoutes.stream()
                 .limit(limit)
                 .collect(Collectors.toList());
     }
 
-    // Pomoćna metoda za dobijanje stanica u gradu
+    /**
+     * Vraća listu svih stanica koje se nalaze u datom gradu.
+     *
+     * @param city Grad čije stanice treba pronaći.
+     * @return Lista {@link Station} objekata.
+     */
     private List<Station> getStationsInCity(City city) {
         List<Station> cityStations = new ArrayList<>();
         for (Station station : transportMap.getAllStations().values()) {
@@ -183,9 +195,17 @@ public class RouteFinder {
     }
 
     /**
-     * Pomoćna metoda za upoređivanje dve putanje na osnovu kriterijuma optimizacije.
-     * Vraća negativan broj ako je path1 bolja, pozitivan ako je path2 bolja, 0 ako su jednake.
-     * Ova metoda se koristi i u NodeState.compareTo i za konačno sortiranje lista putanja.
+     * Pomoćna metoda za upoređivanje dvije putanje na osnovu kriterijuma optimizacije.
+     * <p>
+     * Ova metoda služi kao unificirani komparator koji se koristi na više mjesta
+     * u algoritmu kako bi se osigurala konzistentnost sortiranja i poređenja.
+     * </p>
+     *
+     * @param path1 Prva putanja.
+     * @param path2 Druga putanja.
+     * @param criterion Kriterijum optimizacije ("time", "price", "transfers").
+     * @return Negativan broj ako je path1 bolja, pozitivan ako je path2 bolja, 0 ako su jednake.
+     * @throws IllegalArgumentException ako je kriterijum nepoznat.
      */
     private int comparePaths(Path path1, Path path2, String criterion) {
         if (path1 == null && path2 == null) return 0;

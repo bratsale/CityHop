@@ -1,30 +1,68 @@
 package project.pj25.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Objects;
-import java.util.List; // Ovo je za Jackson
-import project.pj25.util.DurationDeserializer; // Kreiraćemo ovu klasu
-import project.pj25.util.LocalTimeDeserializer; // Kreiraćemo ovu klasu
+import project.pj25.util.DurationDeserializer;
+import project.pj25.util.LocalTimeDeserializer;
 
+/**
+ * Klasa koja predstavlja pojedinačni polazak između dvije stanice.
+ *
+ * <p>Ovaj objekat sadrži sve relevantne detalje o jednom segmentu putovanja:
+ * tip prevoza, stanice polaska i dolaska, vremena, cijenu, kao i minimalno
+ * vrijeme presjedanja na dolaznoj stanici. Klasa koristi Jackson anotacije
+ * za ispravnu deserializaciju polja koja su tipa {@link LocalTime} i {@link Duration},
+ * s obzirom na to da Jackson ne podržava ove tipove po defaultu.</p>
+ *
+ * @author bratsale
+ * @version 1.0
+ */
 public class Departure {
-    private String type; // "autobus" ili "voz"
-    private String departureStationId; // ID stanice polaska (B_X_Y ili T_X_Y)
-    private String arrivalStationId;   // ID stanice dolaska (može biti u drugom gradu ili ista stanica/grad za transfer)
-    @JsonDeserialize(using = LocalTimeDeserializer.class) // Custom deserializer
+    /**
+     * Tip prevoza ("autobus" ili "voz").
+     */
+    private String type;
+    /**
+     * ID stanice polaska.
+     */
+    private String departureStationId;
+    /**
+     * ID stanice dolaska.
+     */
+    private String arrivalStationId;
+    /**
+     * Vrijeme polaska sa stanice.
+     */
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime departureTime;
-
-    @JsonDeserialize(using = LocalTimeDeserializer.class) // Custom deserializer
+    /**
+     * Vrijeme dolaska na odredišnu stanicu.
+     */
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime arrivalTime;
-
-    private double price;              // Cijena karte
-    @JsonDeserialize(using = DurationDeserializer.class) // Custom deserializer
+    /**
+     * Cijena karte za ovaj segment putovanja.
+     */
+    private double price;
+    /**
+     * Minimalno vrijeme presjedanja koje je potrebno na dolaznoj stanici.
+     */
+    @JsonDeserialize(using = DurationDeserializer.class)
     private Duration minTransferTime;
 
-    // Glavni konstruktor - OVAKO TREBA DA IZGLEDA
+    /**
+     * Glavni konstruktor za kreiranje novog objekta polaska.
+     *
+     * @param type Tip prevoza.
+     * @param departureStationId ID stanice polaska.
+     * @param arrivalStationId ID stanice dolaska.
+     * @param departureTime Vrijeme polaska.
+     * @param arrivalTime Vrijeme dolaska.
+     * @param price Cijena karte.
+     * @param minTransferTime Minimalno vrijeme za presjedanje na dolaznoj stanici.
+     */
     public Departure(String type, String departureStationId, String arrivalStationId,
                      LocalTime departureTime, LocalTime arrivalTime, double price, Duration minTransferTime) {
         this.type = type;
@@ -36,35 +74,54 @@ public class Departure {
         this.minTransferTime = minTransferTime;
     }
 
-    // Prazan konstruktor - OVAKO TREBA DA IZGLEDA (za Jackson)
-    public Departure() {
-        // Prazan konstruktor za Jackson
-    }
+    /**
+     * Prazan konstruktor.
+     * <p>Neophodan za rad Jackson biblioteke tokom deserializacije.</p>
+     */
+    public Departure() {}
 
-    // --- Getteri i Setteri ---
+    // Getteri i setteri
+
+    /**
+     * Vraća tip prevoza.
+     * @return Tip prevoza.
+     */
     public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
 
+    /**
+     * Vraća ID stanice polaska.
+     * @return ID stanice polaska.
+     */
     public String getDepartureStationId() { return departureStationId; }
-    public void setDepartureStationId(String departureStationId) { this.departureStationId = departureStationId; }
 
+    /**
+     * Vraća ID stanice dolaska.
+     * @return ID stanice dolaska.
+     */
     public String getArrivalStationId() { return arrivalStationId; }
-    public void setArrivalStationId(String arrivalStationId) { this.arrivalStationId = arrivalStationId; }
 
+    /**
+     * Vraća vrijeme polaska.
+     * @return Vrijeme polaska kao {@link LocalTime} objekat.
+     */
     public LocalTime getDepartureTime() { return departureTime; }
-    // Jackson će koristiti custom deserializer, ali ako želiš setter za druge svrhe, možeš ga ostaviti
-    public void setDepartureTime(LocalTime departureTime) { this.departureTime = departureTime; }
 
+    /**
+     * Vraća vrijeme dolaska.
+     * @return Vrijeme dolaska kao {@link LocalTime} objekat.
+     */
     public LocalTime getArrivalTime() { return arrivalTime; }
-    public void setArrivalTime(LocalTime arrivalTime) { this.arrivalTime = arrivalTime; }
 
+    /**
+     * Vraća cijenu karte.
+     * @return Cijena karte.
+     */
     public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
 
-    public Duration getMinTransferTime() { return minTransferTime; }
-    public void setMinTransferTime(Duration minTransferTime) { this.minTransferTime = minTransferTime; }
-
-
+    /**
+     * Vraća string reprezentaciju objekta polaska.
+     * @return Formatirani string sa detaljima polaska.
+     */
     @Override
     public String toString() {
         return "Departure{" +
@@ -78,6 +135,13 @@ public class Departure {
                 '}';
     }
 
+    /**
+     * Poredi ovaj objekat polaska sa drugim objektom.
+     * Polasci se smatraju jednakim ako sva njihova polja imaju iste vrijednosti.
+     *
+     * @param o Drugi objekat za poređenje.
+     * @return {@code true} ako su objekti jednaki, {@code false} inače.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,6 +156,10 @@ public class Departure {
                 Objects.equals(minTransferTime, departure.minTransferTime);
     }
 
+    /**
+     * Generiše hash kod za objekat polaska na osnovu svih njegovih polja.
+     * @return Hash kod objekta.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(type, departureStationId, arrivalStationId, departureTime, arrivalTime, price, minTransferTime);

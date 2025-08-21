@@ -17,23 +17,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * <p>Klasa za generisanje lažnih podataka za transportnu mrežu.</p>
+ *
+ * <p>Generiše grid gradova, nasumično kreira autobuske i vozne stanice unutar svakog
+ * grada, a zatim generiše nasumične polaske između stanica unutar istog grada,
+ * kao i između susjednih gradova. Podaci se serijalizuju u JSON format
+ * koristeći Jackson biblioteku.</p>
+ *
+ * @author Tvoje Ime
+ * @version 1.0
+ */
 public class TransportDataGenerator {
+    /** Podrazumijevani broj redova u gridu. */
     private static final int DEFAULT_SIZE_N = 5;
+    /** Podrazumijevani broj kolona u gridu. */
     private static final int DEFAULT_SIZE_M = 5;
-    // Povećavamo broj polazaka između stanica kako bismo stvorili gušći graf.
-    private static final int DEPARTURES_PER_STATION_TYPE_PER_DESTINATION = 5; // Povećano sa 3 na 5
+    /** Broj polazaka po tipu stanice i destinaciji. */
+    private static final int DEPARTURES_PER_STATION_TYPE_PER_DESTINATION = 5;
+    /** Minimalan broj stanica po gradu. */
     private static final int MIN_STATIONS_PER_CITY = 1;
+    /** Maksimalan broj stanica po gradu. */
     private static final int MAX_STATIONS_PER_CITY = 3;
+    /** Random generator za nasumične vrijednosti. */
     private static final Random random = new Random();
 
+    /** Broj redova u gridu. */
     private final int n;
+    /** Broj kolona u gridu. */
     private final int m;
 
+    /**
+     * Konstruktor za {@code TransportDataGenerator}.
+     *
+     * @param n Broj redova.
+     * @param m Broj kolona.
+     */
     public TransportDataGenerator(int n, int m) {
         this.n = n;
         this.m = m;
     }
 
+    /**
+     * Glavna metoda za izvršavanje generisanja i serijalizacije podataka.
+     *
+     * @param args Argumenti komandne linije (ne koriste se).
+     */
     public static void main(String[] args) {
         TransportDataGenerator generator = new TransportDataGenerator(DEFAULT_SIZE_N, DEFAULT_SIZE_M);
         TransportMap transportMap = generator.generateData();
@@ -49,17 +78,25 @@ public class TransportDataGenerator {
 
         try {
             mapper.writeValue(new File("transport_data.json"), transportMap);
-            System.out.println("Podaci su generisani i sacuvani kao transport_data.json");
-            System.out.println("\n--- Pokusavam da ucitam generisani JSON sa DataLoaderom ---");
+            System.out.println("Podaci su generisani i sačuvani kao transport_data.json");
+            System.out.println("\n--- Pokušavam da učitam generisani JSON sa DataLoaderom ---");
             project.pj25.data.DataLoader.loadTransportData("transport_data.json");
-            System.out.println("--- Ucitavanje zavrseno ---");
+            System.out.println("--- Učitavanje završeno ---");
 
         } catch (IOException e) {
-            System.err.println("Greska prilikom cuvanja podataka u JSON fajl: " + e.getMessage());
+            System.err.println("Greška prilikom čuvanja podataka u JSON fajl: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    /**
+     * Generiše kompletnu transportnu mapu.
+     * <p>
+     * Kreira gradove, stanice u svakom gradu i polaske između stanica.
+     * </p>
+     *
+     * @return Generisani objekat {@link TransportMap}.
+     */
     public TransportMap generateData() {
         TransportMap transportMap = new TransportMap(n, m);
 
@@ -162,7 +199,6 @@ public class TransportDataGenerator {
 
                     if (!currentBusStations.isEmpty() && !neighborBusStations.isEmpty()) {
                         for (BusStation currentBusStation : currentBusStations) {
-                            // Izmena: Petlja ide do N umesto do 3
                             for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
                                 BusStation randomNeighborBusStation = neighborBusStations.get(random.nextInt(neighborBusStations.size()));
                                 currentBusStation.addDeparture(generateDeparture(
@@ -174,7 +210,6 @@ public class TransportDataGenerator {
 
                     if (!currentTrainStations.isEmpty() && !neighborTrainStations.isEmpty()) {
                         for (TrainStation currentTrainStation : currentTrainStations) {
-                            // Izmena: Petlja ide do N umesto do 3
                             for (int i = 0; i < DEPARTURES_PER_STATION_TYPE_PER_DESTINATION; i++) {
                                 TrainStation randomNeighborTrainStation = neighborTrainStations.get(random.nextInt(neighborTrainStations.size()));
                                 currentTrainStation.addDeparture(generateDeparture(
@@ -189,7 +224,15 @@ public class TransportDataGenerator {
         return transportMap;
     }
 
-    // Izmenjena metoda generateDeparture
+    /**
+     * Generiše nasumični polazak sa realnim podacima o vremenu, cijeni i trajanju.
+     *
+     * @param type            Tip prevoza ("autobus" ili "voz").
+     * @param fromStationId   ID polazne stanice.
+     * @param toStationId     ID dolazne stanice.
+     * @param isLocalTransfer Da li je transfer unutar istog grada.
+     * @return Generisani objekat {@link Departure}.
+     */
     private Departure generateDeparture(String type, String fromStationId, String toStationId, boolean isLocalTransfer) {
         int hour = random.nextInt(24);
         int minute = random.nextInt(4) * 15;
@@ -199,26 +242,31 @@ public class TransportDataGenerator {
         double price;
 
         if (isLocalTransfer) {
-            // Smanjujemo raspon za unutar-gradske transfere da budu predvidljiviji
-            durationMinutes = 10 + random.nextInt(10); // Od 10 do 19 minuta
-            price = 5.0 + random.nextDouble() * 5.0; // Od 5.0 do 10.0 KM
+            durationMinutes = 10 + random.nextInt(10);
+            price = 5.0 + random.nextDouble() * 5.0;
         } else {
-            // Povećavamo broj ruta i smanjujemo razlike u ceni i vremenu da bi se dobilo više alternativa
-            durationMinutes = 30 + random.nextInt(61); // Od 30 do 90 minuta
-            price = 100.0 + random.nextDouble() * 400.0; // Od 100.0 do 500.0 KM
+            durationMinutes = 30 + random.nextInt(61);
+            price = 100.0 + random.nextDouble() * 400.0;
         }
 
         Duration duration = Duration.ofMinutes(durationMinutes);
         LocalTime arrivalTime = departureTime.plus(duration);
-
         price = Math.round(price * 100.0) / 100.0;
 
-        int minTransferMinutes = isLocalTransfer ? 0 : (5 + random.nextInt(16)); // Smanjen raspon
+        int minTransferMinutes = isLocalTransfer ? 0 : (5 + random.nextInt(16));
         Duration minTransferTime = Duration.ofMinutes(minTransferMinutes);
 
         return new Departure(type, fromStationId, toStationId, departureTime, arrivalTime, price, minTransferTime);
     }
 
+    /**
+     * Pomoćna metoda za pronalaženje susjednih gradova u gridu.
+     *
+     * @param x   X koordinata grada.
+     * @param y   Y koordinata grada.
+     * @param map Transportna mapa.
+     * @return Lista susjednih gradova.
+     */
     private List<City> getNeighborCities(int x, int y, TransportMap map) {
         List<City> neighbors = new ArrayList<>();
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};

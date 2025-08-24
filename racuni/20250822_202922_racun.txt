@@ -1,0 +1,25 @@
+--- Račun za kartu ---
+Datum i vrijeme kupovine: 22.08.2025. 20:29:22
+Relacija: G_0_0 -> G_2_3
+-----------------------
+Ukupna cijena: 597.17 KM
+Ukupno vrijeme putovanja: 98č 55min
+Broj presjedanja: 7
+-----------------------
+Detalji rute:
+Ukupno vrijeme: 98č 55min, Ukupna cijena: 597.17 KM, Presjedanja: 7
+  voz: Z_0_0_0 (grad G_0_0) -> Z_1_0_0 (grad G_1_0) | Polazak: 03:30, Dolazak: 04:33, Cijena: 113.58 KM
+     [Čekanje na presjedanje: 16č 57min]
+  voz: Z_1_0_0 (grad G_1_0) -> A_1_0_1 (grad G_1_0) | Polazak: 21:30, Dolazak: 21:41, Cijena: 6.09 KM
+     [Čekanje na presjedanje: 21č 19min]
+  autobus: A_1_0_1 (grad G_1_0) -> A_2_0_0 (grad G_2_0) | Polazak: 19:00, Dolazak: 20:04, Cijena: 127.07 KM
+     [Čekanje na presjedanje: 21č 26min]
+  autobus: A_2_0_0 (grad G_2_0) -> Z_2_0_1 (grad G_2_0) | Polazak: 17:30, Dolazak: 17:46, Cijena: 5.42 KM
+     [Čekanje na presjedanje: 10č 59min]
+  voz: Z_2_0_1 (grad G_2_0) -> Z_2_1_1 (grad G_2_1) | Polazak: 04:45, Dolazak: 06:04, Cijena: 103.95 KM
+     [Čekanje na presjedanje: 5č 11min]
+  voz: Z_2_1_1 (grad G_2_1) -> Z_2_2_0 (grad G_2_2) | Polazak: 11:15, Dolazak: 12:23, Cijena: 110.29 KM
+     [Čekanje na presjedanje: 9č 22min]
+  voz: Z_2_2_0 (grad G_2_2) -> Z_2_3_0 (grad G_2_3) | Polazak: 21:45, Dolazak: 23:15, Cijena: 123.75 KM
+     [Čekanje na presjedanje: 7č 0min]
+  voz: Z_2_3_0 (grad G_2_3) -> A_2_3_0 (grad G_2_3) | Polazak: 06:15, Dolazak: 06:25, Cijena: 7.02 KM

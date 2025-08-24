@@ -10,9 +10,11 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import project.pj25.model.*;
 import project.pj25.data.*;
@@ -23,8 +25,10 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.scene.canvas.Canvas;
+import java.io.IOException;
 
 /**
  * <p>Glavna klasa za pokretanje grafičke aplikacije "CityHop".</p>
@@ -32,10 +36,12 @@ import javafx.scene.canvas.Canvas;
  * <p>Ova klasa postavlja kompletan korisnički interfejs, uključujući kontrole za
  * odabir početnog i krajnjeg grada, kriterijuma optimizacije, grafički prikaz
  * transportne mreže i tabelarni prikaz pronađenih ruta. Povezuje sve komponente
- * sistema: učitavanje podataka, pronalaženje ruta, vizualizaciju i generisanje računa.</p>
+ * sistema: učitavanje podataka, pronalaženje ruta, vizualizaciju i generisanje računa.
+ * Glavna izmjena: Aplikacija sada traži unos dimenzija transportne mape (n x m) na početku.
+ * </p>
  *
- * @author Tvoje Ime
- * @version 1.0
+ * @author bratsale
+ * @version 1.2
  */
 public class TransportApp extends Application {
 
@@ -53,31 +59,45 @@ public class TransportApp extends Application {
     private Button buyBestRouteTicketButton;
     private Path currentBestRoute;
     private Label salesInfoLabel;
+    private List<Path> lastFoundRoutes;
 
     /**
      * Glavna metoda za pokretanje JavaFX aplikacije.
-     * <p>Kreira i postavlja scenu, te inicijalizuje sve komponente korisničkog interfejsa.</p>
+     * <p>Sada prvo poziva dijalog za unos dimenzija mape, a zatim generiše i učitava podatke.</p>
      *
      * @param primaryStage Glavna pozornica (prozor) aplikacije.
      */
     @Override
     public void start(Stage primaryStage) {
+        Optional<Pair<Integer, Integer>> dimensions = showDimensionDialog();
+        if (!dimensions.isPresent()) {
+            // Korisnik je otkazao, zatvori aplikaciju
+            primaryStage.close();
+            return;
+        }
+
+        int n = dimensions.get().getKey();
+        int m = dimensions.get().getValue();
+
+        System.out.println("Generišem transportne podatke za matricu " + n + "x" + m + "...");
+
+        // Generišemo podatke koristeći Generator
+        TransportDataGenerator generator = new TransportDataGenerator(n, m);
+        this.transportMap = generator.generateData();
+
+        if (this.transportMap == null) {
+            System.err.println("Greška prilikom generisanja podataka. Aplikacija se neće pokrenuti.");
+            showAlert("Greška pri generisanju", "Nije moguće generisati transportne podatke.");
+            return;
+        }
+
         SalesData sales = InvoiceManager.loadSalesData();
         salesInfoLabel = new Label(String.format("Ukupno prodato karata: %d\nUkupan prihod: %.2f KM", sales.totalTickets(), sales.totalRevenue()));
         salesInfoLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 1.1em; -fx-padding: 0 0 10 0;");
         salesInfoLabel.setPrefWidth(300);
 
         primaryStage.setTitle("CityHop - Pronađi Optimalnu Rutu");
-
-        System.out.println("Učitavam transportne podatke...");
-        transportMap = DataLoader.loadTransportData("transport_data.json");
-
-        if (transportMap == null) {
-            System.err.println("Greška prilikom učitavanja podataka. Aplikacija se neće pokrenuti.");
-            showAlert("Greška pri učitavanju", "Nije moguće učitati transportne podatke.\nMolimo provjerite da li 'transport_data.json' postoji i da li je ispravan.");
-            return;
-        }
-        System.out.println("Podaci uspješno učitani. Ukupan broj gradova: " + (transportMap.getNumRows() * transportMap.getNumCols()));
+        System.out.println("Podaci uspješno generisani. Ukupan broj gradova: " + (transportMap.getNumRows() * transportMap.getNumCols()));
 
         this.routeFinder = new RouteFinder(transportMap);
 
@@ -172,19 +192,7 @@ public class TransportApp extends Application {
         routeDetailsTable.setMaxHeight(Double.MAX_VALUE);
 
         showAdditionalRoutesButton = new Button("Prikaži dodatne rute");
-        showAdditionalRoutesButton.setOnAction(e -> {
-            City start = startCityComboBox.getSelectionModel().getSelectedItem();
-            City end = endCityComboBox.getSelectionModel().getSelectedItem();
-            String criterion = getSelectedCriterion();
-
-            if (start != null && end != null && criterion != null) {
-                List<Path> topRoutes = routeFinder.findTopNRoutes(start, end, criterion, 5);
-                TopRoutesDialog dialog = new TopRoutesDialog(primaryStage, topRoutes, criterion);
-                dialog.show();
-            } else {
-                showAlert("Greška", "Molimo odaberite početni i krajnji grad, te kriterijum optimizacije prije prikaza dodatnih ruta.");
-            }
-        });
+        showAdditionalRoutesButton.setOnAction(e -> showAdditionalRoutes());
 
         buyBestRouteTicketButton = new Button("Kupovina karte (za najbolju rutu)");
         buyBestRouteTicketButton.setOnAction(e -> {
@@ -221,6 +229,67 @@ public class TransportApp extends Application {
         Scene scene = new Scene(root, 1200, 800);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    /**
+     * Prikazuje dijaloški prozor za unos dimenzija mape (n x m).
+     *
+     * @return Optional par celih brojeva (n, m) ili prazan Optional ako korisnik otkaže.
+     */
+    private Optional<Pair<Integer, Integer>> showDimensionDialog() {
+        Dialog<Pair<Integer, Integer>> dialog = new Dialog<>();
+        dialog.setTitle("Unos dimenzija mape");
+        dialog.setHeaderText("Unesite dimenzije transportne mape (n x m)");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField nField = new TextField();
+        nField.setPromptText("Broj redova (n)");
+        TextField mField = new TextField();
+        mField.setPromptText("Broj kolona (m)");
+
+        grid.add(new Label("Redovi (n):"), 0, 0);
+        grid.add(nField, 1, 0);
+        grid.add(new Label("Kolone (m):"), 0, 1);
+        grid.add(mField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        final Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
+
+        // Validation listener
+        Runnable validate = () -> {
+            boolean nValid = isPositiveInteger(nField.getText());
+            boolean mValid = isPositiveInteger(mField.getText());
+            okButton.setDisable(!(nValid && mValid));
+        };
+        nField.textProperty().addListener((obs, oldV, newV) -> validate.run());
+        mField.textProperty().addListener((obs, oldV, newV) -> validate.run());
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                int n = Integer.parseInt(nField.getText());
+                int m = Integer.parseInt(mField.getText());
+                return new Pair<>(n, m);
+            }
+            return null;
+        });
+
+        return dialog.showAndWait();
+    }
+
+    private boolean isPositiveInteger(String s) {
+        try {
+            int value = Integer.parseInt(s);
+            return value > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
@@ -262,6 +331,7 @@ public class TransportApp extends Application {
 
     /**
      * Pronalazi optimalnu rutu na osnovu odabranih kriterijuma i ažurira korisnički interfejs.
+     * <p>Sada pronalazi top 5 ruta i koristi prvu (najbolju) za prikaz na glavnom ekranu.</p>
      */
     private void findOptimalRoute() {
         City startCity = startCityComboBox.getSelectionModel().getSelectedItem();
@@ -270,40 +340,58 @@ public class TransportApp extends Application {
 
         if (startCity == null || endCity == null) {
             showAlert("Greška pri odabiru", "Molimo odaberite i početni i odredišni grad.");
+            lastFoundRoutes = null;
             currentBestRoute = null;
             showRouteDetails(null, criteria);
             return;
         }
         if (startCity.equals(endCity)) {
             showAlert("Greška pri odabiru", "Početni i odredišni grad moraju biti različiti.");
+            lastFoundRoutes = null;
             currentBestRoute = null;
             showRouteDetails(null, criteria);
             return;
         }
         if (criteria == null) {
             showAlert("Greška pri odabiru", "Molimo odaberite kriterijum optimizacije.");
+            lastFoundRoutes = null;
             currentBestRoute = null;
             showRouteDetails(null, criteria);
             return;
         }
 
-        bestRouteSummaryLabel.setText("Tražim rutu od " + startCity.getName() + " do " + endCity.getName() +
+        bestRouteSummaryLabel.setText("Tražim rute od " + startCity.getName() + " do " + endCity.getName() +
                 " po kriterijumu: " + formatCriterionNameForDisplay(criteria) + "...");
 
-        List<Path> bestRoutes = routeFinder.findTopNRoutes(startCity, endCity, criteria, 1);
-        Path bestRoute = null;
-        if (!bestRoutes.isEmpty()) {
-            bestRoute = bestRoutes.get(0);
+        // Pozivamo findTopNRoutes samo jednom sa limitom 5.
+        // Cijela lista se čuva u lastFoundRoutes za kasniju upotrebu.
+        lastFoundRoutes = routeFinder.findTopNRoutes(startCity, endCity, criteria, 5);
+
+        currentBestRoute = null;
+        if (!lastFoundRoutes.isEmpty()) {
+            currentBestRoute = lastFoundRoutes.get(0);
         }
 
-        currentBestRoute = bestRoute;
+        showRouteDetails(currentBestRoute, criteria);
 
-        showRouteDetails(bestRoute, criteria);
-
-        if (bestRoute != null) {
-            graphRenderer.highlightRoute(bestRoute);
+        if (currentBestRoute != null) {
+            graphRenderer.highlightRoute(currentBestRoute);
         } else {
             graphRenderer.drawInitialMap();
+        }
+    }
+
+    /**
+     * Prikazuje dijaloški prozor sa dodatnim rutama.
+     * <p>Ovaj metod sada koristi prethodno pronađenu listu ruta umjesto da ih ponovo traži.</p>
+     */
+    private void showAdditionalRoutes() {
+        if (lastFoundRoutes != null && !lastFoundRoutes.isEmpty()) {
+            String criterion = getSelectedCriterion();
+            TopRoutesDialog dialog = new TopRoutesDialog(null, lastFoundRoutes, criterion);
+            dialog.show();
+        } else {
+            showAlert("Greška", "Molimo prvo pronađite rute.");
         }
     }
 

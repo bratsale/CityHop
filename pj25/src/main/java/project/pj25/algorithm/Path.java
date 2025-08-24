@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Klasa koja predstavlja kompletnu putanju od početnog do krajnjeg grada,
@@ -14,7 +15,7 @@ import java.util.List;
  * najoptimalnije rute.
  * </p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  * @see RouteSegment
  * @see NodeState
@@ -224,5 +225,42 @@ public class Path implements Comparable<Path> {
     @Override
     public int compareTo(Path other) {
         return this.totalTravelTime.compareTo(other.totalTravelTime);
+    }
+
+    /**
+     * Generiše jedinstveni ključ za rutu na osnovu sekvence stanica.
+     * @return String ključ rute.
+     */
+    public String getRouteKey() {
+        if (segments.isEmpty()) {
+            return "";
+        }
+        // Generiši ključ na osnovu prve stanice, njenog polaska i sekvence stanica
+        return segments.get(0).getDepartureStationId() + "-" +
+                segments.get(0).getActualDepartureTime().toString() + "-" +
+                segments.stream()
+                        .skip(1) // Preskoči prvu stanicu
+                        .map(s -> s.getDeparture().getArrivalStationId())
+                        .collect(Collectors.joining("-"));
+    }
+
+    /**
+     * Generiše jedinstveni ključ za putanju na osnovu prve stanice, vremena polaska i niza stanica.
+     * Ovo omogućava razlikovanje ruta koje prolaze kroz iste gradove, ali u različito vrijeme.
+     *
+     * @return String ključ rute.
+     */
+    public String getRouteKeyWithTime() {
+        if (this.segments.isEmpty()) {
+            return "";
+        }
+        // Vrijeme polaska prve dionice je ključni dio ključa
+        String departureTime = this.startTime.toString();
+        // Niz stanica
+        String stationsSequence = this.segments.stream()
+                .map(s -> s.getDeparture().getDepartureStationId())
+                .collect(Collectors.joining("-"));
+
+        return departureTime + "-" + stationsSequence + "-" + this.getSegments().get(this.getSegments().size() - 1).getArrivalStationId();
     }
 }

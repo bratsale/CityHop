@@ -13,7 +13,7 @@ import java.util.Objects;
  * (vrijeme, cijena, presjedanja). Ovo je ključno za rad algoritma sa prioritetnim redom
  * kao što je A* ili Dijkstra.</p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  * @see RouteFinder
  * @see Path
@@ -64,6 +64,28 @@ public class NodeState implements Comparable<NodeState> {
      * @return {@link Path} objekat.
      */
     public Path getCurrentPath() { return currentPath; }
+
+    /**
+     * Vraća numeričku vrijednost troška putanje na osnovu kriterijuma optimizacije.
+     * Ova metoda je ključna za rad prioritetskog reda, jer daje jedinstvenu
+     * metriku za poređenje putanja.
+     *
+     * @return Trošak putanje kao double vrijednost.
+     * @throws IllegalArgumentException ako je kriterijum optimizacije nepoznat.
+     */
+    public double getCost() {
+        switch (this.optimizationCriterion.toLowerCase()) {
+            case "time":
+                return this.currentPath.getTotalTravelTime().toMinutes();
+            case "price":
+                return this.currentPath.getTotalCost();
+            case "transfers":
+                return this.currentPath.getTransfers();
+            default:
+                throw new IllegalArgumentException("Nepoznat kriterijum optimizacije: " + optimizationCriterion);
+        }
+    }
+
 
     /**
      * Poredi dva objekta {@code NodeState} na osnovu definisanog kriterijuma optimizacije.

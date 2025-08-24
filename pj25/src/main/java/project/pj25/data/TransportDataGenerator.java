@@ -22,17 +22,13 @@ import java.util.Random;
  *
  * <p>Generiše grid gradova, nasumično kreira autobuske i vozne stanice unutar svakog
  * grada, a zatim generiše nasumične polaske između stanica unutar istog grada,
- * kao i između susjednih gradova. Podaci se serijalizuju u JSON format
- * koristeći Jackson biblioteku.</p>
+ * kao i između susjednih gradova. Dimenzije mape (n x m) se prosljeđuju
+ * kroz konstruktor. Ova klasa služi isključivo za generisanje podataka u memoriji.</p>
  *
- * @author Tvoje Ime
- * @version 1.0
+ * @author bratsale
+ * @version 1.1
  */
 public class TransportDataGenerator {
-    /** Podrazumijevani broj redova u gridu. */
-    private static final int DEFAULT_SIZE_N = 5;
-    /** Podrazumijevani broj kolona u gridu. */
-    private static final int DEFAULT_SIZE_M = 5;
     /** Broj polazaka po tipu stanice i destinaciji. */
     private static final int DEPARTURES_PER_STATION_TYPE_PER_DESTINATION = 5;
     /** Minimalan broj stanica po gradu. */
@@ -59,40 +55,10 @@ public class TransportDataGenerator {
     }
 
     /**
-     * Glavna metoda za izvršavanje generisanja i serijalizacije podataka.
-     *
-     * @param args Argumenti komandne linije (ne koriste se).
-     */
-    public static void main(String[] args) {
-        TransportDataGenerator generator = new TransportDataGenerator(DEFAULT_SIZE_N, DEFAULT_SIZE_M);
-        TransportMap transportMap = generator.generateData();
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        SimpleModule customModule = new SimpleModule();
-        customModule.addSerializer(LocalTime.class, new LocalTimeSerializer());
-        customModule.addSerializer(Duration.class, new DurationSerializer());
-        mapper.registerModule(customModule);
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-        try {
-            mapper.writeValue(new File("transport_data.json"), transportMap);
-            System.out.println("Podaci su generisani i sačuvani kao transport_data.json");
-            System.out.println("\n--- Pokušavam da učitam generisani JSON sa DataLoaderom ---");
-            project.pj25.data.DataLoader.loadTransportData("transport_data.json");
-            System.out.println("--- Učitavanje završeno ---");
-
-        } catch (IOException e) {
-            System.err.println("Greška prilikom čuvanja podataka u JSON fajl: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Generiše kompletnu transportnu mapu.
      * <p>
-     * Kreira gradove, stanice u svakom gradu i polaske između stanica.
+     * Kreira gradove, stanice u svakom gradu i polaske između stanica na osnovu
+     * dimenzija proslijeđenih u konstruktoru.
      * </p>
      *
      * @return Generisani objekat {@link TransportMap}.

@@ -16,7 +16,7 @@ import java.time.LocalTime;
  * definisan za potrebe projekta, i omogućava ispravno serijalizovanje i
  * deserializovanje podataka o vremenu.</p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  * @see LocalTimeDeserializer
  */

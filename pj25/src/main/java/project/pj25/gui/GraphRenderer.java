@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * Raspored elemenata se skalira i prilagođava dimenzijama platna.
  * </p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  */
 public class GraphRenderer {
@@ -35,9 +35,9 @@ public class GraphRenderer {
     /** Transportna mapa koja se prikazuje. */
     private TransportMap transportMap;
 
-    /** Mapa koja pohranjuje koordinate stanica na platnu. */
+    /** Mapa koja skladišti koordinate stanica na platnu. */
     private Map<Station, Point2D> stationDisplayCoordinates;
-    /** Mapa koja pohranjuje koordinate "kapija" gradova (za međugradske linije). */
+    /** Mapa koja skladišti koordinate "kapija" gradova (za međugradske linije). */
     private Map<City, CityGateways> cityGatewayCoordinates;
 
     // Fiksne konstante za proporcije
@@ -204,7 +204,7 @@ public class GraphRenderer {
 
     /**
      * Crta kompletnu transportnu mapu (gradske okvire, veze i stanice) na platnu.
-     * <p>Metoda ne crta ID-eve stanica kako bi se održala preglednost.
+     * <p>Metoda ne crta ID-eve stanica kako bi se održala preglednost. !VEOMA BITNO!
      * Stari sadržaj platna se briše prije crtanja.</p>
      */
     public void drawInitialMap() {

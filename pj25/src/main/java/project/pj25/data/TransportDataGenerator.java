@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import project.pj25.model.*;
-import project.pj25.util.LocalTimeSerializer;
-import project.pj25.util.DurationSerializer;
+import project.pj25.util.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * <p>Klasa za generisanje lažnih podataka za transportnu mrežu.</p>
+ * <p>Klasa za generisanje podataka za transportnu mrežu.</p>
  *
  * <p>Generiše grid gradova, nasumično kreira autobuske i vozne stanice unutar svakog
  * grada, a zatim generiše nasumične polaske između stanica unutar istog grada,

@@ -24,7 +24,7 @@ import java.util.List;
  * Svaka ruta je predstavljena sažetkom, detaljnim pregledom segmenata
  * u {@link TableView} i dugmetom za kupovinu karte.</p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  */
 public class TopRoutesDialog extends Stage {

@@ -1,0 +1,35 @@
+--- Račun za kartu ---
+Datum i vrijeme kupovine: 25.08.2025. 00:17:13
+Relacija: G_0_0 -> G_5_6
+-----------------------
+Ukupna cijena: 2612.72 KM
+Ukupno vrijeme putovanja: 21č 16min
+Broj presjedanja: 12
+-----------------------
+Detalji rute:
+Ukupno vrijeme: 21č 16min, Ukupna cijena: 2612.72 KM, Presjedanja: 12
+  voz: Z_0_0_0 (grad G_0_0) -> Z_1_0_0 (grad G_1_0) | Polazak: 11:00, Dolazak: 11:45, Cijena: 137.73 KM
+     [Čekanje na presjedanje: 1č 0min]
+  voz: Z_1_0_0 (grad G_1_0) -> Z_1_1_1 (grad G_1_1) | Polazak: 12:45, Dolazak: 14:12, Cijena: 122.25 KM
+     [Čekanje na presjedanje: 0č 3min]
+  voz: Z_1_1_1 (grad G_1_1) -> Z_2_1_0 (grad G_2_1) | Polazak: 14:15, Dolazak: 14:51, Cijena: 339.30 KM
+     [Čekanje na presjedanje: 2č 24min]
+  voz: Z_2_1_0 (grad G_2_1) -> Z_2_2_0 (grad G_2_2) | Polazak: 17:15, Dolazak: 18:28, Cijena: 154.51 KM
+     [Čekanje na presjedanje: 0č 32min]
+  voz: Z_2_2_0 (grad G_2_2) -> Z_3_2_1 (grad G_3_2) | Polazak: 19:00, Dolazak: 19:43, Cijena: 125.16 KM
+     [Čekanje na presjedanje: 1č 47min]
+  voz: Z_3_2_1 (grad G_3_2) -> Z_3_3_0 (grad G_3_3) | Polazak: 21:30, Dolazak: 22:01, Cijena: 360.88 KM
+     [Čekanje na presjedanje: 0č 14min]
+  voz: Z_3_3_0 (grad G_3_3) -> Z_4_3_0 (grad G_4_3) | Polazak: 22:15, Dolazak: 22:50, Cijena: 113.38 KM
+     [Čekanje na presjedanje: 0č 10min]
+  voz: Z_4_3_0 (grad G_4_3) -> Z_5_3_1 (grad G_5_3) | Polazak: 23:00, Dolazak: 00:18, Cijena: 263.66 KM
+     [Čekanje na presjedanje: 0č 12min]
+  voz: Z_5_3_1 (grad G_5_3) -> Z_5_3_0 (grad G_5_3) | Polazak: 00:30, Dolazak: 00:41, Cijena: 9.11 KM
+     [Čekanje na presjedanje: 0č 4min]
+  voz: Z_5_3_0 (grad G_5_3) -> A_5_3_0 (grad G_5_3) | Polazak: 00:45, Dolazak: 01:00, Cijena: 8.42 KM
+     [Čekanje na presjedanje: 1č 15min]
+  autobus: A_5_3_0 (grad G_5_3) -> A_5_4_0 (grad G_5_4) | Polazak: 02:15, Dolazak: 02:59, Cijena: 194.51 KM
+     [Čekanje na presjedanje: 1č 16min]
+  autobus: A_5_4_0 (grad G_5_4) -> A_5_5_2 (grad G_5_5) | Polazak: 04:15, Dolazak: 05:41, Cijena: 291.12 KM
+     [Čekanje na presjedanje: 1č 34min]
+  autobus: A_5_5_2 (grad G_5_5) -> A_5_6_0 (grad G_5_6) | Polazak: 07:15, Dolazak: 08:16, Cijena: 492.69 KM

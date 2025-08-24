@@ -13,7 +13,7 @@ import java.time.LocalTime;
  * osnovni gradivni blok za kreiranje kompletne putanje (<code>{@link Path}</code>).
  * </p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  * @see Path
  */
@@ -61,7 +61,7 @@ public class RouteSegment {
         this.actualArrivalTime = actualArrivalTime;
     }
 
-    // --- Getteri sa Javadoc komentarima ---
+    // Getteri
 
     /**
      * Vraća objekat polaska ({@link Departure}) za ovaj segment.

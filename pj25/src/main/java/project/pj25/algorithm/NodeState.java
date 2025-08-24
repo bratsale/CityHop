@@ -10,8 +10,7 @@ import java.util.Objects;
  * <p>Ova klasa čuva trenutno stanje tokom pretrage: stanicu, vrijeme dolaska
  * na tu stanicu i putanju do te tačke. Implementira interfejs {@link Comparable}
  * kako bi se omogućilo poređenje stanja na osnovu različitih kriterijuma
- * (vrijeme, cijena, presjedanja). Ovo je ključno za rad algoritma sa prioritetnim redom
- * kao što je A* ili Dijkstra.</p>
+ * (vrijeme, cijena, presjedanja). Ovo je ključno za rad algoritma sa prioritetnim redom.</p>
  *
  * @author bratsale
  * @version 1.0
@@ -86,6 +85,7 @@ public class NodeState implements Comparable<NodeState> {
         }
     }
 
+    // Metode poređenja
 
     /**
      * Poredi dva objekta {@code NodeState} na osnovu definisanog kriterijuma optimizacije.

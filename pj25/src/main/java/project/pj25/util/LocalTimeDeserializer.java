@@ -17,7 +17,7 @@ import java.time.LocalTime;
  * odgovarajući {@link LocalTime} objekat, omogućavajući ispravno učitavanje
  * podataka o vremenu iz JSON fajla.</p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  * @see DurationDeserializer
  */

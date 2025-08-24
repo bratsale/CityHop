@@ -16,7 +16,7 @@ import java.time.Duration;
  * numeričku vrijednost (ukupan broj sekundi) u JSON fajlu,
  * što olakšava skladištenje i prenos podataka o vremenskim intervalima.</p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  * @see DurationDeserializer
  */

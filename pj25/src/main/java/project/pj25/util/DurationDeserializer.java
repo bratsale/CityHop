@@ -15,7 +15,7 @@ import java.time.Duration;
  * iz JSON-a, koje predstavljaju trajanje u sekundama, pravilno konvertuju
  * u {@link Duration} objekte.</p>
  *
- * @author Tvoje Ime
+ * @author bratsale
  * @version 1.0
  * @see LocalTimeDeserializer
  */

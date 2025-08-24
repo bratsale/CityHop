@@ -33,7 +33,7 @@ public class Path implements Comparable<Path> {
     private LocalTime startTime;
 
     /**
-     * Vrijeme dolaska na finalnu destinaciju.
+     * Vrijeme dolaska na konačnu destinaciju.
      */
     private LocalTime endTime;
 
@@ -123,7 +123,7 @@ public class Path implements Comparable<Path> {
         return Duration.ofMinutes(waitingMinutes);
     }
 
-    // --- Getteri sa Javadoc komentarima ---
+    // Getteri
 
     /**
      * Vraća listu segmenata putovanja.
@@ -142,7 +142,7 @@ public class Path implements Comparable<Path> {
     }
 
     /**
-     * Vraća vrijeme dolaska na finalnu destinaciju.
+     * Vraća vrijeme dolaska na konačnu destinaciju.
      * @return Vrijeme dolaska kao {@link LocalTime}.
      */
     public LocalTime getEndTime() {
@@ -235,11 +235,10 @@ public class Path implements Comparable<Path> {
         if (segments.isEmpty()) {
             return "";
         }
-        // Generiši ključ na osnovu prve stanice, njenog polaska i sekvence stanica
         return segments.get(0).getDepartureStationId() + "-" +
                 segments.get(0).getActualDepartureTime().toString() + "-" +
                 segments.stream()
-                        .skip(1) // Preskoči prvu stanicu
+                        .skip(1) // Preskače prvu stanicu
                         .map(s -> s.getDeparture().getArrivalStationId())
                         .collect(Collectors.joining("-"));
     }
@@ -254,9 +253,7 @@ public class Path implements Comparable<Path> {
         if (this.segments.isEmpty()) {
             return "";
         }
-        // Vrijeme polaska prve dionice je ključni dio ključa
         String departureTime = this.startTime.toString();
-        // Niz stanica
         String stationsSequence = this.segments.stream()
                 .map(s -> s.getDeparture().getDepartureStationId())
                 .collect(Collectors.joining("-"));

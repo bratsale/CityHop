@@ -81,7 +81,6 @@ public class TransportApp extends Application {
 
         System.out.println("Generišem transportne podatke za matricu " + n + "x" + m + "...");
 
-        // Generišemo podatke koristeći Generator
         TransportDataGenerator generator = new TransportDataGenerator(n, m);
         this.transportMap = generator.generateData();
 
@@ -169,7 +168,6 @@ public class TransportApp extends Application {
         routeDetailsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         routeDetailsTable.setPlaceholder(new Label("Nema segmenata rute za prikaz."));
 
-        // Definisanje kolona za tabelu
         TableColumn<RouteSegment, String> typeCol = new TableColumn<>("Tip");
         typeCol.setCellValueFactory(new PropertyValueFactory<>("departureType"));
         TableColumn<RouteSegment, String> fromCol = new TableColumn<>("Od (stanica)");
@@ -262,7 +260,6 @@ public class TransportApp extends Application {
         final Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         okButton.setDisable(true);
 
-        // Validation listener
         Runnable validate = () -> {
             boolean nValid = isPositiveInteger(nField.getText());
             boolean mValid = isPositiveInteger(mField.getText());
@@ -363,8 +360,7 @@ public class TransportApp extends Application {
         bestRouteSummaryLabel.setText("Tražim rute od " + startCity.getName() + " do " + endCity.getName() +
                 " po kriterijumu: " + formatCriterionNameForDisplay(criteria) + "...");
 
-        // Pozivamo findTopNRoutes samo jednom sa limitom 5.
-        // Cijela lista se čuva u lastFoundRoutes za kasniju upotrebu.
+
         lastFoundRoutes = routeFinder.findTopNRoutes(startCity, endCity, criteria, 5);
 
         currentBestRoute = null;
